@@ -5,7 +5,6 @@ chown hdfs:hdfs /var/lib/hadoop-hdfs/cache/
 su -c "echo 'N' | hdfs namenode -format" hdfs
 
 # 2 start hdfs
-su -c "hdfs namenode  2>&1 > /var/log/hadoop/hdfs/hadoop-hdfs-datanode.log" hdfs&
 su -c "hdfs namenode  2>&1 > /var/log/hadoop/hdfs/hadoop-hdfs-namenode.log" hdfs&
 
 # 3 wait for process starting
@@ -37,15 +36,7 @@ sleep 10s
 mkdir /var/log/mysql/
 chown mysql:mysql /var/log/mysql/
 
-# 8 copy configuration
-#cp /tmp/hadoop_conf/hive-site.xml /etc/hive/conf/
-#cp /tmp/hadoop_conf/core-site.xml /etc/hadoop/conf
-#cp /tmp/hadoop_conf/mapred-site.xml /etc/hadoop/conf
-#cp /tmp/hadoop_conf/yarn-site.xml /etc/hadoop/conf
-#cp /tmp/hadoop_conf/hadoop-env.sh /etc/hadoop/conf
-#rm -r /tmp/hadoop_conf
-
-# 9 Init zookeeper
+# 8 Init zookeeper
 mkdir -p /var/lib/zookeeper
 chown zookeeper:hadoop /var/lib/zookeeper
 /usr/hdp/2.3.2.0-2950/zookeeper/etc/rc.d/init.d/zookeeper-server init
