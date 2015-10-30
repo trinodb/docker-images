@@ -24,13 +24,6 @@ COPY files/conf-setup/* /etc/hadoop/conf/
 
 COPY files/setup.sh /root/setup.sh
 
-# Put the hadoop conf under /tmp. setup.sh will move it to its final location.
-COPY files/conf /tmp/hadoop_conf/
-
-RUN cat /etc/hosts && hostname
-RUN echo "127.0.0.1	hadoop-master" >>/etc/hosts
-RUN cat /etc/hosts && hostname
-
 # Run the setup script
 RUN /root/setup.sh
 
