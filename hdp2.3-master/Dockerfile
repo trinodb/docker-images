@@ -20,7 +20,7 @@ RUN echo -e "\n\n[include]\nfiles = /etc/supervisord.d/*.conf" \
 # Add the additional supervisord configuration
 COPY files/supervisord.d/* /etc/supervisord.d/
 
-COPY files/conf/* /etc/hadoop/conf/
+COPY files/conf-setup/* /etc/hadoop/conf/
 
 COPY files/setup.sh /root/setup.sh
 
@@ -33,6 +33,9 @@ RUN cat /etc/hosts && hostname
 
 # Run the setup script
 RUN /root/setup.sh
+
+# Copy the real config in now that setup has run
+COPY files/conf/* /etc/hadoop/conf/
 
 # HDFS PORTS
 EXPOSE 50010 1004 50075 1006 50020 8020 50070 50470

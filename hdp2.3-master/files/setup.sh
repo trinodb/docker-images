@@ -46,6 +46,8 @@ chown mysql:mysql /var/log/mysql/
 #rm -r /tmp/hadoop_conf
 
 # 9 Init zookeeper
+mkdir -p /var/lib/zookeeper
+chown zookeeper:hadoop /var/lib/zookeeper
 /usr/hdp/2.3.2.0-2950/zookeeper/etc/rc.d/init.d/zookeeper-server init
 
 exit 0
