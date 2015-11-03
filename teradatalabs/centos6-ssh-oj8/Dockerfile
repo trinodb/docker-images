@@ -24,7 +24,6 @@ ENV JAVA_HOME /usr/java/jdk1.8.0_40/jre/
 
 # Install dependencies for presto-admin -- already has python-2.6
 RUN yum -y install bzip2 \
-    gcc \
     python-devel \
     tar
 
