@@ -13,6 +13,9 @@ sleep 10
 # 4 exec hdp hdfs init script
 /usr/hdp/2.3.2.0-2950/hadoop/libexec/init-hdfs.sh
 
+# 4.1 Create an hdfs home directory for the yarn user. For some reason, init-hdfs doesn't do so.
+su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir /user/yarn && /usr/bin/hadoop fs -chown yarn:yarn /user/yarn'
+
 # 5 init hive directories
 su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir /user/hive/warehouse'
 su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chmod g+w /user/hive/warehouse'
