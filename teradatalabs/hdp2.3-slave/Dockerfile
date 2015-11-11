@@ -15,6 +15,8 @@ COPY files/supervisord.d/* /etc/supervisord.d/
 # Copy the real config in now that setup has run
 COPY files/conf/* /etc/hadoop/conf/
 
+COPY files/datanode-bootstrap /etc/
+
 # HDFS PORTS
 EXPOSE 50010 1004 50075 1006 50020 8020 50070 50470
 
