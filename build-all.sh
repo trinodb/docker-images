@@ -1,3 +1,5 @@
+#!/bin/bash -eux
+
 IMAGES=("teradatalabs/centos6-ssh-oj8" \
 	"teradatalabs/hdp2.3-repo" \
 	"teradatalabs/hdp2.3-base" \
