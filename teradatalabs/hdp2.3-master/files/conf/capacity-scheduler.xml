@@ -4,7 +4,7 @@
 <configuration>
   <property>
     <name>yarn.scheduler.capacity.maximum-am-resource-percent</name>
-    <value>0.1</value>
+    <value>0.5</value>
   </property>
   <property>
     <name>yarn.scheduler.capacity.maximum-applications</name>
