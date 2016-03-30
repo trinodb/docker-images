@@ -16,3 +16,7 @@ for image in "${IMAGES[@]}"; do
 	docker build -t "$image" .
 	cd -
 done
+
+# pull auxiliary images needed by kerberized product tests job
+docker pull java:8
+docker pull maven:3.3-jdk-8
