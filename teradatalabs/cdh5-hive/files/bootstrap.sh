@@ -20,7 +20,7 @@ supervisorctl start yarn-resourcemanager yarn-nodemanager mapreduce-historyserve
 supervisorctl start hive-metastore hive-server2
 
 # 5 sshd
-supervisorctl start sshd
+/sbin/service sshd start
 
 # 6 socks-proxy
 supervisorctl start socks-proxy
