@@ -31,7 +31,7 @@ RUN chown hdfs:hadoop /etc/hadoop/conf/hdfs.keytab
 RUN chown mapred:hadoop /etc/hadoop/conf/mapred.keytab
 RUN chown yarn:hadoop /etc/hadoop/conf/yarn.keytab
 RUN chown hdfs:hadoop /etc/hadoop/conf/HTTP.keytab
-RUN chmod 400 /etc/hadoop/conf/*.keytab
+RUN chmod 644 /etc/hadoop/conf/*.keytab
 
 # ENABLE HADOOP SECURITY
 ADD files/conf/core-site.xml /etc/hadoop/conf/core-site.xml
@@ -53,7 +53,7 @@ RUN /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/hive/conf/hive.keytab hive
 # ENABLE HIVE SECURITY
 ADD files/conf/hive-site.xml /etc/hive/conf/hive-site.xml
 RUN chown hive:hadoop /etc/hive/conf/hive.keytab
-RUN chmod 400 /etc/hive/conf/hive.keytab
+RUN chmod 644 /etc/hive/conf/hive.keytab
 
 # CREATE PRESTO PRINCIPAL AND KEYTAB
 RUN /usr/sbin/kadmin.local -q "addprinc -randkey presto-server/presto-master@LABS.TERADATA.COM"
@@ -61,6 +61,17 @@ RUN /usr/sbin/kadmin.local -q "addprinc -randkey presto-client/presto-master@LAB
 RUN mkdir -p /etc/presto/conf
 RUN /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/presto/conf/presto-server.keytab presto-server/presto-master"
 RUN /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/presto/conf/presto-client.keytab presto-client/presto-master"
+RUN chmod 644 /etc/presto/conf/*.keytab
+
+# CREATE SSL KEYSTORE
+RUN keytool -genkeypair \
+    -alias presto \
+    -keyalg RSA \
+    -keystore /etc/presto/conf/keystore.jks \
+    -keypass password \
+    -storepass password \
+    -dname "CN=presto-master, OU=, O=, L=, S=, C="
+RUN chmod 644 /etc/presto/conf/keystore.jks
 
 # EXPOSE KERBEROS PORTS
 EXPOSE	88
