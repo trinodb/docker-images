@@ -8,7 +8,8 @@ IMAGES=("teradatalabs/centos6-ssh-oj8" \
 	"teradatalabs/centos6-java8-oracle" \
 	"teradatalabs/cdh5-base" \
 	"teradatalabs/cdh5-hive" \
-	"teradatalabs/cdh5-hive-kerberized")
+	"teradatalabs/cdh5-hive-kerberized" \
+	"teradatalabs/dns")
 
 for image in "${IMAGES[@]}"; do
 	echo $image
