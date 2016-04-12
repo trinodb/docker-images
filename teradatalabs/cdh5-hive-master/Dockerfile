@@ -8,6 +8,7 @@ RUN \
      hive-server \
      hadoop-hdfs-namenode \
      hadoop-yarn-resourcemanager \
+     hadoop-yarn-nodemanager \
      zookeeper-server \
      mysql-server \
      mysql-connector-java \

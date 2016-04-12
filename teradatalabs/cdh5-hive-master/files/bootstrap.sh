@@ -15,6 +15,7 @@ supervisorctl start hdfs-namenode
 
 # 3 YARN
 supervisorctl start yarn-resourcemanager mapreduce-historyserver
+supervisorctl start yarn-nodemanager
 
 # 4 Hive
 supervisorctl start hive-metastore hive-server2
