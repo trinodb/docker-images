@@ -4,9 +4,11 @@ MAINTAINER Lukasz Osipiuk <lukasz.osipiuk@teradata.com>
 # INSTALL PACKAGES
 RUN \
    yum install -y \
-     hive hive-server \
+     hive \
+     hive-server \
      hadoop-hdfs-namenode \
      hadoop-yarn-resourcemanager \
+     zookeeper-server \
      mysql-server \
      mysql-connector-java \
      python-setuptools \

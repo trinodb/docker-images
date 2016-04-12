@@ -58,3 +58,6 @@ killall mysqld
 sleep 10s
 mkdir /var/log/mysql/
 chown mysql:mysql /var/log/mysql
+
+# 8 Init zookeeper
+/etc/init.d/zookeeper-server init
