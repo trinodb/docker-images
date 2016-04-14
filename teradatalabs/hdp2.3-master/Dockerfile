@@ -2,7 +2,7 @@ FROM teradatalabs/hdp2.3-base
 MAINTAINER Eric Diven <eric.diven@teradata.com>
 
 # INSTALL MYSQL (Hive Metastore)
-RUN yum install -y mysql-server yum install mysql-connector-java
+RUN yum install -y mysql-server mysql-connector-java
 RUN mkdir -p /usr/lib/hive/lib \
 	&& ln -s /usr/share/java/mysql-connector-java.jar /usr/lib/hive/lib/mysql-connector-java.jar
 
