@@ -32,12 +32,8 @@ RUN ln -s /usr/share/java/mysql-connector-java.jar /usr/lib/hive/lib/mysql-conne
 COPY files/supervisord.conf /etc/supervisord.conf
 COPY files/supervisord.d/* /etc/supervisord.d/
 
-# Add SUPERVISORD BOOTSTRAP SCRIPT
-COPY files/bootstrap.sh /root/bootstrap.sh
-
-# ADD STARTUP SCRIPT
-COPY files/setup.sh /root/setup.sh
-COPY files/startup.sh /root/startup.sh
+# ADD SETUP AND STARTUP SCRIPTS
+COPY files/bootstrap.sh files/setup.sh files/startup.sh /root/
 
 # DELETE ORIGINAL CONFIGURATION
 RUN rm -rf /etc/hadoop/conf/*
@@ -50,9 +46,6 @@ RUN /root/setup.sh
 
 # COPY TARGET CONFIGURATION
 COPY files/conf/ /etc/hadoop/conf
-
-# CLEANUP
-RUN rm -rf /tmp/* /var/tmp/*
 
 # HDFS PORTS
 EXPOSE 1004 1006 8020 50010 50020 50070 50075 50470
