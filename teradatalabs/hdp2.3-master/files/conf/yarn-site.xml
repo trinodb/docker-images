@@ -19,6 +19,11 @@
 
 <configuration>
   <property>
+    <name>yarn.resourcemanager.hostname</name>
+    <value>hadoop-master</value>
+  </property>
+
+  <property>
     <name>yarn.nodemanager.aux-services</name>
     <value>mapreduce_shuffle</value>
   </property>
