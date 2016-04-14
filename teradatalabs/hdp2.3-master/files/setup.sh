@@ -12,13 +12,31 @@ su -c "hdfs namenode  2>&1 > /var/log/hadoop/hdfs/hadoop-hdfs-namenode.log" hdfs
 # 3 wait for process starting
 sleep 10
 
-# 4 exec hdp hdfs init script
-# Failure on error is disabled and then enabled here because the
-# init-hdfs.sh script attempts to upload a jar to HDFS and that fails
-# because there is no Hadoop cluster up.
-set +e
-/usr/hdp/2.3.*/hadoop/libexec/init-hdfs.sh
-set -e
+# 4 init basic hdfs directories
+su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir /tmp'
+su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chmod -R 1777 /tmp'
+su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir /var'
+su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir /var/log'
+su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chmod -R 1775 /var/log'
+su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chown yarn:mapred /var/log'
+su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir /tmp/hadoop-yarn'
+su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chown -R mapred:mapred /tmp/hadoop-yarn'
+su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chmod -R 777 /tmp/hadoop-yarn'
+su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir -p /var/log/hadoop-yarn/apps'
+su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chmod -R 1777 /var/log/hadoop-yarn/apps'
+su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chown yarn:mapred /var/log/hadoop-yarn/apps'
+su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir /user'
+su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chmod 755 /user'
+su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chown hdfs  /user'
+su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir /user/history'
+su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chown mapred:mapred /user/history'
+su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chmod 755 /user/history'
+su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir /user/hive'
+su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chmod -R 777 /user/hive'
+su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chown hive /user/hive'
+su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir /user/root'
+su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chmod -R 777 /user/root'
+su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chown root /user/root'
 
 # 4.1 Create an hdfs home directory for the yarn user. For some reason, init-hdfs doesn't do so.
 su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir /user/yarn && /usr/bin/hadoop fs -chown yarn:yarn /user/yarn'
