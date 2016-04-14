@@ -20,7 +20,7 @@
 <configuration>
   <property>
     <name>yarn.resourcemanager.hostname</name>
-    <value>master</value>
+    <value>hadoop-master</value>
   </property>
 
   <property>

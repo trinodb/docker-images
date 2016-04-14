@@ -18,7 +18,7 @@
 <configuration>
     <property>
         <name>fs.defaultFS</name>
-        <value>hdfs://master:8020</value>
+        <value>hdfs://hadoop-master:8020</value>
     </property>
 
     <!-- OOZIE proxy user setting -->
