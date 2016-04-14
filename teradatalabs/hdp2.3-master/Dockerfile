@@ -12,6 +12,7 @@ RUN yum -y clean all && rm -rf /tmp/* /var/tmp/*
 # Good grief. Get rid of the default hdp config.
 RUN rm -r /etc/hadoop/conf/*
 RUN rm -r /etc/zookeeper/conf/*
+RUN rm -r /etc/hive/conf/hive-site.xml
 
 # Append to the existing supervisor config, which sets up ssh access. This lets
 # us add additional programs via the include mechanism
@@ -35,6 +36,7 @@ RUN /root/setup.sh
 # Copy the real config in now that setup has run
 COPY files/conf/* /etc/hadoop/conf/
 COPY files/conf-zookeeper/* /etc/zookeeper/conf/
+COPY files/conf-hive/* /etc/hive/conf/
 
 # HDFS PORTS
 EXPOSE 50010 1004 50075 1006 50020 8020 50070 50470
