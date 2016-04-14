@@ -56,4 +56,6 @@ if [[ -f "$VERSION_PATH" ]] && ! is_unique "$VERSION_PATH"; then
 	make_unique "$VERSION_PATH"
 fi
 
+chown -R hdfs:hdfs /tmp/hadoop-hdfs
+
 exec hdfs datanode
