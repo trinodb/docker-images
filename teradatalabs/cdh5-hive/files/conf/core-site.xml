@@ -82,4 +82,15 @@
         <value>*</value>
     </property>
 
+    <!-- Hdfs impersonation -->
+    <property>
+      <name>hadoop.proxyuser.hdfs.groups</name>
+      <value>*</value>
+    </property>
+
+    <property>
+      <name>hadoop.proxyuser.hdfs.hosts</name>
+      <value>*</value>
+    </property>
+
 </configuration>
