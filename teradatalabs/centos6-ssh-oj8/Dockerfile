@@ -55,6 +55,7 @@ RUN awk -v file="/etc/bootstrap-extra" -v lineno=$(($(wc -l < /etc/ssh-bootstrap
 RUN sed -i \
     -e 's/^PermitRootLogin no/PermitRootLogin without-password/g' \
     -e 's/^PasswordAuthentication no/PasswordAuthentication yes/g' \
+    -e 's/^PasswordAuthentication no/PasswordAuthentication yes/g' \
     /etc/ssh/sshd_config
 
 # Set default password for testing
