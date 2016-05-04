@@ -17,10 +17,10 @@ MAINTAINER Christina Wallin <christina.wallin@teradata.com>
 RUN yum upgrade ca-certificates --disablerepo=epel -y && \
     yum update -y && \
     yum install -y wget && \
-    wget --header "Cookie: oraclelicense=accept-securebackup-cookie" https://edelivery.oracle.com/otn-pub/java/jdk/8u40-b26/jdk-8u40-linux-x64.rpm
-RUN rpm -ivh jdk-8u40-linux-x64.rpm && rm jdk-8u40-linux-x64.rpm
+    wget --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/8u92-b14/jdk-8u92-linux-x64.rpm
+RUN rpm -ivh jdk-8u92-linux-x64.rpm && rm jdk-8u92-linux-x64.rpm
 
-ENV JAVA_HOME /usr/java/jdk1.8.0_40/jre/
+ENV JAVA_HOME /usr/java/jdk1.8.0_92/jre/
 
 # Install dependencies for presto-admin -- already has python-2.6
 RUN yum -y install bzip2 \

@@ -9,8 +9,8 @@ running.  Passwordless ssh for the user app-admin is also set up.
 $ sudo docker build -t teradata-labs/centos6-ssh-test .
 $ sudo docker run --rm -it teradata-labs/centos6-ssh-test /bin/bash
 [root@17e6caf87452 /]# java -version
-java version "1.8.0_40"
-Java(TM) SE Runtime Environment (build 1.8.0_40-b26)
+java version "1.8.0_92"
+Java(TM) SE Runtime Environment (build 1.8.0_92-b14)
 Java HotSpot(TM) 64-Bit Server VM (build 25.40-b25, mixed mode)
 ```
 
