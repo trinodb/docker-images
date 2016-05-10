@@ -59,9 +59,4 @@
 	<description>The set of privileges automatically granted to the owner whenever a table gets created.</description>
     </property>
 
-    <property>
-        <name>hive.users.in.admin.role</name>
-        <value>hdfs,hive</value>
-    </property>
-
 </configuration>
