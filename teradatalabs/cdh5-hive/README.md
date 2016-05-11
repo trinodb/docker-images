@@ -1,4 +1,4 @@
-# cdh5-base
+# cdh5-hive
 
 Docker image with HDFS, YARN and HIVE installed. Please note that running services have lower memory heap size set.
 For more details please check [blob/master/images/cdh5-hive/files/conf/hadoop-env.sh](configuration) file.

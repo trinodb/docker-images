@@ -29,7 +29,7 @@ docker build -t teradatalabs/cdh5-hive:latest .
 docker push teradatalabs/cdh5-hive:latest
 docker tag teradatalabs/cdh5-hive:latest teradatalabs/cdh5-hive:<git_commit_head_commit_id>
 docker push teradatalabs/cdh5-hive:<git_commit_head_commit_id>
-docker tag teradatalabs/cdh5-hive:5 teradatalabs/cdh5-hive:5
+docker tag teradatalabs/cdh5-hive:latest teradatalabs/cdh5-hive:5
 docker push teradatalabs/cdh5-hive:5
 git tag teradatalabs/cdh5-hive/5
 git push --tags
