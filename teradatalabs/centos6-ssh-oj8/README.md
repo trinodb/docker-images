@@ -1,4 +1,4 @@
-# centos6-ssh-test
+# centos6-ssh-oj8
 
 Docker image of CentOS 6 with Oracle JDK 8 installed, and with sshd
 running.  Passwordless ssh for the user app-admin is also set up.
@@ -6,8 +6,8 @@ running.  Passwordless ssh for the user app-admin is also set up.
 ## Build
 
 ```
-$ sudo docker build -t teradata-labs/centos6-ssh-test .
-$ sudo docker run --rm -it teradata-labs/centos6-ssh-test /bin/bash
+$ sudo docker build -t teradatalabs/centos6-ssh-oj8 .
+$ sudo docker run --rm -it teradatalabs/centos6-ssh-oj8 /bin/bash
 [root@17e6caf87452 /]# java -version
 java version "1.8.0_92"
 Java(TM) SE Runtime Environment (build 1.8.0_92-b14)
