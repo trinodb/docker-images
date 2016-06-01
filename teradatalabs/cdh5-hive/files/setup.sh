@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -ex
 
 # 1 format namenode
 chown hdfs:hdfs /var/lib/hadoop-hdfs/cache/
