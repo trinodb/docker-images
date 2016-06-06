@@ -16,6 +16,10 @@ su -c "hdfs namenode  2>&1 > /var/log/hadoop-hdfs/hadoop-hdfs-namenode.log" hdfs
 # 3 wait for process starting
 sleep 10
 
+# remove a broken symlink created by cdh installer so that init-hdfs.sh does no blow up on it
+# (hbase-annotations.jar seems not needed in our case)
+rm /usr/lib/hive/lib/hbase-annotations.jar
+
 # 4 exec cloudera hdfs init script
 /usr/lib/hadoop/libexec/init-hdfs.sh
 
