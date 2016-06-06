@@ -44,7 +44,7 @@ echo "CREATE DATABASE metastore; USE metastore; SOURCE /usr/lib/hive/scripts/met
 killall mysqld
 sleep 10s
 mkdir /var/log/mysql/
-chown mysql:mysql mkdir /var/log/mysql/
+chown mysql:mysql /var/log/mysql/
 
 # 8 copy configuration
 cp /tmp/hadoop_conf/hive-site.xml /etc/hive/conf/
