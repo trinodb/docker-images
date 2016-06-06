@@ -1,7 +1,12 @@
-#!/bin/bash
+#!/bin/bash -ex
 
 # 1 format namenode
 chown hdfs:hdfs /var/lib/hadoop-hdfs/cache/
+
+# workaround for 'could not open session' bug as suggested here:
+# https://github.com/docker/docker/issues/7056#issuecomment-49371610
+rm /etc/security/limits.d/hdfs.conf
+
 su -c "echo 'N' | hdfs namenode -format" hdfs
 
 # 2 start hdfs
@@ -10,6 +15,10 @@ su -c "hdfs namenode  2>&1 > /var/log/hadoop-hdfs/hadoop-hdfs-namenode.log" hdfs
 
 # 3 wait for process starting
 sleep 10
+
+# remove a broken symlink created by cdh installer so that init-hdfs.sh does no blow up on it
+# (hbase-annotations.jar seems not needed in our case)
+rm /usr/lib/hive/lib/hbase-annotations.jar
 
 # 4 exec cloudera hdfs init script
 /usr/lib/hadoop/libexec/init-hdfs.sh
@@ -35,7 +44,7 @@ echo "CREATE DATABASE metastore; USE metastore; SOURCE /usr/lib/hive/scripts/met
 killall mysqld
 sleep 10s
 mkdir /var/log/mysql/
-chown mysql:mysql mkdir /var/log/mysql/
+chown mysql:mysql /var/log/mysql/
 
 # 8 copy configuration
 cp /tmp/hadoop_conf/hive-site.xml /etc/hive/conf/
