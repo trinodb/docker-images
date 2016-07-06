@@ -1,4 +1,4 @@
-FROM teradatalabs/cdh5-hive-master:1
+FROM teradatalabs/cdh5-hive-master
 MAINTAINER Grzegorz Kokosiński <grzegorz.kokosinksi@teradata.com>
 
 RUN yum install -y openssh-server openssh-clients passwd libcgroup unzip && yum -y clean all

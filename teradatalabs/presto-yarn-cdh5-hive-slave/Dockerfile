@@ -1,4 +1,4 @@
-FROM teradatalabs/cdh5-hive-slave:1
+FROM teradatalabs/cdh5-hive-slave
 MAINTAINER Grzegorz Kokosiński <grzegorz.kokosinksi@teradata.com>
 
 RUN yum install -y openssh-server openssh-clients passwd libcgroup
