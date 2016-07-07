@@ -1,4 +1,4 @@
-FROM teradatalabs/hdp2.3-repo:1
+FROM teradatalabs/hdp2.3-repo
 MAINTAINER Eric Diven <eric.diven@teradata.com>
 
 RUN yum install -y hadoop-hdfs-namenode \

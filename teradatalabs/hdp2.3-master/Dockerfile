@@ -1,4 +1,4 @@
-FROM teradatalabs/hdp2.3-base:1
+FROM teradatalabs/hdp2.3-base
 MAINTAINER Eric Diven <eric.diven@teradata.com>
 
 # INSTALL MYSQL (Hive Metastore)
