@@ -1,4 +1,4 @@
-FROM teradatalabs/hdp2.3-slave:1
+FROM teradatalabs/hdp2.3-slave
 MAINTAINER Grzegorz Kokosiński <grzegorz.kokosinksi@teradata.com>
 
 RUN rpm -e cracklib-dicts --nodeps && \
