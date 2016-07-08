@@ -15,6 +15,6 @@ RUN chmod 400 /root/.ssh/authorized_keys
 
 RUN passwd --unlock root
 
-RUN echo export JAVA_HOME=/usr/java/jdk1.8.0_40/ > /etc/profile.d/java.sh
+RUN echo export JAVA_HOME=/usr/java/jdk1.8.0_92/ > /etc/profile.d/java.sh
 
 COPY files/supervisord.conf /etc/
