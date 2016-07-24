@@ -1,8 +1,7 @@
 FROM teradatalabs/centos6-java8-oracle
 MAINTAINER Sanjay Sharma <sanjay.sharma@teradata.com>
 
-ENV LDAP_PATH=/etc/ldap ROOT_CERTI_PATH=/etc/ldap/rootca JAVA_HOME=/usr/java/jdk1.8.0_92
-RUN mkdir -p $ROOT_CERTI_PATH
+ENV LDAP_PATH=/etc/ldap JAVA_HOME=/usr/java/jdk1.8.0_92
 
 # Import the Active Directory certificate into presto-coordinator
 COPY files $LDAP_PATH/files
@@ -36,5 +35,7 @@ RUN keytool -import -alias TestCA -storepass testldap -keystore $LDAP_PATH/coord
     keytool -import -alias coordinator -storepass testldap -keystore $LDAP_PATH/coordinator.jks \
     -file $LDAP_PATH/TestCA.cer
 
-# Copying the root certi to a new folder, as only root certi needs to be shared with container running presto-cli
-RUN cp $LDAP_PATH/caroot.cer $ROOT_CERTI_PATH
+# Import the root certificate of the issuer of the presto-coordinator certificate.
+# This would be used by clients ( cli, jdbc ) to run tests
+RUN keytool -import -alias caroot -storepass testldap -keystore $LDAP_PATH/cacerts.jks -noprompt \
+    -file $LDAP_PATH/caroot.cer
