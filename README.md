@@ -24,55 +24,79 @@ terdatalabs/cdh5-hive-slave`
 
 ## Releasing (pushing) docker image
 
-When you push (release) docker image to docker hub you should follow below  docker image releasing convention:
- - for snapshot versions (work in progress) a tag 'latest' should be updated and a separate tag should be created with git commit hash
- - for regular releases, all the rules of snapshot releasing applies and a new tag should be created with an increasing unique number. It is recommended to tag git version so it could be possible to match docker hub image version with source code version. Moreover we should avoid doing a release from other than master branch.
+All of the docker images in the repository share the same version number. This
+is because most of the images depend on a parent image that is also in the
+repository (e.g. teradatalabs/hdp2.3-master is FROM teradatalabs/hdp2.3-base),
+or are meant to be used together in testing (teradatalabs/cdh5-hive-master and
+teradatalabs/cdh5-hive-slave).
 
-### Manual
+Having all of the images on the same version number make troubleshooting easy:
+Iff all of the docker images you are using have the same version number then
+they are in a consistent state. 
 
-Doing a snapshot release:
+This means that we treat the repository as a single codebase that creates
+multiple artifacts (Docker images) that all need to be released together. The
+Makefile uses [docker-release](https://github.com/kokosing/docker-release) to
+automate this process and ensure that the images on dockerhub are in a
+consistent state provided all of the push operations run to completion.
 
-```
-docker login
-make teradatalabs/cdh5-hive
-docker push teradatalabs/cdh5-hive:latest
-docker tag teradatalabs/cdh5-hive:latest teradatalabs/cdh5-hive:<git_commit_head_commit_id>
-docker push teradatalabs/cdh5-hive:<git_commit_head_commit_id>
-```
+docker-release also handles tagging the images and repository appropriately so
+that you can easily find the Dockerfile used to create an image starting from
+just the tags on a Docker image.
 
-Doing a release version:
+To release a snapshot version of the repository do the following
 
-```
-# make sure you are on 'master' branch
-docker login
-make teradatalabs/cdh5-hive
-docker push teradatalabs/cdh5-hive:latest
-docker tag teradatalabs/cdh5-hive:latest teradatalabs/cdh5-hive:<git_commit_head_commit_id>
-docker push teradatalabs/cdh5-hive:<git_commit_head_commit_id>
-docker tag teradatalabs/cdh5-hive:latest teradatalabs/cdh5-hive:5
-docker push teradatalabs/cdh5-hive:5
-git tag teradatalabs/cdh5-hive/5
-git push --tags
-```
+1. `docker login`
+2. Verify in the Makefile that `VERSION` is set to something ending in -SNAPSHOT.
+3. `make snapshot`
 
-### Using docker-release tool
+To release a release (final) version of the repository do the following
 
-See https://github.com/kokosing/docker-release
+1. `docker login`
+2. Verify in the Makefile that `VERSION` is set to something *not* ending in -SNAPSHOT.
+3. `make release`
 
-Doing a snapshot:
+To release a snapshot or final version, you must log in to docker using the
+docker `login` command.
 
-```
-docker login
-docker-release -s teradatalabs/cdh5-hive
-```
+### Typical workflow
 
-Doing a release version:
+Normally developers are working on a snapshot version of the next release, and
+the `VERSION` macro in the Makefile should be set to a snapshot version such as
+35-SNAPSHOT. A typical workflow is as follows:
 
-```
-docker login
-docker-release teradatalabs/cdh5-hive
-```
- 
+1. Develop changes
+2. Commit changes
+3. `make snapshot` to push snapshot releases to dockerhub as needed
+4. Repeat as needed
+
+Eventually, version 35-SNAPSHOT is ready for release. To release version 35, do
+the following:
+
+1. Change `VERSION` to the release version: 35-SNAPSHOT -> 35
+2. Commit the repository
+3. `make release` to push the images to dockerhub and tag the repository
+4. Change `VERSION` to the next snapshot version: 35 -> 36-SNAPSHOT
+5. Commit the repository
+6. Continue developing as described above
+
+`make snapshot` does the following:
+
+* Updates the 'latest' tag for the image on dockerhub
+* Creates a tag for the image with the git hash of the git repository on dockerhub
+
+`make release` does the following:
+
+* Updates the 'latest' tag for the image on dockerhub
+* Creates a tag for the image on dockerhub with the git hash of the git repository
+* Creates a tag for the image on dockerhub with the $(VERSION) specified in the Makefile
+* Creates a tag in the git repository with the name release-$(VERSION)
+
+`docker-release` enforces several rules about the state of the repository when pushing to dockerhub:
+
+* For a snapshot or a release, the repository must be in a clean state (no uncommitted files)
+* For a release, the branch must be master
+
 ## How the build system works.
 
 At a high level, a docker image depends on two things:

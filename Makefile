@@ -1,3 +1,19 @@
+#
+# For normal use, VERSION should be a snapshot version. I.e. one ending in
+# -SNAPSHOT, such as 35-SNAPSHOT
+#
+# When a version is final, do the following:
+# 1) Change VERSION to a non-SNAPSHOT release: 35-SNAPSHOT -> 35
+# 2) Commit the repo
+# 3) `make release' to push the images to dockerhub and tag the repo
+# 4) Change VERSION to tne next SHAPSHOT release: 35 -> 36-SNAPSHOT
+# 5) Commit
+# 6) Continue developing
+# 7) `make snapshot' as needed to push snapshot images to dockerhub
+#
+VERSION := 5-SNAPSHOT
+RELEASE_TYPE := $(if $(filter %-SNAPSHOT, $(VERSION)),snapshot,release)
+
 DEPEND_SH=depend.sh
 DEPDIR=depends
 
@@ -24,6 +40,19 @@ DEPS:=$(foreach dockerfile,$(DOCKERFILES),$(DEPDIR)/$(dockerfile:/Dockerfile=.d)
 all: $(IMAGE_DIRS)
 
 #
+# Release images to Dockerhub using docker-release
+# https://github.com/kokosing/docker-release
+#
+.PHONY: release snapshot
+release: $(IMAGE_DIRS)
+	[ "$(RELEASE_TYPE)" = "$@" ] || ( echo "$(VERSION) is not a $@ version"; exit 1 )
+	docker-release --no-build --release $(VERSION) --tag-once $^
+
+snapshot: $(IMAGE_DIRS)
+	[ "$(RELEASE_TYPE)" = "$@" ] || ( echo "$(VERSION) is not a $@ version"; exit 1 )
+	docker-release --no-build --snapshot --tag-once $^
+
+#
 # For generating/cleaning the depends directory without building any images.
 # Because the Makefile includes the .d files, and will create them if they
 # don't exist, an empty target is sufficient to get make to rebuild the
@@ -48,7 +77,7 @@ $(DEPDIR)/%.d: %/Dockerfile $(DEPEND_SH)
 	$(SHELL) $(DEPEND_SH) $< $(IMAGE_DIRS) >$@
 
 #
-# Finally, the pattern rule that actually invokes docker build. If
+# Finally, the static pattern rule that actually invokes docker build. If
 # teradatalabs/foo has a dependency on a foo_parent image in this repo, make
 # knows about it via the included .d file, and builds foo_parent before it
 # builds foo.
