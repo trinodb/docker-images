@@ -1,14 +1,14 @@
 #!/bin/sh
 
 usage() {
-	echo "$0 {target image} [known -images]" >&2
+	echo "$0 {target image} [known images]" >&2
 }
 
 find_parent() {
 	cat $1 | awk '
 		BEGIN {
 			ec = 1;
-			FROM_PATTERN = "^[[:space:]]*FROM";
+			FROM_PATTERN = "^\s*FROM";
 		}
 
 		$0 ~ FROM_PATTERN && parent {
