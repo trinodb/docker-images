@@ -8,7 +8,7 @@ find_parent() {
 	cat $1 | awk '
 		BEGIN {
 			ec = 1;
-			FROM_PATTERN = "^\s*FROM";
+			FROM_PATTERN = "^\\s*FROM";
 		}
 
 		$0 ~ FROM_PATTERN && parent {
