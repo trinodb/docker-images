@@ -10,6 +10,7 @@ RUN echo -e "\n\n[include]\nfiles = /etc/supervisord.d/*.conf" \
 	>> /etc/supervisord.conf
 
 # Add the additional supervisord configuration
+ADD files/supervisord.conf /etc/supervisord.conf
 COPY files/supervisord.d/* /etc/supervisord.d/
 
 # Copy the real config in now that setup has run
