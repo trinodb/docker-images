@@ -9,11 +9,6 @@ RUN keytool -import -alias presto -storepass changeit -keystore $JAVA_HOME/jre/l
     -noprompt -trustcacerts -file $LDAP_PATH/files/active-directory-certificate.crt && \
     rm -rf $LDAP_PATH/files/active-directory-certificate.crt
 
-# Import the Open LDAP certificate into presto-coordinator
-RUN keytool -import -alias prestowithopenldap -storepass changeit -keystore $JAVA_HOME/jre/lib/security/cacerts \
-    -noprompt -trustcacerts -file $LDAP_PATH/files/openldap-certificate.pem && \
-    rm -rf $LDAP_PATH/files/openldap-certificate.pem
-
 # Generate a keystore.
 RUN keytool -genkey -alias coordinator -storepass testldap -keystore $LDAP_PATH/coordinator.jks \
     -keypass testldap -keyalg RSA -sigalg SHA1withRSA -dname "CN=presto-master, OU=, O=, L=, S=, C="
