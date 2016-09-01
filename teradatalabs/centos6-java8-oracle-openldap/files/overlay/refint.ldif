@@ -1,0 +1,15 @@
+# This overlay ensures that when user accounts are modified or deleted,
+# the corresponding member attribute in groups is also handled accordingly.
+dn: cn=module{1},cn=config
+cn: module
+objectclass: olcModuleList
+objectclass: top
+olcmoduleload: refint.la
+
+dn: olcOverlay={1}refint,olcDatabase={2}bdb,cn=config
+objectClass: olcConfig
+objectClass: olcOverlayConfig
+objectClass: olcRefintConfig
+objectClass: top
+olcOverlay: {1}refint
+olcRefintAttribute: memberof member manager owner
