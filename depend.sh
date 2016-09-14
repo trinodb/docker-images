@@ -5,7 +5,7 @@ usage() {
 }
 
 find_parent() {
-	cat $1 | awk '
+	awk '
 		BEGIN {
 			ec = 1;
 			FROM_PATTERN = "^\\s*FROM";
@@ -25,7 +25,7 @@ find_parent() {
 
 		END {
 			exit ec
-		}'
+		}' "$1"
 }
 
 contains() {
@@ -40,11 +40,11 @@ if [ $# -lt 2 ]; then
 fi
 
 target_dockerfile=$1
-target_image=$(dirname $target_dockerfile)
+target_image=$(dirname "$target_dockerfile")
 shift
-known_images="$@"
+known_images="$*"
 
-parent_image=$(find_parent $target_dockerfile)
+parent_image=$(find_parent "$target_dockerfile")
 ec=$?
 case $ec in
 	0) ;;
@@ -58,8 +58,8 @@ case $ec in
 		;;
 esac
 
-if contains $parent_image $known_images; then
-	echo $target_image: $parent_image
+if contains "$parent_image" "$known_images"; then
+	echo "$target_image: $parent_image"
 else
-	echo $target_image:
+	echo "$target_image:"
 fi
