@@ -1,5 +1,7 @@
-FROM teradatalabs/hdp2.3-repo
+FROM teradatalabs/centos6-ssh-oj8
 MAINTAINER Eric Diven <eric.diven@teradata.com>
+
+RUN wget -nv http://sdvl3pxe001.labs.teradata.com/hdp.repo -P /etc/yum.repos.d
 
 RUN yum install -y hadoop-hdfs-namenode \
 	&& yum install -y hadoop-hdfs-secondarynamenode \
