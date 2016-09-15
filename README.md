@@ -112,6 +112,54 @@ docker images used by the project using the following process.
 8. Create a PR against upstream/master that uses the new release of the docker images.
 9. After Travis passes, merge the PR
 
+## Docker build arguments (ARG, --build-arg)
+
+Docker build arguments are documented in the [Dockerfile
+reference](https://docs.docker.com/engine/reference/builder/#/arg)
+
+Args are used by specifying the ARG directive in a Dockerfile:
+
+```
+ARG FOO
+RUN echo $FOO >/etc/foo
+```
+
+The value of FOO then needs to be set in the Makefile:
+
+```
+FOO := Docker images build on $(shell uname -s) are superior to all others.
+```
+
+Note that `docker build` does *not* allow the variable reference `$FOO` to be
+written `${FOO}` or `$(FOO)`. Further note that it won't warn you about this;
+instead, you'll likely end up with an error later in the build or a broken
+image.
+
+`docker build` won't let you pass `--build-arg`s that don't have a
+corresponding key in the Dockerfile. This means that the build system can't
+just pass the union of all of the `--build-arg`s needed by every Dockerfile in
+the repository. The build system handles this largely the same way it handles
+figuring out what the correct dependency order is for building the images,
+described below.
+
+Build args with a default value are not handled at present. Feel free to add
+that functionality in `flag.sh` if needed.
+
+## Java
+
+Individual Dockerfiles shouldn't contain the URL for downloading Java, the name
+of the RPM, or the path that java gets installed in. Doing this makes upgrading
+Java across the repo a pain with a bunch of touch points.
+
+Instead, the build system exposes the [Docker build
+arguments](https://docs.docker.com/engine/reference/builder/#/arg) `JDK_URL`,
+`JDK_RPM`, and `JDK_PATH`. These can be used in your Dockerfile as follows:
+
+```
+ARG JDK_URL
+RUN wget $JDK_URL
+```
+
 ## How the build system works.
 
 At a high level, a docker image depends on two things:

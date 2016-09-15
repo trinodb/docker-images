@@ -13,13 +13,16 @@
 FROM jdeathe/centos-ssh:centos-6-1.2.0
 MAINTAINER Christina Wallin <christina.wallin@teradata.com>
 
+ARG JDK_URL
+ARG JDK_RPM
+ARG JDK_PATH
+
 # Install Oracle Java and presto-admin dependences (already has python 2.6)
 RUN yum upgrade ca-certificates --disablerepo=epel -y && \
     yum update -y && \
     yum install -y wget bzip2 gcc python-devel tar expect && \
-    wget --header "Cookie: oraclelicense=accept-securebackup-cookie" \
-        http://download.oracle.com/otn-pub/java/jdk/8u92-b14/jdk-8u92-linux-x64.rpm && \
-    rpm -ivh jdk-8u92-linux-x64.rpm && rm jdk-8u92-linux-x64.rpm
+    wget --header "Cookie: oraclelicense=accept-securebackup-cookie" $JDK_URL && \
+    rpm -ivh $JDK_RPM && rm $JDK_RPM
 
 # Copy Vagrant insecure SSH keys for passwordless SSH between
 # containers and to localhost
@@ -51,7 +54,7 @@ RUN printf "\nSSH_USER_PASSWORD=password" >> /etc/services-config/ssh/ssh-bootst
 
 EXPOSE 22 8080
 
-ENV JAVA_HOME /usr/java/jdk1.8.0_92/jre/
+ENV JAVA_HOME $JDK_PATH/jre/
 
 # Clean up
 RUN yum -y clean all && rm -rf /tmp/* /var/tmp/*

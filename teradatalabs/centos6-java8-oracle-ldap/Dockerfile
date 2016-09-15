@@ -1,7 +1,9 @@
 FROM teradatalabs/centos6-java8-oracle
 MAINTAINER Sanjay Sharma <sanjay.sharma@teradata.com>
 
-ENV LDAP_PATH=/etc/ldap JAVA_HOME=/usr/java/jdk1.8.0_92
+ARG JDK_PATH
+
+ENV LDAP_PATH=/etc/ldap JAVA_HOME=$JDK_PATH
 
 # Import the Active Directory certificate into presto-coordinator
 COPY files $LDAP_PATH/files

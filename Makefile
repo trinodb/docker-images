@@ -15,9 +15,38 @@ VERSION := 7-SNAPSHOT
 RELEASE_TYPE := $(if $(filter %-SNAPSHOT, $(VERSION)),snapshot,release)
 
 DEPEND_SH=depend.sh
+FLAG_SH=flag.sh
 DEPDIR=depends
+FLAGDIR=flags
 
 ORGDIR=teradatalabs
+
+#
+# This should be the only place you need to touch to update the version of Java
+# we install in the images. Every other variable should be derived directly or
+# indirectly from this one, and you should pass those variables to the
+# Dockerfiles using ARG and --build-arg.
+#
+JDK_URL := http://download.oracle.com/otn-pub/java/jdk/8u92-b14/jdk-8u92-linux-x64.rpm
+JDK_RPM := $(notdir $(JDK_URL))
+INSTALL_JDK_BUILD_ARGS := \
+	--build-arg JDK_URL=$(JDK_URL) \
+	--build-arg JDK_RPM=$(JDK_RPM)
+
+#
+# Generate path to installed JDK from the JDK RPM name.
+#
+# Assumes that the Java version number in the installed JDK path will remain in
+# the format 1.<major version>.0_<update number>
+#
+# jdk-8u92-linux-x64.rpm -> /usr/java/jdk1.8.0_92/
+#
+# Use only BREs in sed for cross-platform compatibility.
+#
+JDK_PATH := $(shell echo $(JDK_RPM) | \
+       	sed 's!jdk-\([0-9][0-9]*\)u\([0-9][0-9]*\).*!/usr/java/jdk1.\1.0_\2!')
+JDK_PATH_BUILD_ARGS := \
+	--build-arg JDK_PATH=$(JDK_PATH)
 
 #
 # In theory, we could just find all of the Dockerfiles and derive IMAGE_DIRS
@@ -29,6 +58,7 @@ ORGDIR=teradatalabs
 IMAGE_DIRS=$(shell find $(ORGDIR) -type f -name Dockerfile -exec dirname {} \;)
 DOCKERFILES:=$(addsuffix /Dockerfile,$(IMAGE_DIRS))
 DEPS:=$(foreach dockerfile,$(DOCKERFILES),$(DEPDIR)/$(dockerfile:/Dockerfile=.d))
+FLAGS:=$(foreach dockerfile,$(DOCKERFILES),$(FLAGDIR)/$(dockerfile:/Dockerfile=.flags))
 
 #
 # Make a list of the Docker images we depend on, but aren't built from
@@ -69,11 +99,16 @@ snapshot: $(IMAGE_DIRS)
 # dependencies if needed. This is mostly useful for testing changes to the
 # script that creates the .d files.
 #
-.PHONY: dep clean-dep
+.PHONY: dep clean-dep flag clean-flag
 dep:
 
 clean-dep:
 	-rm -r $(DEPDIR)
+
+flag:
+
+clean-flag:
+	-rm -r $(FLAGDIR)
 
 #
 # Include the dependencies for every image we know how to build. These don't
@@ -81,10 +116,15 @@ clean-dep:
 # run that rule for every .d file in $(DEPS).
 #
 include $(DEPS)
+include $(FLAGS)
 
 $(DEPDIR)/%.d: %/Dockerfile $(DEPEND_SH)
 	-mkdir -p $(dir $@)
 	$(SHELL) $(DEPEND_SH) $< $(IMAGE_DIRS) >$@
+
+$(FLAGDIR)/%.flags: %/Dockerfile $(FLAG_SH)
+	-mkdir -p $(dir $@)
+	$(SHELL) $(FLAG_SH) $< >$@
 
 #
 # Finally, the static pattern rule that actually invokes docker build. If
@@ -92,8 +132,14 @@ $(DEPDIR)/%.d: %/Dockerfile $(DEPEND_SH)
 # knows about it via the included .d file, and builds foo_parent before it
 # builds foo.
 #
+# We don't need to specify any dependencies other than the Dockerfile for the
+# image because these are .PHONY targets. In particular, if the DBFLAGS for an
+# image have changed without the Dockerfile changing, it's OK because we'll
+# invoke docker build for the image anyway and let Docker figure out if
+# anything has changed that requires a rebuild.
+#
 $(IMAGE_DIRS): %: %/Dockerfile
-	cd $(dir $<) && docker build -t $@ .
+	cd $(dir $<) && docker build $(DBFLAGS_$@) -t $@ .
 
 #
 # Static pattern rule to pull docker images that are external dependencies of
