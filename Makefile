@@ -22,7 +22,7 @@ ORGDIR=teradatalabs
 #
 # In theory, we could just find all of the Dockerfiles and derive IMAGE_DIRS
 # from that, but make's dir function includes the trailing slash, which we'd
-# have to strip off to get a valid Docker tag name.
+# have to strip off to get a valid Docker image name.
 #
 # Also, find on Mac doesn't support -exec {} +
 #
@@ -31,10 +31,20 @@ DOCKERFILES:=$(addsuffix /Dockerfile,$(IMAGE_DIRS))
 DEPS:=$(foreach dockerfile,$(DOCKERFILES),$(DEPDIR)/$(dockerfile:/Dockerfile=.d))
 
 #
+# Make a list of the Docker images we depend on, but aren't built from
+# Dockerfiles in this repository. Order doesn't matter, but sort() has the
+# side-effect of making the list unique.
+#
+EXTERNAL_DEPS := \
+	$(sort \
+		$(foreach dockerfile,$(DOCKERFILES),\
+			$(shell $(SHELL) $(DEPEND_SH) -x $(dockerfile) $(DOCKERFILES))))
+
+#
 # The image directories exist in the filesystem. Make them .PHONY so make
 # actually builds them.
 #
-.PHONY: $(IMAGE_DIRS)
+.PHONY: $(IMAGE_DIRS) $(EXTERNAL_DEPS)
 
 # By default, build all of the images.
 all: $(IMAGE_DIRS)
@@ -84,3 +94,17 @@ $(DEPDIR)/%.d: %/Dockerfile $(DEPEND_SH)
 #
 $(IMAGE_DIRS): %: %/Dockerfile
 	cd $(dir $<) && docker build -t $@ .
+
+#
+# Static pattern rule to pull docker images that are external dependencies of
+# this repository.
+#
+# Note that the $(DEPEND_SH) script substitutes : -> @ in the image:tag of
+# external dependencies because there's no way to escape a colon in a target or
+# prerequisite name[0]. The subst() function reverses this transformation for
+# docker pull.
+#
+# [0] http://www.mail-archive.com/bug-make@gnu.org/msg03318.html
+#
+$(EXTERNAL_DEPS): %:
+	docker pull $(subst @,:,$@)

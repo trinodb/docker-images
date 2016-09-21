@@ -97,6 +97,21 @@ the following:
 * For a snapshot or a release, the repository must be in a clean state (no uncommitted files)
 * For a release, the branch must be master
 
+## Upgrading Docker images for consumers
+
+For a project that uses Travis for continuous integration, you can upgrade the
+docker images used by the project using the following process.
+
+1. Develop locally, testing your changes
+2. When you are satisfied with your changes, run `make snapshot` to release a snapshot build to dockerhub.
+3. Create a branch of the dependent project
+4. Set the tag for the images on the project to the tag of the snapshot build
+5. Push the branch to github.
+6. Merge your changes into docker-images/master
+7. Update the release version as described above, and run `make release`
+8. Create a PR against upstream/master that uses the new release of the docker images.
+9. After Travis passes, merge the PR
+
 ## How the build system works.
 
 At a high level, a docker image depends on two things:
