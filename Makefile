@@ -11,7 +11,7 @@
 # 6) Continue developing
 # 7) `make snapshot' as needed to push snapshot images to dockerhub
 #
-VERSION := 7-SNAPSHOT
+VERSION := 7
 RELEASE_TYPE := $(if $(filter %-SNAPSHOT, $(VERSION)),snapshot,release)
 
 DEPEND_SH=depend.sh
