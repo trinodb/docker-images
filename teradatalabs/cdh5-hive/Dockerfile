@@ -4,17 +4,6 @@ MAINTAINER Stanislaw Ogorkis <stanislaw.ogorkis@teradata.com>
 # INSTALL HADOOP AND HIVE
 RUN yum install -y hadoop-conf-pseudo hive hive-server2 zookeeper-server
 
-# INSTALL SUPERVISORD
-RUN yum install -y python-setuptools \
-&& easy_install pip \
-&& pip install supervisor \
-&& mkdir /etc/supervisord.d/
-
-# INSTALL MISSING supervisor dependency
-RUN wget http://dl.fedoraproject.org/pub/epel/6/x86_64/python-meld3-0.6.7-1.el6.x86_64.rpm
-RUN rpm -ihv python-meld3-0.6.7-1.el6.x86_64.rpm
-RUN rm python-meld3-0.6.7-1.el6.x86_64.rpm
-
 # INSTALL MYSQL (Hive Metastore)
 RUN yum install -y mysql-server yum install mysql-connector-java
 RUN ln -s /usr/share/java/mysql-connector-java.jar /usr/lib/hive/lib/mysql-connector-java.jar

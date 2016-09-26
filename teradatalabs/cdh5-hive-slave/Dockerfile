@@ -7,18 +7,7 @@ RUN \
       hadoop-hdfs-datanode \
       hadoop-yarn-nodemanager \
       python-setuptools \
- && yum -y clean all 
-
-# INSTALL SUPERVISORD
-RUN \
-    easy_install pip \
- && pip install supervisor \
- && mkdir /etc/supervisord.d/
-
-# INSTALL MISSING supervisor dependency
-RUN wget http://dl.fedoraproject.org/pub/epel/6/x86_64/python-meld3-0.6.7-1.el6.x86_64.rpm
-RUN rpm -ihv python-meld3-0.6.7-1.el6.x86_64.rpm
-RUN rm python-meld3-0.6.7-1.el6.x86_64.rpm
+ && yum -y clean all
 
 # CLEANUP
 RUN rm -rf /tmp/* /var/tmp/*

@@ -13,17 +13,7 @@ RUN \
      mysql-server \
      mysql-connector-java \
      python-setuptools \
-&& yum -y clean all \
-
-# INSTALL SUPERVISORD
-&& easy_install pip \
-&& pip install supervisor \
-&& mkdir /etc/supervisord.d/
-
-# INSTALL MISSING supervisor dependency
-RUN wget http://dl.fedoraproject.org/pub/epel/6/x86_64/python-meld3-0.6.7-1.el6.x86_64.rpm && \
-       rpm -ihv python-meld3-0.6.7-1.el6.x86_64.rpm && \
-       rm python-meld3-0.6.7-1.el6.x86_64.rpm
+&& yum -y clean all
 
 # INSTALL MYSQL (Hive Metastore)
 RUN ln -s /usr/share/java/mysql-connector-java.jar /usr/lib/hive/lib/mysql-connector-java.jar
