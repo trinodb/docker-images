@@ -22,7 +22,28 @@ RUN yum upgrade ca-certificates --disablerepo=epel -y && \
     yum update -y && \
     yum install -y wget bzip2 gcc python-devel tar expect && \
     wget --header "Cookie: oraclelicense=accept-securebackup-cookie" $JDK_URL && \
-    rpm -ivh $JDK_RPM && rm $JDK_RPM
+    rpm -ivh $JDK_RPM && rm $JDK_RPM && \
+    rm -rf $JDK_PATH/*src.zip \
+           $JDK_PATH/lib/missioncontrol \
+           $JDK_PATH/lib/visualvm \
+           $JDK_PATH/lib/*javafx* \
+           $JDK_PATH/jre/lib/plugin.jar \
+           $JDK_PATH/jre/lib/ext/jfxrt.jar \
+           $JDK_PATH/jre/bin/javaws \
+           $JDK_PATH/jre/lib/javaws.jar \
+           $JDK_PATH/jre/lib/desktop \
+           $JDK_PATH/jre/plugin \
+           $JDK_PATH/jre/lib/deploy* \
+           $JDK_PATH/jre/lib/*javafx* \
+           $JDK_PATH/jre/lib/*jfx* \
+           $JDK_PATH/jre/lib/amd64/libdecora_sse.so \
+           $JDK_PATH/jre/lib/amd64/libprism_*.so \
+           $JDK_PATH/jre/lib/amd64/libfxplugins.so \
+           $JDK_PATH/jre/lib/amd64/libglass.so \
+           $JDK_PATH/jre/lib/amd64/libgstreamer-lite.so \
+           $JDK_PATH/jre/lib/amd64/libjavafx*.so \
+           $JDK_PATH/jre/lib/amd64/libjfx*.so && \
+    yum -y clean all && rm -rf /tmp/* /var/tmp/*
 
 # Copy Vagrant insecure SSH keys for passwordless SSH between
 # containers and to localhost
