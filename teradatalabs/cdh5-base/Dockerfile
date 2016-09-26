@@ -8,6 +8,9 @@ RUN wget http://archive.cloudera.com/cdh5/one-click-install/redhat/6/x86_64/clou
   && rpm --import http://archive.cloudera.com/cdh5/redhat/6/x86_64/cdh/RPM-GPG-KEY-cloudera \
   && sed -i '/^baseurl=/c\baseurl=https://archive.cloudera.com/cdh5/redhat/6/x86_64/cdh/5.8.2/' /etc/yum.repos.d/cloudera-cdh5.repo \
 
+# Install hive, as it's needed by all child images
+  && yum install -y hive \
+
 # Install supervisord
   && yum install -y python-setuptools \
   && easy_install pip \
