@@ -1,4 +1,9 @@
-# docker-dnsmasq
+# docker-dnsmasq [![][layers-badge]][layers-link] [![][version-badge]][dockerhub-link]
+           
+[layers-badge]: https://images.microbadger.com/badges/image/teradatalabs/dns.svg
+[layers-link]: https://microbadger.com/images/teradatalabs/dns
+[version-badge]: https://images.microbadger.com/badges/version/teradatalabs/dns.svg
+[dockerhub-link]: https://hub.docker.com/r/teradatalabs/dns
 
 Based on https://github.com/andyshinn/docker-dnsmasq
 
