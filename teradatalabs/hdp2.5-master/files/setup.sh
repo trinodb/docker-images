@@ -55,9 +55,9 @@ mysql_install_db
 /usr/bin/mysqld_safe &
 sleep 10s
 
-cp /usr/hdp/2.3.*/hive/scripts/metastore/upgrade/mysql/hive-schema-0.14.0.mysql.sql /tmp/hive-schema-0.14.0.mysql.sql
+cp /usr/hdp/2.5.*/hive/scripts/metastore/upgrade/mysql/hive-schema-0.14.0.mysql.sql /tmp/hive-schema-0.14.0.mysql.sql
 echo "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION; FLUSH PRIVILEGES;" | mysql
-echo "CREATE DATABASE metastore; USE metastore; SOURCE /usr/hdp/2.3.0.0-2557/hive/scripts/metastore/upgrade/mysql/hive-schema-0.14.0.mysql.sql;" | mysql
+echo "CREATE DATABASE metastore; USE metastore; SOURCE /usr/hdp/2.5.0.0-1245/hive/scripts/metastore/upgrade/mysql/hive-schema-0.14.0.mysql.sql;" | mysql
 /usr/bin/mysqladmin -u root password 'root'
 rm -f /tmp/hive-schema-0.14.0.mysql.sql
 

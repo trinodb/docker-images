@@ -26,7 +26,7 @@ terdatalabs/cdh5-hive-slave`
 
 All of the docker images in the repository share the same version number. This
 is because most of the images depend on a parent image that is also in the
-repository (e.g. teradatalabs/hdp2.3-master is FROM teradatalabs/hdp2.3-base),
+repository (e.g. teradatalabs/hdp2.5-master is FROM teradatalabs/hdp2.5-base),
 or are meant to be used together in testing (teradatalabs/cdh5-hive-master and
 teradatalabs/cdh5-hive-slave).
 

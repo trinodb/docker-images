@@ -1,4 +1,4 @@
-FROM teradatalabs/hdp2.3-base
+FROM teradatalabs/hdp2.5-base
 MAINTAINER Eric Diven <eric.diven@teradata.com>
 
 # Good grief. Get rid of the default hdp config.
