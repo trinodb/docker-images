@@ -13,7 +13,7 @@
 # limitations under the License.
 
 FROM teradatalabs/cdh5-hive
-MAINTAINER Karol Sobczak <karol.sobczak@teradata.com>
+MAINTAINER Teradata Docker Team <docker@teradata.com>
 
 # INSTALL KERBEROS
 RUN yum install -y krb5-libs krb5-server krb5-workstation

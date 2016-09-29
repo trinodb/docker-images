@@ -13,6 +13,7 @@
 # limitations under the License.
 
 FROM ubuntu:14.04
+MAINTAINER Teradata Docker Team <docker@teradata.com>
 
 RUN echo "deb http://ppa.launchpad.net/fkrull/deadsnakes/ubuntu trusty main" \
     > /etc/apt/sources.list.d/fkrull-deadsnakes-trusty.list \

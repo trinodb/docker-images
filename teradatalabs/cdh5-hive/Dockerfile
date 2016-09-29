@@ -13,7 +13,7 @@
 # limitations under the License.
 
 FROM teradatalabs/cdh5-base
-MAINTAINER Stanislaw Ogorkis <stanislaw.ogorkis@teradata.com>
+MAINTAINER Teradata Docker Team <docker@teradata.com>
 
 # INSTALL HADOOP AND HIVE
 RUN yum install -y hadoop-conf-pseudo hive hive-server2 zookeeper-server

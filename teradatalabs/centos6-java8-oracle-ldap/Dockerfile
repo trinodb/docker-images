@@ -13,7 +13,7 @@
 # limitations under the License.
 
 FROM teradatalabs/centos6-java8-oracle
-MAINTAINER Sanjay Sharma <sanjay.sharma@teradata.com>
+MAINTAINER Teradata Docker Team <docker@teradata.com>
 
 ARG JDK_PATH
 

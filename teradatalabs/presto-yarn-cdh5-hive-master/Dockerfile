@@ -13,7 +13,7 @@
 # limitations under the License.
 
 FROM teradatalabs/cdh5-hive-master
-MAINTAINER Grzegorz Kokosiński <grzegorz.kokosinksi@teradata.com>
+MAINTAINER Teradata Docker Team <docker@teradata.com>
 
 RUN yum install -y openssh-server openssh-clients passwd libcgroup unzip && yum -y clean all
 

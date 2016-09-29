@@ -13,7 +13,7 @@
 # limitations under the License.
 
 FROM teradatalabs/hdp2.5-base
-MAINTAINER Eric Diven <eric.diven@teradata.com>
+MAINTAINER Teradata Docker Team <docker@teradata.com>
 
 # Good grief. Get rid of the default hdp config.
 RUN rm -r /etc/hadoop/conf/*

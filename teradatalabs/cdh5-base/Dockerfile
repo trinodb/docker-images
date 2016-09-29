@@ -13,7 +13,7 @@
 # limitations under the License.
 
 FROM teradatalabs/centos6-java8-oracle
-MAINTAINER Stanislaw Ogorkis <stanislaw.ogorkis@teradata.com>
+MAINTAINER Teradata Docker Team <docker@teradata.com>
 
 # Setup CDH repo, pin the CDH distribution to a concrete version
 RUN wget http://archive.cloudera.com/cdh5/one-click-install/redhat/6/x86_64/cloudera-cdh-5-0.x86_64.rpm \

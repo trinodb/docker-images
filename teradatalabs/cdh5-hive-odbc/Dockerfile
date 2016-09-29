@@ -13,7 +13,7 @@
 # limitations under the License.
 
 FROM teradatalabs/cdh5-hive
-MAINTAINER Sanjay Sharma <sanjay.sharma@teradata.com>
+MAINTAINER Teradata Docker Team <docker@teradata.com>
 
 # INSTALL unixODBC and argparse
 RUN yum install -y unixODBC \

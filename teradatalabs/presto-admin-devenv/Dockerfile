@@ -13,7 +13,7 @@
 # limitations under the License.
 
 FROM centos:6
-MAINTAINER Grzegorz Kokosiński <grzegorz.kokosinski@teradata.com>
+MAINTAINER Teradata Docker Team <docker@teradata.com>
 
 # Install presto-admin dependences (already has python 2.6)
 RUN \

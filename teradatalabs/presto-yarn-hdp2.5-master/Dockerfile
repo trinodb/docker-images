@@ -13,7 +13,7 @@
 # limitations under the License.
 
 FROM teradatalabs/hdp2.5-master
-MAINTAINER Grzegorz Kokosiński <grzegorz.kokosinksi@teradata.com>
+MAINTAINER Teradata Docker Team <docker@teradata.com>
 
 ARG JDK_PATH
 

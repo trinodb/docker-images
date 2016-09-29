@@ -13,7 +13,7 @@
 # limitations under the License.
 
 FROM teradatalabs/cdh5-base
-MAINTAINER Lukasz Osipiuk <lukasz.osipiuk@teradata.com>
+MAINTAINER Teradata Docker Team <docker@teradata.com>
 
 # INSTALL HDFS DATANODE and YARN NODEMANAGER
 RUN \

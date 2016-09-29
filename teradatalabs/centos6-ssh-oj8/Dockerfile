@@ -13,7 +13,7 @@
 # limitations under the License.
 
 FROM jdeathe/centos-ssh:centos-6-1.2.0
-MAINTAINER Christina Wallin <christina.wallin@teradata.com>
+MAINTAINER Teradata Docker Team <docker@teradata.com>
 
 ARG JDK_URL
 ARG JDK_RPM

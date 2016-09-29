@@ -13,7 +13,7 @@
 # limitations under the License.
 
 FROM centos:6
-MAINTAINER Stanislaw Ogorkis <stanislaw.ogorkis@teradata.com>
+MAINTAINER Teradata Docker Team <docker@teradata.com>
 
 ARG JDK_URL
 ARG JDK_RPM
