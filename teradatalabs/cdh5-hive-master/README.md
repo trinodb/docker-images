@@ -12,13 +12,6 @@ for general correctness testing.
 
 Image is to be used together with one ore more containers running `cdh5-hive-slave` image.
 
-## Build
-
-```
-docker build -t teradatalabs/cdh5-hive-master .
-docker run --rm -it teradatalabs/cdh5-hive-master /bin/bash
-```
-
 ## Run
 
 ### Directly
@@ -60,5 +53,5 @@ services:
 
 ## Oracle license
 
-By using this container, you accept the Oracle Binary Code License Agreement for Java SE available here:
+By using this image, you accept the Oracle Binary Code License Agreement for Java SE available here:
 [http://www.oracle.com/technetwork/java/javase/terms/license/index.html](http://www.oracle.com/technetwork/java/javase/terms/license/index.html)

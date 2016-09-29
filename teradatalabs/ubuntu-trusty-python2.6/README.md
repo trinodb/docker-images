@@ -4,3 +4,5 @@
 [layers-link]: https://microbadger.com/images/teradatalabs/ubuntu-trusty-python2.6
 [version-badge]: https://images.microbadger.com/badges/version/teradatalabs/ubuntu-trusty-python2.6.svg
 [dockerhub-link]: https://hub.docker.com/r/teradatalabs/ubuntu-trusty-python2.6
+
+Ubuntu Trusty + Python 2.6

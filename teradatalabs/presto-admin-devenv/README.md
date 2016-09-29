@@ -4,3 +4,5 @@
 [layers-link]: https://microbadger.com/images/teradatalabs/presto-admin-devenv
 [version-badge]: https://images.microbadger.com/badges/version/teradatalabs/presto-admin-devenv.svg
 [dockerhub-link]: https://hub.docker.com/r/teradatalabs/presto-admin-devenv
+
+A development environment image for Presto Admin.
