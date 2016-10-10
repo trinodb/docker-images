@@ -21,10 +21,7 @@ RUN \
       hadoop-hdfs-datanode \
       hadoop-yarn-nodemanager \
       python-setuptools \
- && yum -y clean all
-
-# CLEANUP
-RUN rm -rf /tmp/* /var/tmp/*
+ && yum -y clean all && rm -rf /tmp/* /var/tmp/*
 
 # ADD SUPERVISORD CONFS
 ADD files/supervisord.conf /etc/supervisord.conf
