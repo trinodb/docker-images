@@ -21,7 +21,6 @@ ARG JDK_PATH
 
 # Install Oracle Java and presto-admin dependences (already has python 2.6)
 RUN yum upgrade ca-certificates --disablerepo=epel -y && \
-    yum update -y && \
     yum install -y wget bzip2 gcc python-devel tar expect && \
     wget --header "Cookie: oraclelicense=accept-securebackup-cookie" $JDK_URL && \
     rpm -ivh $JDK_RPM && rm $JDK_RPM && \

@@ -20,8 +20,7 @@ ARG JDK_RPM
 ARG JDK_PATH
 
 # Install Oracle Java, trim it down and clean up temporary files after installation
-RUN yum update -y && \
-    yum install -y wget && \
+RUN yum install -y wget && \
     wget --header "Cookie: oraclelicense=accept-securebackup-cookie" $JDK_URL && \
     rpm -ivh $JDK_RPM && rm $JDK_RPM && \
     rm -rf $JDK_PATH/*src.zip \
