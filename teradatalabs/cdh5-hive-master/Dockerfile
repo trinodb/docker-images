@@ -27,7 +27,7 @@ RUN \
      mysql-server \
      mysql-connector-java \
      python-setuptools \
-&& yum -y clean all
+  && yum -y clean all && rm -rf /tmp/* /var/tmp/*
 
 # INSTALL MYSQL (Hive Metastore)
 RUN ln -s /usr/share/java/mysql-connector-java.jar /usr/lib/hive/lib/mysql-connector-java.jar
@@ -46,7 +46,7 @@ RUN rm -rf /etc/hadoop/conf/*
 COPY files/conf-setup/ /etc/hadoop/conf
 
 # RUN SETUP script
-RUN /root/setup.sh
+RUN /root/setup.sh && rm -rf /tmp/* /var/tmp/*
 
 # COPY TARGET CONFIGURATION
 COPY files/conf/ /etc/hadoop/conf
