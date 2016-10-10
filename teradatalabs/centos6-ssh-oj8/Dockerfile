@@ -20,8 +20,7 @@ ARG JDK_RPM
 ARG JDK_PATH
 
 # Install Oracle Java and presto-admin dependences (already has python 2.6)
-RUN yum upgrade ca-certificates --disablerepo=epel -y && \
-    yum install -y \
+RUN yum install -y \
       wget \
       bzip2 \
       gcc \
