@@ -14,6 +14,8 @@
 VERSION := 11-SNAPSHOT
 RELEASE_TYPE := $(if $(filter %-SNAPSHOT, $(VERSION)),snapshot,release)
 
+LABEL := com.teradata.git.hash=$(shell git rev-parse HEAD)
+
 DEPEND_SH=depend.sh
 FLAG_SH=flag.sh
 DEPDIR=depends
@@ -139,7 +141,7 @@ $(FLAGDIR)/%.flags: %/Dockerfile $(FLAG_SH)
 # anything has changed that requires a rebuild.
 #
 $(IMAGE_DIRS): %: %/Dockerfile
-	cd $(dir $<) && time docker build $(DBFLAGS_$@) -t $@ .
+	cd $(dir $<) && time docker build $(DBFLAGS_$@) -t $@ --label $(LABEL) .
 
 #
 # Static pattern rule to pull docker images that are external dependencies of
