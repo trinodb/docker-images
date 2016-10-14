@@ -17,6 +17,7 @@ MAINTAINER Teradata Docker Team <docker@teradata.com>
 
 RUN yum -y install openldap openldap-clients openldap-servers
 COPY files /tmp/files
+RUN cp -r /tmp/files/openldap-certificate.pem /etc/openldap/
 RUN cp -r /tmp/files/certs/* /etc/openldap/certs/
 RUN chmod a+x /tmp/files/start_slapd.sh
 RUN service slapd restart && \
