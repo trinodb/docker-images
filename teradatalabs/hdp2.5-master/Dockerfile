@@ -50,7 +50,7 @@ RUN /root/setup.sh
 # Copy the real config in now that setup has run
 COPY files/conf/* /etc/hadoop/conf/
 COPY files/conf-zookeeper/* /etc/zookeeper/conf/
-COPY files/conf-hive/* /etc/hive/conf/
+COPY files/conf/hive-site.xml /etc/hive/conf/
 
 # HDFS PORTS
 EXPOSE 50010 1004 50075 1006 50020 8020 50070 50470

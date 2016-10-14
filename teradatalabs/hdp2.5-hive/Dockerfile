@@ -53,7 +53,7 @@ RUN /root/setup.sh
 # Copy the real config in now that setup has run
 COPY files/conf/* /etc/hadoop/conf/
 COPY files/conf-zookeeper/* /etc/zookeeper/conf/
-COPY files/conf-hive/* /etc/hive/conf/
+COPY files/conf/hive-site.xml /etc/hive/conf/
 
 # SETUP SOCKS PROXY
 RUN yum install -y openssh openssh-clients openssh-server
