@@ -18,6 +18,7 @@ LABEL := com.teradata.git.hash=$(shell git rev-parse HEAD)
 
 DEPEND_SH=depend.sh
 FLAG_SH=flag.sh
+FIND_BROKEN_SYMLINKS_SH=find_broken_symlinks.sh
 DEPDIR=depends
 FLAGDIR=flags
 
@@ -101,7 +102,7 @@ snapshot: $(IMAGE_DIRS)
 # dependencies if needed. This is mostly useful for testing changes to the
 # script that creates the .d files.
 #
-.PHONY: dep clean-dep flag clean-flag
+.PHONY: dep clean-dep flag clean-flag check-links
 dep:
 
 clean-dep:
@@ -111,6 +112,9 @@ flag:
 
 clean-flag:
 	-rm -r $(FLAGDIR)
+
+check-links:
+	$(SHELL) $(FIND_BROKEN_SYMLINKS_SH)
 
 #
 # Include the dependencies for every image we know how to build. These don't
@@ -140,7 +144,7 @@ $(FLAGDIR)/%.flags: %/Dockerfile $(FLAG_SH)
 # invoke docker build for the image anyway and let Docker figure out if
 # anything has changed that requires a rebuild.
 #
-$(IMAGE_DIRS): %: %/Dockerfile
+$(IMAGE_DIRS): %: %/Dockerfile check-links
 	cd $(dir $<) && time $(SHELL) -c "( tar -czh . | docker build $(DBFLAGS_$@) -t $@ --label $(LABEL) - )"
 
 #
