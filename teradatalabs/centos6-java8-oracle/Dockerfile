@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM centos:6
+FROM centos:6.8
 MAINTAINER Teradata Docker Team <docker@teradata.com>
 
 ARG JDK_URL
