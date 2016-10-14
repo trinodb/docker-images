@@ -141,7 +141,7 @@ $(FLAGDIR)/%.flags: %/Dockerfile $(FLAG_SH)
 # anything has changed that requires a rebuild.
 #
 $(IMAGE_DIRS): %: %/Dockerfile
-	cd $(dir $<) && time docker build $(DBFLAGS_$@) -t $@ --label $(LABEL) .
+	cd $(dir $<) && time $(SHELL) -c "( tar -czh . | docker build $(DBFLAGS_$@) -t $@ --label $(LABEL) - )"
 
 #
 # Static pattern rule to pull docker images that are external dependencies of
