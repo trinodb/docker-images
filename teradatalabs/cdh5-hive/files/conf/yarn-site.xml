@@ -47,20 +47,34 @@
   <property>
     <description>Where to store container logs.</description>
     <name>yarn.nodemanager.log-dirs</name>
-    <value>/var/log/hadoop-yarn/containers</value>
+    <value>/var/log/hadoop/yarn/containers</value>
   </property>
 
   <property>
     <description>Where to aggregate logs to.</description>
     <name>yarn.nodemanager.remote-app-log-dir</name>
-    <value>/var/log/hadoop-yarn/apps</value>
+    <value>/var/log/hadoop/yarn/apps</value>
   </property>
 
   <property>
     <description>Classpath for typical applications.</description>
      <name>yarn.application.classpath</name>
      <value>
-        /etc/hadoop/conf,/usr/lib/hadoop/*,/usr/lib/hadoop/lib/*,/usr/lib/hadoop-hdfs/*,/usr/lib/hadoop-hdfs/lib/*,/usr/lib/hadoop-yarn/*,/usr/lib/hadoop-yarn/lib/*,/usr/lib/hadoop-mapreduce/*,/usr/lib/hadoop-mapreduce/lib/*
+      /etc/hadoop/conf,
+      /usr/lib/hadoop/*,
+      /usr/lib/hadoop/lib/*,
+      /usr/lib/hadoop-hdfs/*,
+      /usr/lib/hadoop-hdfs/lib/*,
+      /usr/lib/hadoop-yarn/*,
+      /usr/lib/hadoop-yarn/lib/*,
+      /usr/lib/hadoop-mapreduce/*,
+      /usr/lib/hadoop-mapreduce/lib/*
      </value>
   </property>
+
+  <property>
+    <name>yarn.resourcemanager.hostname</name>
+    <value>hadoop-master</value>
+  </property>
+
 </configuration>

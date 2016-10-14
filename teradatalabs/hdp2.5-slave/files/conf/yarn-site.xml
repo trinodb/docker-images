@@ -19,11 +19,6 @@
 
 <configuration>
   <property>
-    <name>yarn.resourcemanager.hostname</name>
-    <value>hadoop-master</value>
-  </property>
-
-  <property>
     <name>yarn.nodemanager.aux-services</name>
     <value>mapreduce_shuffle</value>
   </property>
@@ -65,7 +60,8 @@
     <description>Classpath for typical applications.</description>
      <name>yarn.application.classpath</name>
      <value>
-      /etc/hadoop/conf,/usr/hdp/current/hadoop-client/*,
+      /etc/hadoop/conf,
+      /usr/hdp/current/hadoop-client/*,
       /usr/hdp/current/hadoop-client/lib/*,
       /usr/hdp/current/hadoop-hdfs-client/*,
       /usr/hdp/current/hadoop-hdfs-client/lib/*,
@@ -75,4 +71,10 @@
       /usr/hdp/current/hadoop-mapreduce-client/lib/*
      </value>
   </property>
+
+  <property>
+    <name>yarn.resourcemanager.hostname</name>
+    <value>hadoop-master</value>
+  </property>
+
 </configuration>
