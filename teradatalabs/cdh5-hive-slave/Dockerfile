@@ -27,11 +27,8 @@ RUN \
 ADD files/supervisord.conf /etc/supervisord.conf
 ADD files/supervisord.d/* /etc/supervisord.d/
 
-# Add SUPERVISORD BOOTSTRAP SCRIPT
-ADD files/bootstrap.sh /root/bootstrap.sh
-
-# ADD STARTUP SCRIPT
-ADD files/startup.sh /root/startup.sh
+# ADD SETUP AND STARTUP SCRIPTS
+COPY files/bootstrap.sh files/startup.sh /root/
 
 # CREATE CONF DIRECTORIES
 COPY files/conf/ /etc/hadoop/conf
