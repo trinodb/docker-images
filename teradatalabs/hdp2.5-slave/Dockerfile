@@ -27,6 +27,9 @@ RUN echo -e "\n\n[include]\nfiles = /etc/supervisord.d/*.conf" \
 ADD files/supervisord.conf /etc/supervisord.conf
 COPY files/supervisord.d/* /etc/supervisord.d/
 
+# ADD SETUP AND STARTUP SCRIPTS
+COPY files/bootstrap.sh files/startup.sh /root/
+
 # Copy the real config in now that setup has run
 COPY files/conf/* /etc/hadoop/conf/
 
@@ -35,3 +38,5 @@ EXPOSE 50010 1004 50075 1006 50020 8020 50070 50470
 
 # YARN PORTS
 EXPOSE 8032 8030 8031 8033 8088 8040 8042 8041 10020 19888
+
+CMD /root/startup.sh

@@ -36,12 +36,11 @@ RUN echo -e "\n\n[include]\nfiles = /etc/supervisord.d/*.conf" \
 ADD files/supervisord.conf /etc/supervisord.conf
 COPY files/supervisord.d/* /etc/supervisord.d/
 
-# Add SUPERVISORD BOOTSTRAP SCRIPT
-ADD files/bootstrap.sh /root/bootstrap.sh
+# ADD SETUP AND STARTUP SCRIPTS
+COPY files/bootstrap.sh files/setup.sh files/startup.sh /root/
 
 # CREATE CONF DIRECTORIES
 COPY files/conf-setup/* /etc/hadoop/conf/
-COPY files/setup.sh /root/setup.sh
 
 # Create needed dirs
 RUN mkdir /var/lib/zookeeper
@@ -73,3 +72,5 @@ EXPOSE 9083 10000
 
 # SOCKS PORT
 EXPOSE 1180
+
+CMD /root/startup.sh
