@@ -15,23 +15,24 @@
 FROM teradatalabs/centos6-ssh-oj8
 MAINTAINER Teradata Docker Team <docker@teradata.com>
 
-RUN wget -nv http://public-repo-1.hortonworks.com/HDP/centos6/2.x/updates/2.5.0.0/hdp.repo -P /etc/yum.repos.d
+RUN \
+  wget -nv http://public-repo-1.hortonworks.com/HDP/centos6/2.x/updates/2.5.0.0/hdp.repo -P /etc/yum.repos.d \
 
-RUN yum install -y hadoop-hdfs-namenode \
-	&& yum install -y hadoop-hdfs-secondarynamenode \
-	&& yum install -y hadoop-hdfs-datanode
+  && yum install -y \
+    hadoop-hdfs-namenode \
+    hadoop-hdfs-secondarynamenode \
+    hadoop-hdfs-datanode \
 
-RUN yum install -y hadoop-mapreduce-historyserver
+    hadoop-mapreduce-historyserver \
 
-RUN yum install -y hadoop-yarn-resourcemanager \
-	&& yum install -y hadoop-yarn-nodemanager
+    hadoop-yarn-resourcemanager \
+    hadoop-yarn-nodemanager \
 
-RUN yum install -y zookeeper \
-	&& yum install -y zookeeper-server
+    zookeeper \
+    zookeeper-server \
 
-RUN yum install -y hive \
-	&& yum install -y hive-metastore \
-	&& yum install -y hive-server2
+    hive \
+    hive-metastore \
+    hive-server2 \
 
-# CLEANUP
-RUN yum -y clean all && rm -rf /tmp/* /var/tmp/*
+  && yum -y clean all && rm -rf /tmp/* /var/tmp/*
