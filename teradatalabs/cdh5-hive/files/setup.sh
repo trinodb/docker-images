@@ -10,8 +10,8 @@ rm /etc/security/limits.d/hdfs.conf
 su -c "echo 'N' | hdfs namenode -format" hdfs
 
 # 2 start hdfs
-su -c "hdfs datanode  2>&1 > /var/log/hadoop-hdfs/hadoop-hdfs-datanode.log" hdfs&
-su -c "hdfs namenode  2>&1 > /var/log/hadoop-hdfs/hadoop-hdfs-namenode.log" hdfs&
+su -c "hdfs datanode  2>&1 > /var/log/hadoop/hdfs/hadoop-hdfs-datanode.log" hdfs&
+su -c "hdfs namenode  2>&1 > /var/log/hadoop/hdfs/hadoop-hdfs-namenode.log" hdfs&
 
 # 3 wait for process starting
 sleep 10

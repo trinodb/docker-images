@@ -36,4 +36,10 @@ RUN wget http://archive.cloudera.com/cdh5/one-click-install/redhat/6/x86_64/clou
   && rm python-meld3-0.6.7-1.el6.x86_64.rpm \
 
 # Cleanup
-  && yum -y clean all && rm -rf /tmp/* /var/tmp/*
+  && yum -y clean all && rm -rf /tmp/* /var/tmp/* \
+
+# Alias log directories so that files in `/common` can use `/var/log/hadoop/*` format
+  && mkdir -p /var/log/hadoop \
+  && ln -s /var/log/hadoop-hdfs /var/log/hadoop/hdfs \
+  && ln -s /var/log/hadoop-mapreduce /var/log/hadoop/mapreduce \
+  && ln -s /var/log/hadoop-yarn /var/log/hadoop/yarn

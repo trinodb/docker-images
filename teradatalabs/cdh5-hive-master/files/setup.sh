@@ -5,7 +5,7 @@ chown hdfs:hdfs /var/lib/hadoop-hdfs/cache/
 su -c "echo 'N' | hdfs namenode -format" hdfs
 
 # 2 start hdfs
-su -c "hdfs namenode  2>&1 > /var/log/hadoop-hdfs/hadoop-hdfs-namenode.log" hdfs&
+su -c "hdfs namenode  2>&1 > /var/log/hadoop/hdfs/hadoop-hdfs-namenode.log" hdfs&
 
 # 3 wait for process starting
 sleep 10
@@ -22,9 +22,9 @@ su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chown -R mapred:mapred /tmp/hadoop-
 su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir -p /tmp/hadoop-yarn/staging/history/done_intermediate'
 su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chown -R mapred:mapred /tmp/hadoop-yarn/staging'
 su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chmod -R 1777 /tmp'
-su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir -p /var/log/hadoop-yarn/apps'
-su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chmod -R 1777 /var/log/hadoop-yarn/apps'
-su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chown yarn:mapred /var/log/hadoop-yarn/apps'
+su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir -p /var/log/hadoop/yarn/apps'
+su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chmod -R 1777 /var/log/hadoop/yarn/apps'
+su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chown yarn:mapred /var/log/hadoop/yarn/apps'
 su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir -p /user'
 su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir -p /user/history'
 su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chown mapred /user/history'
