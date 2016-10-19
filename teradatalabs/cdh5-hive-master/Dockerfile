@@ -15,16 +15,16 @@
 FROM teradatalabs/cdh5-base
 MAINTAINER Teradata Docker Team <docker@teradata.com>
 
-# INSTALL PACKAGES
+# INSTALL HADOOP AND HIVE
 RUN \
-   yum install -y \
-     hive \
-     hive-server \
-     hadoop-hdfs-namenode \
-     hadoop-yarn-resourcemanager \
-     hadoop-yarn-nodemanager \
-     zookeeper-server \
-     python-setuptools \
+  yum install -y \
+    hive \
+    hive-server \
+    hadoop-hdfs-namenode \
+    hadoop-yarn-resourcemanager \
+    hadoop-yarn-nodemanager \
+    zookeeper-server \
+    python-setuptools \
   && yum -y clean all && rm -rf /tmp/* /var/tmp/*
 
 # INSTALL MYSQL (Hive Metastore)

@@ -21,24 +21,20 @@ RUN \
     hive \
     hive-server2 \
     zookeeper-server \
-    mysql-server \
-    mysql-connector-java \
     hadoop-conf-pseudo \
   && yum -y clean all && rm -rf /tmp/* /var/tmp/*
 
 # INSTALL MYSQL (Hive Metastore)
-RUN ln -s /usr/share/java/mysql-connector-java.jar /usr/lib/hive/lib/mysql-connector-java.jar
+RUN yum install -y mysql-server mysql-connector-java \
+    && yum -y clean all && rm -rf /tmp/* /var/tmp/* \
+    && ln -s /usr/share/java/mysql-connector-java.jar /usr/lib/hive/lib/mysql-connector-java.jar
 
 # ADD SUPERVISORD CONFS
 COPY files/supervisord.conf /etc/supervisord.conf
 COPY files/supervisord.d/* /etc/supervisord.d/
 
-# Add SUPERVISORD BOOTSTRAP SCRIPT
-COPY files/bootstrap.sh /root/bootstrap.sh
-
-# ADD STARTUP SCRIPT
-COPY files/setup.sh /root/setup.sh
-COPY files/startup.sh /root/startup.sh
+# ADD SETUP AND STARTUP SCRIPTS
+COPY files/bootstrap.sh files/setup.sh files/startup.sh /root/
 
 # CREATE CONF DIRECTORIES
 RUN mkdir /tmp/hadoop_conf
