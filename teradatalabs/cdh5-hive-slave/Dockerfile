@@ -23,8 +23,8 @@ RUN \
       python-setuptools \
  && yum -y clean all && rm -rf /tmp/* /var/tmp/*
 
-# ADD SETUP AND STARTUP SCRIPTS
-COPY files/bootstrap.sh files/startup.sh /root/
+# ADD BOOTSTRAP SCRIPT
+COPY files/bootstrap.sh /root/
 
 # CREATE CONF DIRECTORIES
 COPY files/conf/ /etc/hadoop/conf

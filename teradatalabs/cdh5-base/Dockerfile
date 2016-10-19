@@ -44,6 +44,10 @@ RUN wget http://archive.cloudera.com/cdh5/one-click-install/redhat/6/x86_64/clou
   && ln -s /var/log/hadoop-mapreduce /var/log/hadoop/mapreduce \
   && ln -s /var/log/hadoop-yarn /var/log/hadoop/yarn
 
-# ADD SUPERVISORD CONFS IN CHILD IMAGES
-ONBUILD COPY files/supervisord.conf /etc/supervisord.conf
+# Copy supervisord startup script and base configs
+COPY files/startup.sh /root/startup.sh
+COPY files/supervisord.conf /etc/supervisord.conf
+COPY files/supervisord.d/bootstrap.conf /etc/supervisord.d/bootstrap.conf
+
+# Add supervisord confs in child images
 ONBUILD COPY files/supervisord.d/* /etc/supervisord.d/
