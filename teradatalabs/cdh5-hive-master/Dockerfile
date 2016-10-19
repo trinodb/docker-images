@@ -24,13 +24,13 @@ RUN \
      hadoop-yarn-resourcemanager \
      hadoop-yarn-nodemanager \
      zookeeper-server \
-     mysql-server \
-     mysql-connector-java \
      python-setuptools \
   && yum -y clean all && rm -rf /tmp/* /var/tmp/*
 
 # INSTALL MYSQL (Hive Metastore)
-RUN ln -s /usr/share/java/mysql-connector-java.jar /usr/lib/hive/lib/mysql-connector-java.jar
+RUN yum install -y mysql-server mysql-connector-java \
+    && yum -y clean all && rm -rf /tmp/* /var/tmp/* \
+    && ln -s /usr/share/java/mysql-connector-java.jar /usr/lib/hive/lib/mysql-connector-java.jar
 
 # ADD SUPERVISORD CONFS
 COPY files/supervisord.conf /etc/supervisord.conf
