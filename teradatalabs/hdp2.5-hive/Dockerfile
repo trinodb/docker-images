@@ -24,11 +24,6 @@ RUN yum install -y mysql-server mysql-connector-java \
 COPY files/supervisord.conf /etc/supervisord.conf
 COPY files/supervisord.d/* /etc/supervisord.d/
 
-# Append to the existing supervisor config, which sets up ssh access. This lets
-# us add additional programs via the include mechanism
-RUN echo -e "\n\n[include]\nfiles = /etc/supervisord.d/*.conf" \
-	>> /etc/supervisord.conf
-
 # ADD SETUP AND STARTUP SCRIPTS
 COPY files/bootstrap.sh files/setup.sh files/startup.sh /root/
 

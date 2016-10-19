@@ -18,13 +18,8 @@ MAINTAINER Teradata Docker Team <docker@teradata.com>
 # Good grief. Get rid of the default hdp config.
 RUN rm -r /etc/hadoop/conf/*
 
-# Append to the existing supervisor config, which sets up ssh access. This lets
-# us add additional programs via the include mechanism
-RUN echo -e "\n\n[include]\nfiles = /etc/supervisord.d/*.conf" \
-	>> /etc/supervisord.conf
-
 # Add the additional supervisord configuration
-ADD files/supervisord.conf /etc/supervisord.conf
+COPY files/supervisord.conf /etc/supervisord.conf
 COPY files/supervisord.d/* /etc/supervisord.d/
 
 # ADD SETUP AND STARTUP SCRIPTS
