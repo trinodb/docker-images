@@ -24,7 +24,6 @@ RUN \
     hadoop-yarn-resourcemanager \
     hadoop-yarn-nodemanager \
     zookeeper-server \
-    python-setuptools \
   && yum -y clean all && rm -rf /tmp/* /var/tmp/*
 
 # INSTALL MYSQL (Hive Metastore)
