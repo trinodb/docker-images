@@ -18,8 +18,8 @@ MAINTAINER Teradata Docker Team <docker@teradata.com>
 # Good grief. Get rid of the default hdp config.
 RUN rm -r /etc/hadoop/conf/*
 
-# ADD SETUP AND STARTUP SCRIPTS
-COPY files/bootstrap.sh files/startup.sh /root/
+# ADD BOOTSTRAP SCRIPT
+COPY files/bootstrap.sh /root/
 
 # Copy the real config in now that setup has run
 COPY files/conf/* /etc/hadoop/conf/

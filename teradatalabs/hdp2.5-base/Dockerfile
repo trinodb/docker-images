@@ -37,6 +37,10 @@ RUN \
 
   && yum -y clean all && rm -rf /tmp/* /var/tmp/*
 
-# ADD SUPERVISORD CONFS IN CHILD IMAGES
-ONBUILD COPY files/supervisord.conf /etc/supervisord.conf
+# Copy supervisord startup script and base configs
+COPY files/startup.sh /root/startup.sh
+COPY files/supervisord.conf /etc/supervisord.conf
+COPY files/supervisord.d/bootstrap.conf /etc/supervisord.d/bootstrap.conf
+
+# Add supervisord configs in child images
 ONBUILD COPY files/supervisord.d/* /etc/supervisord.d/

@@ -20,8 +20,8 @@ RUN yum install -y mysql-server mysql-connector-java \
     && yum -y clean all && rm -rf /tmp/* /var/tmp/* \
     && ln -s /usr/share/java/mysql-connector-java.jar /usr/hdp/current/hive-metastore/lib/mysql-connector-java.jar
 
-# ADD SETUP AND STARTUP SCRIPTS
-COPY files/bootstrap.sh files/setup.sh files/startup.sh /root/
+# ADD SETUP AND BOOTSTRAP SCRIPTS
+COPY files/bootstrap.sh files/setup.sh /root/
 
 # Create needed dirs
 RUN mkdir /var/lib/zookeeper
