@@ -36,3 +36,7 @@ RUN \
     hive-server2 \
 
   && yum -y clean all && rm -rf /tmp/* /var/tmp/*
+
+# ADD SUPERVISORD CONFS IN CHILD IMAGES
+ONBUILD COPY files/supervisord.conf /etc/supervisord.conf
+ONBUILD COPY files/supervisord.d/* /etc/supervisord.d/

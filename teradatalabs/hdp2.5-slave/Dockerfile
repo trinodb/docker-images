@@ -18,10 +18,6 @@ MAINTAINER Teradata Docker Team <docker@teradata.com>
 # Good grief. Get rid of the default hdp config.
 RUN rm -r /etc/hadoop/conf/*
 
-# Add the additional supervisord configuration
-COPY files/supervisord.conf /etc/supervisord.conf
-COPY files/supervisord.d/* /etc/supervisord.d/
-
 # ADD SETUP AND STARTUP SCRIPTS
 COPY files/bootstrap.sh files/startup.sh /root/
 

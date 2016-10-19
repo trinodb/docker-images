@@ -31,10 +31,6 @@ RUN yum install -y mysql-server mysql-connector-java \
     && yum -y clean all && rm -rf /tmp/* /var/tmp/* \
     && ln -s /usr/share/java/mysql-connector-java.jar /usr/lib/hive/lib/mysql-connector-java.jar
 
-# ADD SUPERVISORD CONFS
-COPY files/supervisord.conf /etc/supervisord.conf
-COPY files/supervisord.d/* /etc/supervisord.d/
-
 # ADD SETUP AND STARTUP SCRIPTS
 COPY files/bootstrap.sh files/setup.sh files/startup.sh /root/
 

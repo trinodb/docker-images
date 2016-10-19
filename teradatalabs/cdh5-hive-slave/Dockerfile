@@ -23,10 +23,6 @@ RUN \
       python-setuptools \
  && yum -y clean all && rm -rf /tmp/* /var/tmp/*
 
-# ADD SUPERVISORD CONFS
-ADD files/supervisord.conf /etc/supervisord.conf
-ADD files/supervisord.d/* /etc/supervisord.d/
-
 # ADD SETUP AND STARTUP SCRIPTS
 COPY files/bootstrap.sh files/startup.sh /root/
 
