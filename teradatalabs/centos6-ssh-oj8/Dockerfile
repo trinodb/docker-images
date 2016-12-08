@@ -26,7 +26,10 @@ RUN yum install -y \
       gcc \
       python-devel \
       tar \
-      expect && \
+      expect \
+      python-devel \
+      openssl-devel \
+      libffi-devel && \
     wget --header "Cookie: oraclelicense=accept-securebackup-cookie" $JDK_URL && \
     rpm -ivh $JDK_RPM && rm $JDK_RPM && \
     rm -rf $JDK_PATH/*src.zip \
