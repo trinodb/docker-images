@@ -99,4 +99,14 @@
         <value>hdfs,hive</value>
     </property>
 
+    <property>
+        <name>hive.security.authorization.manager</name>
+        <value>org.apache.hadoop.hive.ql.security.authorization.plugin.sqlstd.SQLStdConfOnlyAuthorizerFactory</value>
+    </property>
+
+    <property>
+        <name>hive.security.authorization.task.factory</name>
+        <value>org.apache.hadoop.hive.ql.parse.authorization.HiveAuthorizationTaskFactoryImpl</value>
+    </property>
+
 </configuration>

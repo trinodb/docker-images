@@ -69,6 +69,9 @@ ADD files/conf/hive-site.xml /etc/hive/conf/hive-site.xml
 RUN chown hive:hadoop /etc/hive/conf/hive.keytab
 RUN chmod 644 /etc/hive/conf/hive.keytab
 
+# ENABLE AUTHORIZATION IN HIVE SERVER 
+ADD files/conf/hiveserver2-site.xml /etc/hive/conf/hiveserver2-site.xml
+
 # CREATE PRESTO PRINCIPAL AND KEYTAB
 RUN /usr/sbin/kadmin.local -q "addprinc -randkey presto-server/presto-master@LABS.TERADATA.COM"
 RUN /usr/sbin/kadmin.local -q "addprinc -randkey presto-client/presto-master@LABS.TERADATA.COM"
