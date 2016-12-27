@@ -16,7 +16,7 @@ before_install:
   - sudo pip install docker-release
   - docker-release --version
   # prime the cache by fetching the latest release of all images
-  - ls teradatalabs/ | awk '{print "teradatalabs/" $0 }' | xargs -L1 time docker pull || true
+  - ./pull_latest_images.sh
 
 install: make
 
