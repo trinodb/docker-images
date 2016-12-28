@@ -2,6 +2,10 @@
 
 # 1 format namenode
 chown hdfs:hdfs /var/lib/hadoop-hdfs/cache/
+
+# workaround for 'could not open session' bug as suggested here:
+# https://github.com/docker/docker/issues/7056#issuecomment-49371610
+rm -f /etc/security/limits.d/hdfs.conf
 su -c "echo 'N' | hdfs namenode -format" hdfs
 
 # 2 start hdfs
