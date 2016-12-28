@@ -75,9 +75,11 @@ ADD files/conf/hiveserver2-site.xml /etc/hive/conf/hiveserver2-site.xml
 # CREATE PRESTO PRINCIPAL AND KEYTAB
 RUN /usr/sbin/kadmin.local -q "addprinc -randkey presto-server/presto-master@LABS.TERADATA.COM"
 RUN /usr/sbin/kadmin.local -q "addprinc -randkey presto-client/presto-master@LABS.TERADATA.COM"
+RUN /usr/sbin/kadmin.local -q "addprinc -randkey hive/presto-master@LABS.TERADATA.COM"
 RUN mkdir -p /etc/presto/conf
 RUN /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/presto/conf/presto-server.keytab presto-server/presto-master"
 RUN /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/presto/conf/presto-client.keytab presto-client/presto-master"
+RUN /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/presto/conf/hive-presto-master.keytab hive/presto-master"
 RUN chmod 644 /etc/presto/conf/*.keytab
 
 # CREATE SSL KEYSTORE
