@@ -156,4 +156,14 @@
     <value>*</value>
   </property>
 
+  <property>
+    <name>hadoop.proxyuser.presto-server.groups</name>
+    <value>*</value>
+  </property>
+
+  <property>
+    <name>hadoop.proxyuser.presto-server.hosts</name>
+    <value>*</value>
+  </property>
+
 </configuration>
