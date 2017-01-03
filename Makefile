@@ -144,7 +144,7 @@ $(FLAGDIR)/%.flags: %/Dockerfile $(FLAG_SH)
 # invoke docker build for the image anyway and let Docker figure out if
 # anything has changed that requires a rebuild.
 #
-$(IMAGE_DIRS): %: %/Dockerfile check-links
+$(IMAGE_DIRS): %: %/Dockerfile | check-links
 	cd $(dir $<) && time $(SHELL) -c "( tar -czh . | docker build $(DBFLAGS_$@) -t $@ --label $(LABEL) - )"
 
 #
