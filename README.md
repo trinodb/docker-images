@@ -17,7 +17,7 @@ The docker images should be built using `make`. To build the docker image named
 the image and its dependencies in the correct order.
 
 If you are going to release an image, you should release it and all of its
-dependencies. Master and slave images should be be built from the same chain of
+dependencies. Master and slave images should be built from the same chain of
 parent images. You can ensure that both are built from the same set of parent
 images by running e.g. `make teradatalabs/cdh5-hive-master
 terdatalabs/cdh5-hive-slave`
