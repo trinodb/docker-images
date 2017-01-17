@@ -21,8 +21,6 @@ before_install:
   - sudo apt-get install dc
   - sudo pip install docker-release
   - docker-release --version
-  # prime the cache by fetching the latest release of all images
-  - ./pull_latest_images.sh
 
 install: make ${IMAGES[@]}
 
