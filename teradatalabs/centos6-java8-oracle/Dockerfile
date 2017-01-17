@@ -15,12 +15,14 @@
 FROM centos:6.8
 MAINTAINER Teradata Docker Team <docker@teradata.com>
 
+ENV DOCKERIZE_VERSION v0.3.0
+
 ARG JDK_URL
 ARG JDK_RPM
 ARG JDK_PATH
 
-# Install Oracle Java, trim it down and clean up temporary files after installation
 RUN yum install -y wget && \
+    # install and trim Oracle JDK
     wget --header "Cookie: oraclelicense=accept-securebackup-cookie" $JDK_URL && \
     rpm -ivh $JDK_RPM && rm $JDK_RPM && \
     rm -rf $JDK_PATH/*src.zip \
@@ -43,6 +45,11 @@ RUN yum install -y wget && \
            $JDK_PATH/jre/lib/amd64/libgstreamer-lite.so \
            $JDK_PATH/jre/lib/amd64/libjavafx*.so \
            $JDK_PATH/jre/lib/amd64/libjfx*.so && \
+    # install dockerize
+    wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
+        && tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
+        && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && \
+    # cleanup
     yum -y clean all && rm -rf /tmp/* /var/tmp/*
 
 ENV JAVA_HOME $JDK_PATH/jre/
