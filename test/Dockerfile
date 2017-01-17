@@ -22,19 +22,19 @@ RUN \
     unzip \
 
   # setup CDH repo, pin the CDH distribution to a concrete version
-  && wget http://archive.cloudera.com/cdh5/one-click-install/redhat/6/x86_64/cloudera-cdh-5-0.x86_64.rpm \
+  && wget -nv http://archive.cloudera.com/cdh5/one-click-install/redhat/6/x86_64/cloudera-cdh-5-0.x86_64.rpm \
   && yum --nogpgcheck localinstall -y cloudera-cdh-5-0.x86_64.rpm \
   && rm cloudera-cdh-5-0.x86_64.rpm \
   && rpm --import http://archive.cloudera.com/cdh5/redhat/6/x86_64/cdh/RPM-GPG-KEY-cloudera \
   && sed -i '/^baseurl=/c\baseurl=https://archive.cloudera.com/cdh5/redhat/6/x86_64/cdh/5.8.2/' /etc/yum.repos.d/cloudera-cdh5.repo \
 
   # install BATS bash test lib
-  && wget https://github.com/ArturGajowy/bats/archive/6959d91.zip -O /tmp/bats.zip \
+  && wget -nv https://github.com/ArturGajowy/bats/archive/6959d91.zip -O /tmp/bats.zip \
   && unzip -q /tmp/bats.zip -d /tmp \
   && /tmp/bats-*/install.sh /usr/local \
 
   # install dockerize
-  && wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
+  && wget -nv https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
   && tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
   && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
 

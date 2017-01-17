@@ -28,7 +28,7 @@ RUN \
     yum install -y wget && \
 
     # install and trim Oracle JDK
-    wget --header "Cookie: oraclelicense=accept-securebackup-cookie" $JDK_URL && \
+    wget -nv --header "Cookie: oraclelicense=accept-securebackup-cookie" $JDK_URL && \
     rpm -ivh $JDK_RPM && rm $JDK_RPM && \
     rm -rf $JDK_PATH/*src.zip \
            $JDK_PATH/lib/missioncontrol \
@@ -51,7 +51,7 @@ RUN \
            $JDK_PATH/jre/lib/amd64/libjavafx*.so \
            $JDK_PATH/jre/lib/amd64/libjfx*.so && \
     # install dockerize
-    wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
+    wget -nv https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
         && tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
         && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && \
     # cleanup
