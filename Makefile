@@ -145,7 +145,17 @@ $(FLAGDIR)/%.flags: %/Dockerfile $(FLAG_SH)
 # anything has changed that requires a rebuild.
 #
 $(IMAGE_DIRS): %: %/Dockerfile | check-links
+	@echo
+	@echo "Building [$*] image"
+	@echo
 	cd $(dir $<) && time $(SHELL) -c "( tar -czh . | docker build $(DBFLAGS_$@) -t $@ --label $(LABEL) - )"
+	@echo
+	@echo "Running tests for [$*]"
+	@echo
+	export TESTED_IMAGE=$* && \
+	  cd test && \
+	  docker-compose up -t 0 -d hadoop-master && \
+	  time docker-compose run -e EXPECTED_CAPABILITIES="`cat ../$*/capabilities.txt | tr '\n' ' '`" --rm test-runner
 
 #
 # Static pattern rule to pull docker images that are external dependencies of

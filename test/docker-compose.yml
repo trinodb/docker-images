@@ -1,0 +1,13 @@
+version: '2'
+services:
+
+  hadoop-master:
+    image: ${TESTED_IMAGE}
+    hostname: hadoop-master
+    ports:
+    - '1180'
+
+  test-runner:
+    build: .
+    volumes:
+    - './image_tests:/image_tests:ro'
