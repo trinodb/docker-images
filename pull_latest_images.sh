@@ -10,7 +10,5 @@ for i in teradatalabs/*; do
 done
 
 for PID in $PIDS; do
-  wait $PID || let "RESULT=$?"
+  wait $PID
 done
-
-exit $RESULT
