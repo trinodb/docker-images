@@ -21,7 +21,12 @@ ARG JDK_URL
 ARG JDK_RPM
 ARG JDK_PATH
 
-RUN yum install -y wget && \
+RUN \
+    # disable the notoriuosly unstable EPEL repo...
+    rm -rf /etc/yum.repos.d/epel* && \
+
+    yum install -y wget && \
+
     # install and trim Oracle JDK
     wget --header "Cookie: oraclelicense=accept-securebackup-cookie" $JDK_URL && \
     rpm -ivh $JDK_RPM && rm $JDK_RPM && \
