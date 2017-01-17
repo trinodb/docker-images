@@ -21,6 +21,11 @@
         <value>hdfs://127.0.0.1:8020</value>
     </property>
 
+    <property>
+        <name>fs.default.name</name>
+        <value>hdfs://localhost:9000</value>
+    </property>
+
     <!-- OOZIE proxy user setting -->
     <property>
         <name>hadoop.proxyuser.oozie.hosts</name>

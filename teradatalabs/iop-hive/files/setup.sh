@@ -9,16 +9,14 @@ rm -f /etc/security/limits.d/hdfs.conf
 su -c "echo 'N' | hdfs namenode -format" hdfs
 
 # 2 start hdfs
+su -c "hdfs datanode  2>&1 > /var/log/hadoop/hdfs/hadoop-hdfs-datanode.log" hdfs&
 su -c "hdfs namenode  2>&1 > /var/log/hadoop/hdfs/hadoop-hdfs-namenode.log" hdfs&
 
 # 3 wait for process starting
 sleep 10
 
-# 4 init basic hdfs directories
-/usr/hdp/2.5.0.0-1245/hadoop/libexec/init-hdfs.sh
-
-# 4.1 Create an hdfs home directory for the yarn user. For some reason, init-hdfs doesn't do so.
-su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir /user/yarn && /usr/bin/hadoop fs -chown yarn:yarn /user/yarn'
+# 4 exec hdfs init script
+/usr/iop/4.2.0.0/hadoop/libexec/init-hdfs.sh
 
 # 5 init hive directories
 su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir /user/hive/warehouse'
@@ -34,9 +32,8 @@ mysql_install_db
 /usr/bin/mysqld_safe &
 sleep 10s
 
-cd /usr/hdp/2.5.*/hive/scripts/metastore/upgrade/mysql/
 echo "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION; FLUSH PRIVILEGES;" | mysql
-echo "CREATE DATABASE metastore; USE metastore; SOURCE hive-schema-1.2.1000.mysql.sql;" | mysql
+echo "CREATE DATABASE metastore; USE metastore; SOURCE /usr/iop/4.2.0.0/hive/scripts/metastore/upgrade/mysql/hive-schema-0.13.0.mysql.sql;" | mysql
 /usr/bin/mysqladmin -u root password 'root'
 
 killall mysqld
@@ -44,4 +41,15 @@ sleep 10s
 mkdir /var/log/mysql/
 chown mysql:mysql /var/log/mysql/
 
-exit 0
+# 8 copy configuration
+cp /tmp/hadoop_conf/hive-site.xml /etc/hive/conf/
+cp /tmp/hadoop_conf/capacity-scheduler.xml /etc/hadoop/conf
+cp /tmp/hadoop_conf/core-site.xml /etc/hadoop/conf
+cp /tmp/hadoop_conf/mapred-site.xml /etc/hadoop/conf
+cp /tmp/hadoop_conf/yarn-site.xml /etc/hadoop/conf
+cp /tmp/hadoop_conf/hadoop-env.sh /etc/hadoop/conf
+cp /tmp/hadoop_conf/hive-env.sh /etc/hive/conf
+rm -r /tmp/hadoop_conf
+
+# 9 Init zookeeper
+/usr/iop/4.2.0.0/zookeeper/bin/zookeeper-server-initialize

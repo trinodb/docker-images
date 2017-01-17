@@ -21,6 +21,11 @@
         <value>hdfs://hadoop-master:8020</value>
     </property>
 
+    <property>
+        <name>fs.default.name</name>
+        <value>hdfs://hadoop-master:9000</value>
+    </property>
+
     <!-- OOZIE proxy user setting -->
     <property>
         <name>hadoop.proxyuser.oozie.hosts</name>
