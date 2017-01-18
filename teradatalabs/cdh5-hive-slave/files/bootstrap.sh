@@ -7,9 +7,7 @@
 # the systemctl command. This is the only script launched
 # at startup by supervisord.
 
-# 1 HDFS
 supervisorctl start hdfs-datanode
 
-# 2 YARN
 supervisorctl start yarn-nodemanager
 
