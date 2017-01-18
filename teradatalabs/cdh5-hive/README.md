@@ -6,7 +6,7 @@
 [dockerhub-link]: https://hub.docker.com/r/teradatalabs/cdh5-hive
 
 Docker image with HDFS, YARN and HIVE installed. Please note that running services have lower memory heap size set.
-For more details please check [blob/master/images/cdh5-hive/files/conf/hadoop-env.sh](configuration) file.
+For more details please check the [hadoop-env.sh](files/conf/hadoop-env.sh) configuration file.
 If you want to work on larger datasets please tune those settings accordingly, the current settings should be optimal
 for general correctness testing.
 
