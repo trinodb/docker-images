@@ -22,6 +22,15 @@ parent images. You can ensure that both are built from the same set of parent
 images by running e.g. `make teradatalabs/cdh5-hive-master
 terdatalabs/cdh5-hive-slave`
 
+If you want to build a base image and all the images depending on it,
+you can use the `*.dependants` targets. E.g.
+
+```
+make teradatalabs/cdh5-base.dependants
+```
+
+will build the `cdh5-base` and all the images depending on it (transitively).
+
 ## Releasing (pushing) docker image
 
 All of the docker images in the repository share the same version number. This
