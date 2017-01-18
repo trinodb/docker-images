@@ -1,19 +1,19 @@
-# cdh5-hive [![][layers-badge]][layers-link] [![][version-badge]][dockerhub-link]
+# iop-hive [![][layers-badge]][layers-link] [![][version-badge]][dockerhub-link]
            
-[layers-badge]: https://images.microbadger.com/badges/image/teradatalabs/cdh5-hive.svg
-[layers-link]: https://microbadger.com/images/teradatalabs/cdh5-hive
-[version-badge]: https://images.microbadger.com/badges/version/teradatalabs/cdh5-hive.svg
-[dockerhub-link]: https://hub.docker.com/r/teradatalabs/cdh5-hive
+[layers-badge]: https://images.microbadger.com/badges/image/teradatalabs/iop-hive.svg
+[layers-link]: https://microbadger.com/images/teradatalabs/iop-hive
+[version-badge]: https://images.microbadger.com/badges/version/teradatalabs/iop-hive.svg
+[dockerhub-link]: https://hub.docker.com/r/teradatalabs/iop-hive
 
 Docker image with HDFS, YARN and HIVE installed. Please note that running services have lower memory heap size set.
-For more details please check [blob/master/images/cdh5-hive/files/conf/hadoop-env.sh](configuration) file.
+For more details please check the [hadoop-env.sh](files/conf/hadoop-env.sh) configuration file.
 If you want to work on larger datasets please tune those settings accordingly, the current settings should be optimal
 for general correctness testing.
 
 ## Run
 
 ```
-$ docker run -d --name hadoop-master -h hadoop-master teradatalabs/cdh5-hive
+$ docker run -d --name hadoop-master -h hadoop-master teradatalabs/iop-hive
 ```
 
 ## Oracle license
