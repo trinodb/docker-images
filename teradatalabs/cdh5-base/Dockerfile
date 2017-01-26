@@ -20,7 +20,7 @@ RUN wget -nv http://archive.cloudera.com/cdh5/one-click-install/redhat/6/x86_64/
   && yum --nogpgcheck localinstall -y cloudera-cdh-5-0.x86_64.rpm \
   && rm cloudera-cdh-5-0.x86_64.rpm \
   && rpm --import http://archive.cloudera.com/cdh5/redhat/6/x86_64/cdh/RPM-GPG-KEY-cloudera \
-  && sed -i '/^baseurl=/c\baseurl=https://archive.cloudera.com/cdh5/redhat/6/x86_64/cdh/5.8.2/' /etc/yum.repos.d/cloudera-cdh5.repo \
+  && sed -i '/^baseurl=/c\baseurl=https://archive.cloudera.com/cdh5/redhat/6/x86_64/cdh/5.9.1/' /etc/yum.repos.d/cloudera-cdh5.repo \
 
 # Install hive, as it's needed by all child images
   && yum install -y hive \
