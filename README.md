@@ -53,6 +53,8 @@ docker-release also handles tagging the images and repository appropriately so
 that you can easily find the Dockerfile used to create an image starting from
 just the tags on a Docker image.
 
+Best practice for publishing a snapshot or release version is to use the Jenkins job.  Login to Jenkins and search for `docker-images`.  If you must publish a new version manually, follow these steps:
+
 To release a snapshot version of the repository do the following
 
 1. `docker login`
