@@ -1,6 +1,6 @@
-#!/bin/sh
+#!/bin/bash
 
-BROKEN_LINKS=$( find . -type l -exec sh -c "file -b {} | grep -q ^broken" \; -print )
+BROKEN_LINKS="$(find -L . -type l)"
 
 if [ ! "${BROKEN_LINKS}" = '' ]; then
   echo "The following symlinks are broken:"
