@@ -25,9 +25,7 @@ Run single query:
 Build:
 `docker build -t teradatalabs/presto-cli --build-arg PRESTO_VERSION=0.165-t .`
 
-## Oracle license
+## License
 
-By using this image, you accept the Oracle Binary Code License Agreement for Java SE available here:
-[http://www.oracle.com/technetwork/java/javase/terms/license/index.html](http://www.oracle.com/technetwork/java/javase/terms/license/index.html)
-
-
+By using this image, you accept OpenJDK license for Java SE, available at
+[http://openjdk.java.net/legal/gplv2+ce.html](http://openjdk.java.net/legal/gplv2+ce.html).
