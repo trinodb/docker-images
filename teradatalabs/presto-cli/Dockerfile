@@ -1,4 +1,4 @@
-FROM java:8-jre
+FROM openjdk:8-jre
 ARG PRESTO_VERSION
 
 ADD http://teradata-presto.s3.amazonaws.com/presto/$PRESTO_VERSION/presto-cli-$PRESTO_VERSION-executable.jar /usr/local/bin/presto
