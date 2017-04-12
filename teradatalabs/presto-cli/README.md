@@ -17,10 +17,10 @@ To use examples below please set following environment variables:
  * `PRESTO_PORT` - port on which Presto Master is visible (most likely 8080)
 
 Run:
-`docker run -i -t teradatalabs/presto-cli:$PRESTO_VERSION --server $PRESTO_HOST:$PRESTO_PORT`
+`docker run --rm -i -t teradatalabs/presto-cli:$PRESTO_VERSION --server $PRESTO_HOST:$PRESTO_PORT`
 
 Run single query:
-`docker run -i -t teradatalabs/presto-cli:$PRESTO_VERSION --server $PRESTO_HOST:$PRESTO_PORT --execute "$QUERY"`
+`docker run --rm -i -t teradatalabs/presto-cli:$PRESTO_VERSION --server $PRESTO_HOST:$PRESTO_PORT --execute "$QUERY"`
 
 Build:
 `docker build -t teradatalabs/presto-cli --build-arg PRESTO_VERSION=0.165-t .`
