@@ -23,18 +23,18 @@ RUN \
     rm -rf \tmp\* \var\tmp\*
 
 RUN \
+    pip install --upgrade setuptools==20.1.1 && \
+    pip install --upgrade pip==7.1.2 && \
+    pip install --upgrade wheel==0.23.0 && \
     pip install --upgrade argparse==1.4 && \
     pip install --upgrade paramiko==1.15.3 && \
     pip install --upgrade flake8==2.5.4 && \
     pip install --upgrade py==1.4.26 && \
-    pip install --upgrade Sphinx>=1.3.1 && \
-    pip install --upgrade wheel==0.23.0 && \
+    pip install --upgrade Sphinx==1.3.1 && \
     pip install --upgrade fabric==1.10.1 && \
     pip install --upgrade requests==2.7.0 && \
     pip install --upgrade certifi==2015.4.28 && \
     pip install --upgrade fudge==1.1.0 && \
     pip install --upgrade PyYAML==3.11 && \
     pip install --upgrade overrides==0.5 && \
-    pip install --upgrade setuptools==20.1.1 && \
-    pip install --upgrade pip==7.1.2 && \
     pip install --upgrade retrying==1.3.3
