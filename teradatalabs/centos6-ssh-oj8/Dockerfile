@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM jdeathe/centos-ssh:centos-6-1.2.0
+FROM jdeathe/centos-ssh:centos-6-1.8.1
 MAINTAINER Teradata Docker Team <docker@teradata.com>
 
 ENV DOCKERIZE_VERSION v0.3.0
@@ -72,24 +72,32 @@ COPY vagrant_insecure_rsa /etc/services-config/ssh/id_rsa
 
 # Modify the ssh-bootstrap script to copy id_rsa to ~/.ssh (the script already makes ~/.ssh
 # and copies authorized_keys)
-RUN printf "cp -f /etc/services-config/ssh/id_rsa \${OPTS_SSH_USER_HOME_DIR}/.ssh/id_rsa\n \
-            chown -R \${OPTS_SSH_USER}:${OPTS_SSH_USER} \${OPTS_SSH_USER_HOME_DIR}/.ssh/id_rsa\n \
-            chmod 600 \${OPTS_SSH_USER_HOME_DIR}/.ssh/id_rsa\n \
-            cp -r \${OPTS_SSH_USER_HOME_DIR}/.ssh /root/.ssh\n\n \
+RUN printf "cp -f /etc/services-config/ssh/id_rsa \${OPTS_SSH_USER_HOME}/.ssh/id_rsa\n \
+            chown -R \${OPTS_SSH_USER}:${OPTS_SSH_USER} \${OPTS_SSH_USER_HOME}/.ssh/id_rsa\n \
+            chmod 600 \${OPTS_SSH_USER_HOME}/.ssh/id_rsa\n \
+            cp -r \${OPTS_SSH_USER_HOME}/.ssh /root/.ssh\n\n \
             useradd -ms /bin/bash testuser\n \
             echo "testuser:testpass" | chpasswd" \
-            > /etc/bootstrap-extra
+            > /usr/sbin/bootstrap-extra
 
-RUN awk -v file="/etc/bootstrap-extra" -v lineno=$(($(wc -l < /etc/ssh-bootstrap) - 3)) ' \
+RUN awk -v file="/usr/sbin/bootstrap-extra" -v lineno=$(($(wc -l < /usr/sbin/sshd-bootstrap) - 4)) ' \
     NR==lineno {system("echo ""; cat " file); print; next} \
-    1' /etc/ssh-bootstrap > /etc/ssh-bootstrap2 && \
-    mv /etc/ssh-bootstrap2 /etc/ssh-bootstrap && \
-    chmod +x /etc/ssh-bootstrap
+    1' /usr/sbin/sshd-bootstrap > /usr/sbin/sshd-bootstrap2 && \
+    mv /usr/sbin/sshd-bootstrap2 /usr/sbin/sshd-bootstrap && \
+    chmod +x /usr/sbin/sshd-bootstrap
 
+#
+# The sshd-bootstrap process engages in some tomfoolery with the
+# /etc/ssh/sshd_config file during the bootstrap process. Namely, it forcibly
+# symlinks /etc/services-config/ssh/sshd_config over it under conditions that
+# prevail in our images. This means the canonical source of the sshd
+# configuration is the file in /etc/services-config, and we need to modify it,
+# rather than the customary file in /etc/ssh.
+#
 RUN sed -i \
     -e 's/^PermitRootLogin no/PermitRootLogin without-password/g' \
     -e 's/^PasswordAuthentication no/PasswordAuthentication yes/g' \
-    /etc/ssh/sshd_config
+    /etc/services-config/ssh/sshd_config
 
 # Set default password for testing
 RUN printf "\nSSH_USER_PASSWORD=password" >> /etc/services-config/ssh/ssh-bootstrap.conf
