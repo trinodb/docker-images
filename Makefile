@@ -58,6 +58,12 @@ JDK_PATH_BUILD_ARGS := \
 #
 # Also, find on Mac doesn't support -exec {} +
 #
+# Note that the generated .d files also include reverse dependencies so that
+# you can e.g. `make cdh5-hive.dependants' and cdh5-hive, and all of its
+# dependent images will be rebuilt. This is used in .travis.yml to break the
+# build up into pieces based on image that have a large number of direct and
+# indirect children.
+#
 IMAGE_DIRS=$(shell find $(ORGDIR) -type f -name Dockerfile -exec dirname {} \;)
 DOCKERFILES:=$(addsuffix /Dockerfile,$(IMAGE_DIRS))
 DEPS:=$(foreach dockerfile,$(DOCKERFILES),$(DEPDIR)/$(dockerfile:/Dockerfile=.d))
@@ -74,24 +80,37 @@ EXTERNAL_DEPS := \
 			$(shell $(SHELL) $(DEPEND_SH) -x $(dockerfile) $(DOCKERFILES))))
 
 #
+# Images that can be tested have a capabilities file in their directory. The
+# reverse dependencies for tests are handled here. They're listed in separate
+# files to avoid having to deal with dependencies between .d and .test.rd files.
+#
+TESTABLE_IMAGES=$(shell find $(ORGDIR) -type f -name capabilities.txt -exec dirname {} \;)
+IMAGE_TESTS=$(addprefix test-,$(TESTABLE_IMAGES))
+TEST_RDEPS=$(foreach testable_image,$(TESTABLE_IMAGES),$(DEPDIR)/$(testable_image).test.rd)
+
+#
 # The image directories exist in the filesystem. Make them .PHONY so make
 # actually builds them.
 #
-.PHONY: $(IMAGE_DIRS) $(EXTERNAL_DEPS)
+.PHONY: $(IMAGE_DIRS) $(IMAGE_TESTS) $(EXTERNAL_DEPS) $(TEST_RDEPS)
 
 # By default, build all of the images.
-all: $(IMAGE_DIRS)
+all: images tests
+
+images: $(IMAGE_DIRS)
+
+tests: $(IMAGE_TESTS)
 
 #
 # Release images to Dockerhub using docker-release
 # https://github.com/kokosing/docker-release
 #
 .PHONY: release snapshot
-release: $(IMAGE_DIRS)
+release: all
 	[ "$(RELEASE_TYPE)" = "$@" ] || ( echo "$(VERSION) is not a $@ version"; exit 1 )
 	docker-release --no-build --release $(VERSION) --tag-once $^
 
-snapshot: $(IMAGE_DIRS)
+snapshot: all
 	[ "$(RELEASE_TYPE)" = "$@" ] || ( echo "$(VERSION) is not a $@ version"; exit 1 )
 	docker-release --no-build --snapshot --tag-once $^
 
@@ -123,6 +142,7 @@ check-links:
 #
 include $(DEPS)
 include $(FLAGS)
+include $(TEST_RDEPS)
 
 $(DEPDIR)/%.d: %/Dockerfile $(DEPEND_SH)
 	-mkdir -p $(dir $@)
@@ -131,6 +151,17 @@ $(DEPDIR)/%.d: %/Dockerfile $(DEPEND_SH)
 $(FLAGDIR)/%.flags: %/Dockerfile $(FLAG_SH)
 	-mkdir -p $(dir $@)
 	$(SHELL) $(FLAG_SH) $< >$@
+
+#
+# Generate .test.rd files, adding a test target for an image to the dependants
+# of its corresponding image.
+#
+# Note that the .test.rd files need to be updated if the Makefile changes
+# because the Makefile is what generates the .test.rd files.
+#
+$(TEST_RDEPS): depends/%.test.rd: Makefile
+	-mkdir -p $(dir $@)
+	echo $*.dependants: test-$* >"$@"
 
 #
 # Finally, the static pattern rule that actually invokes docker build. If
@@ -149,7 +180,8 @@ $(IMAGE_DIRS): %: %/Dockerfile check-links
 	@echo "Building [$*] image"
 	@echo
 	cd $(dir $<) && time $(SHELL) -c "( tar -czh . | docker build $(DBFLAGS_$@) -t $@ --label $(LABEL) - )"
-	@echo
+
+$(IMAGE_TESTS): test-%: % %/capabilities.txt
 	@echo "Running tests for [$*]"
 	@echo
 	export TESTED_IMAGE=$* && \
