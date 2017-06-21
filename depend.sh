@@ -1,7 +1,7 @@
 #!/bin/sh
 
 usage() {
-	echo "$0 {-d|-x} {target image} [known images]" >&2
+	echo "$0 {-d|-g|-x} {target image} [known images]" >&2
 }
 
 find_parent() {
@@ -69,7 +69,25 @@ list_ext_image() {
 	echo "$make_friendly_parent"
 }
 
-while getopts ":dx" c; do
+graph_own_image() {
+	cat <<-EOF
+	"$1" [shape=box]
+	"$2" [shape=box]
+	"$1" -> "$2"
+
+EOF
+}
+
+graph_ext_image() {
+	cat <<-EOF
+	"$1" [shape=box]
+	"$2" [shape=house; style=filled; fillcolor="#a0a0a0"]
+	"$1" -> "$2"
+
+EOF
+}
+
+while getopts ":dgx" c; do
 	case $c in
 		d)
 			own_image_function=depfiles_own_image
@@ -78,6 +96,10 @@ while getopts ":dx" c; do
 		x)
 			own_image_function=noop
 			ext_image_function=list_ext_image
+			;;
+		g)
+			own_image_function=graph_own_image
+			ext_image_function=graph_ext_image
 			;;
 		\?)
 			echo "Unrecognized option -$OPTARG" >&2
