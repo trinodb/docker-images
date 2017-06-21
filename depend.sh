@@ -81,6 +81,7 @@ if contains "$parent_image" "$known_images"; then
 	# The parent image is built from the repository
 	if ! "$list_external"; then
 		echo "$target_image: $parent_image"
+		echo "PHONY: $target_image.dependants $parent_image.dependants"
 		echo "$target_image.dependants: $target_image"
 		echo "$parent_image.dependants: $target_image.dependants"
 	fi
