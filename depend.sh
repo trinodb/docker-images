@@ -1,7 +1,7 @@
 #!/bin/sh
 
 usage() {
-	echo "$0 [-x] {target image} [known images]" >&2
+	echo "$0 {-d|-x} {target image} [known images]" >&2
 }
 
 find_parent() {
@@ -33,12 +33,51 @@ contains() {
 	echo "$@" | grep -q -E "\<$needle\>"
 }
 
-list_external=false
+#
+# You cannot use a colon (:) in a target or prerequisite name in a
+# Makefile. Change colons to @-signs, which docker does not allow as part
+# of an name or tag. The Makefile will have to translate them back before
+# invoking `docker pull' to fetch the base images.
+#
+make_friendly_name() {
+	echo "$1" | sed 's/:/@/g'
+}
 
-while getopts ":x" c; do
+noop() {
+	:
+}
+
+depfiles_own_image() {
+	local target_image=$1
+	local parent_image=$2
+
+	echo "$target_image: $parent_image"
+	echo "PHONY: $target_image.dependants $parent_image.dependants"
+	echo "$target_image.dependants: $target_image"
+	echo "$parent_image.dependants: $target_image.dependants"
+}
+
+depfiles_ext_image() {
+	local target_image="$1"
+	local make_friendly_parent=$(make_friendly_name "$2")
+
+	echo "$target_image: $make_friendly_parent"
+}
+
+list_ext_image() {
+	local make_friendly_parent=$(make_friendly_name "$2")
+	echo "$make_friendly_parent"
+}
+
+while getopts ":dx" c; do
 	case $c in
+		d)
+			own_image_function=depfiles_own_image
+			ext_image_function=depfiles_ext_image
+			;;
 		x)
-			list_external=true
+			own_image_function=noop
+			ext_image_function=list_ext_image
 			;;
 		\?)
 			echo "Unrecognized option -$OPTARG" >&2
@@ -53,7 +92,7 @@ done
 
 shift "`dc -e"$OPTIND 1 - p"`"
 
-if [ $# -lt 2 ]; then
+if [ -z "$own_image_function" -o $# -lt 2 ]; then
 	usage
 	exit 1
 fi
@@ -78,26 +117,7 @@ case $ec in
 esac
 
 if contains "$parent_image" "$known_images"; then
-	# The parent image is built from the repository
-	if ! "$list_external"; then
-		echo "$target_image: $parent_image"
-		echo "PHONY: $target_image.dependants $parent_image.dependants"
-		echo "$target_image.dependants: $target_image"
-		echo "$parent_image.dependants: $target_image.dependants"
-	fi
+	$own_image_function "$target_image" "$parent_image"
 else
-	#
-	# You cannot use a colon (:) in a target or prerequisite name in a
-	# Makefile. Change colons to @-signs, which docker does not allow as part
-	# of an name or tag. The Makefile will have to translate them back before
-	# invoking `docker pull' to fetch the base images.
-	#
-	make_friendly_parent=`echo "$parent_image" | sed 's/:/@/g'`
-
-	# The parent image is pulled from a repository
-	if ! "$list_external"; then
-		echo "$target_image: $make_friendly_parent"
-	else
-		echo "$make_friendly_parent"
-	fi
+	$ext_image_function "$target_image" "$parent_image"
 fi

@@ -47,7 +47,7 @@ INSTALL_JDK_BUILD_ARGS := \
 # Use only BREs in sed for cross-platform compatibility.
 #
 JDK_PATH := $(shell echo $(JDK_RPM) | \
-       	sed 's!jdk-\([0-9][0-9]*\)u\([0-9][0-9]*\).*!/usr/java/jdk1.\1.0_\2!')
+	sed 's!jdk-\([0-9][0-9]*\)u\([0-9][0-9]*\).*!/usr/java/jdk1.\1.0_\2!')
 JDK_PATH_BUILD_ARGS := \
 	--build-arg JDK_PATH=$(JDK_PATH)
 
@@ -146,7 +146,7 @@ include $(TEST_RDEPS)
 
 $(DEPDIR)/%.d: %/Dockerfile $(DEPEND_SH)
 	-mkdir -p $(dir $@)
-	$(SHELL) $(DEPEND_SH) $< $(IMAGE_DIRS) >$@
+	$(SHELL) $(DEPEND_SH) -d $< $(IMAGE_DIRS) >$@
 
 $(FLAGDIR)/%.flags: %/Dockerfile $(FLAG_SH)
 	-mkdir -p $(dir $@)
