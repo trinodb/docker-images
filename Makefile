@@ -21,7 +21,6 @@ FLAG_SH=flag.sh
 FIND_BROKEN_SYMLINKS_SH=find_broken_symlinks.sh
 DEPDIR=depends
 FLAGDIR=flags
-
 ORGDIR=teradatalabs
 
 #
@@ -47,7 +46,7 @@ INSTALL_JDK_BUILD_ARGS := \
 # Use only BREs in sed for cross-platform compatibility.
 #
 JDK_PATH := $(shell echo $(JDK_RPM) | \
-       	sed 's!jdk-\([0-9][0-9]*\)u\([0-9][0-9]*\).*!/usr/java/jdk1.\1.0_\2!')
+	sed 's!jdk-\([0-9][0-9]*\)u\([0-9][0-9]*\).*!/usr/java/jdk1.\1.0_\2!')
 JDK_PATH_BUILD_ARGS := \
 	--build-arg JDK_PATH=$(JDK_PATH)
 
@@ -146,7 +145,7 @@ include $(TEST_RDEPS)
 
 $(DEPDIR)/%.d: %/Dockerfile $(DEPEND_SH)
 	-mkdir -p $(dir $@)
-	$(SHELL) $(DEPEND_SH) $< $(IMAGE_DIRS) >$@
+	$(SHELL) $(DEPEND_SH) -d $< $(IMAGE_DIRS) >$@
 
 $(FLAGDIR)/%.flags: %/Dockerfile $(FLAG_SH)
 	-mkdir -p $(dir $@)
@@ -202,3 +201,32 @@ $(IMAGE_TESTS): test-%: % %/capabilities.txt
 #
 $(EXTERNAL_DEPS): %:
 	docker pull $(subst @,:,$@)
+
+#
+# Targets and variables for creating the dependency graph of the docker images
+# as an image file.
+#
+GVDIR=graphviz
+GVWHOLE=$(GVDIR)/dependency_graph.gv
+DEPENDENCY_GRAPH=dependency_graph.svg
+GVFRAGS=$(addprefix $(GVDIR)/,$(addsuffix .gv.frag,$(IMAGE_DIRS)))
+
+.PHONY: graph clean-graph
+graph: $(DEPENDENCY_GRAPH)
+
+clean-graph:
+	-rm -r $(GVDIR)
+	-rm -r $(DEPENDENCY_GRAPH)
+
+$(DEPENDENCY_GRAPH): $(GVWHOLE) Makefile
+	dot -T svg $(filter %.gv,$^) > $@
+
+$(GVWHOLE): $(GVFRAGS) Makefile
+	echo "digraph {" >$@
+	echo 'size="14!" pack=true packmode="array2"' >>$@
+	cat $(filter %.gv.frag,$^) >>$@
+	echo "}" >>$@
+
+$(GVFRAGS): $(GVDIR)/%.gv.frag: %/Dockerfile $(DEPEND_SH)
+	-mkdir -p $(dir $@)
+	$(SHELL) $(DEPEND_SH) -g $< $(DOCKERFILES) >$@
