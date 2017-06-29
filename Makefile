@@ -18,6 +18,7 @@ LABEL := com.teradata.git.hash=$(shell git rev-parse HEAD)
 
 DEPEND_SH=depend.sh
 FLAG_SH=flag.sh
+PUSH_SH=push.sh
 FIND_BROKEN_SYMLINKS_SH=find_broken_symlinks.sh
 DEPDIR=depends
 FLAGDIR=flags
@@ -63,10 +64,17 @@ JDK_PATH_BUILD_ARGS := \
 # build up into pieces based on image that have a large number of direct and
 # indirect children.
 #
-IMAGE_DIRS=$(shell find $(ORGDIR) -type f -name Dockerfile -exec dirname {} \;)
-DOCKERFILES:=$(addsuffix /Dockerfile,$(IMAGE_DIRS))
-DEPS:=$(foreach dockerfile,$(DOCKERFILES),$(DEPDIR)/$(dockerfile:/Dockerfile=.d))
-FLAGS:=$(foreach dockerfile,$(DOCKERFILES),$(FLAGDIR)/$(dockerfile:/Dockerfile=.flags))
+IMAGE_DIRS := $(shell find $(ORGDIR) -type f -name Dockerfile -exec dirname {} \;)
+LATEST_TAGS := $(addsuffix @latest,$(IMAGE_DIRS))
+VERSION_TAGS := $(addsuffix @$(VERSION),$(IMAGE_DIRS))
+GIT_HASH := $(shell git rev-parse --short HEAD)
+GIT_HASH_TAGS := $(addsuffix @$(GIT_HASH),$(IMAGE_DIRS))
+DOCKERFILES := $(addsuffix /Dockerfile,$(IMAGE_DIRS))
+DEPS := $(foreach dockerfile,$(DOCKERFILES),$(DEPDIR)/$(dockerfile:/Dockerfile=.d))
+FLAGS := $(foreach dockerfile,$(DOCKERFILES),$(FLAGDIR)/$(dockerfile:/Dockerfile=.flags))
+
+RELEASE_TAGS := $(VERSION_TAGS) $(GIT_HASH_TAGS) $(LATEST_TAGS)
+SNAPSHOT_TAGS := $(GIT_HASH_TAGS) $(LATEST_TAGS)
 
 #
 # Make a list of the Docker images we depend on, but aren't built from
@@ -88,30 +96,67 @@ IMAGE_TESTS=$(addprefix test-,$(TESTABLE_IMAGES))
 TEST_RDEPS=$(foreach testable_image,$(TESTABLE_IMAGES),$(DEPDIR)/$(testable_image).test.rd)
 
 #
-# The image directories exist in the filesystem. Make them .PHONY so make
-# actually builds them.
+# Image tags in the Makefile use @ instead of : in full image:tag names.  This
+# is because there's no way to escape a colon in a target or prerequisite
+# name[0]. docker-tag reverses this transformation for places where we need to
+# interact with docker using its image:tag convention.
 #
-.PHONY: $(IMAGE_DIRS) $(IMAGE_TESTS) $(EXTERNAL_DEPS) $(TEST_RDEPS)
+# [0] http://www.mail-archive.com/bug-make@gnu.org/msg03318.html
+#
+# Must be a recursively expanded variable to use with $(call ...)
+#
+docker-tag = $(subst @,:,$(1))
+
+#
+# Various variables that define targets need to be .PHONY so that Make
+# continues to build them if a file with a matching name somehow comes into
+# existence
+#
+.PHONY: $(IMAGE_DIRS) $(LATEST_TAGS) $(VERSION_TAGS) $(GIT_HASH_TAGS) $(IMAGE_TESTS) $(EXTERNAL_DEPS)
 
 # By default, build all of the images.
 all: images tests
 
-images: $(IMAGE_DIRS)
+images: $(LATEST_TAGS)
 
 tests: $(IMAGE_TESTS)
 
 #
 # Release images to Dockerhub using docker-release
-# https://github.com/kokosing/docker-release
 #
-.PHONY: release snapshot
-release: all
-	[ "$(RELEASE_TYPE)" = "$@" ] || ( echo "$(VERSION) is not a $@ version"; exit 1 )
-	docker-release --no-build --release $(VERSION) --tag-once $^
+.PHONY: release push-release snapshot push-snapshot
 
-snapshot: all
-	[ "$(RELEASE_TYPE)" = "$@" ] || ( echo "$(VERSION) is not a $@ version"; exit 1 )
-	docker-release --no-build --snapshot --tag-once $^
+release: require-clean-repo require-on-master require-release-version push-release
+
+push-release: $(RELEASE_TAGS)
+	$(SHELL) $(PUSH_SH) $(call docker-tag,$^)
+
+snapshot: require-clean-repo require-snapshot-version push-snapshot
+
+push-snapshot: $(SNAPSHOT_TAGS)
+	$(SHELL) $(PUSH_SH) $(call docker-tag,$^)
+
+#
+# Create tags without pushing. This is probably only useful for testing.
+#
+.PHONY: release-tags snapshot-tags
+release-tags: $(RELEASE_TAGS)
+snapshot-tags: $(SNAPSHOT_TAGS)
+
+#
+# Targets for sanity-checking the repo prior to doing a release or snapshot.
+# Use $(shell git ...) so the output of the git command shows up on the command
+# line.
+#
+.PHONY: require-clean-repo require-on-master
+require-clean-repo:
+	test -z "$(shell git status --porcelain)" || ( echo "Repository is not clean"; exit 1 )
+
+require-on-master:
+	test "$(shell git rev-parse --abbrev-ref HEAD)" = "master" || ( echo "Current branch must be master"; exit 1 )
+
+require-%-version:
+	[ "$(RELEASE_TYPE)" = "$*" ] || ( echo "$(VERSION) is not a $* version"; exit 1 )
 
 #
 # For generating/cleaning the depends directory without building any images.
@@ -174,16 +219,31 @@ $(TEST_RDEPS): depends/%.test.rd: Makefile
 # invoke docker build for the image anyway and let Docker figure out if
 # anything has changed that requires a rebuild.
 #
-$(IMAGE_DIRS): %: %/Dockerfile check-links
+$(LATEST_TAGS): %@latest: %/Dockerfile check-links
 	@echo
 	@echo "Building [$*] image"
 	@echo
-	cd $(dir $<) && time $(SHELL) -c "( tar -czh . | docker build $(DBFLAGS_$@) -t $@ --label $(LABEL) - )"
+	cd $(dir $<) && time $(SHELL) -c "( tar -czh . | docker build $(DBFLAGS_$*) -t $(call docker-tag,$@) --label $(LABEL) - )"
 
-$(IMAGE_TESTS): test-%: % %/capabilities.txt
+$(VERSION_TAGS): %@$(VERSION): %@latest
+	docker tag $(call docker-tag,$^) $(call docker-tag,$@)
+
+$(GIT_HASH_TAGS): %@$(GIT_HASH): %@latest
+	docker tag $(call docker-tag,$^) $(call docker-tag,$@)
+
+#
+# This has two important functions:
+# 1. Making it possible to type `make teradatalabs/image' without specifying
+# @latest
+# 2. Allowing the .d files to express the various forward and reverse
+# dependencies without having to specify the @latest tag.
+#
+$(IMAGE_DIRS): %: %@latest
+
+$(IMAGE_TESTS): test-%: %@latest %/capabilities.txt
 	@echo "Running tests for [$*]"
 	@echo
-	export TESTED_IMAGE=$* && \
+	export TESTED_IMAGE=$(call docker-tag,$<) && \
 	  cd test && \
 	  docker-compose up -t 0 -d hadoop-master && \
 	  time docker-compose run -e EXPECTED_CAPABILITIES="`cat ../$*/capabilities.txt | tr '\n' ' '`" --rm test-runner
@@ -192,15 +252,8 @@ $(IMAGE_TESTS): test-%: % %/capabilities.txt
 # Static pattern rule to pull docker images that are external dependencies of
 # this repository.
 #
-# Note that the $(DEPEND_SH) script substitutes : -> @ in the image:tag of
-# external dependencies because there's no way to escape a colon in a target or
-# prerequisite name[0]. The subst() function reverses this transformation for
-# docker pull.
-#
-# [0] http://www.mail-archive.com/bug-make@gnu.org/msg03318.html
-#
 $(EXTERNAL_DEPS): %:
-	docker pull $(subst @,:,$@)
+	docker pull $(call docker-tag,$@)
 
 #
 # Targets and variables for creating the dependency graph of the docker images
