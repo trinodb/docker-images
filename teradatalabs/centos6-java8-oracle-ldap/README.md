@@ -7,7 +7,9 @@
 
 Docker image of CentOS 6 with Oracle JDK 8 installed. This will act
 as the base image for presto when running product-tests with front-end
-LDAP authentication.
+LDAP authentication. This has the certificates for AD and OpenLDAP.
+The AD certificates are valid for an year and needs to be regenerated
+every year.
 
 ## Oracle license
 
