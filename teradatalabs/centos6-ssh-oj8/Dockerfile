@@ -102,7 +102,7 @@ RUN sed -i \
     /etc/services-config/ssh/sshd_config
 
 # Set default password for testing
-RUN printf "\nSSH_USER_PASSWORD=password" >> /etc/services-config/ssh/ssh-bootstrap.conf
+RUN printf "\nSSH_USER_PASSWORD=password" >> /etc/services-config/ssh/sshd-bootstrap.conf
 
 EXPOSE 22 8080
 
