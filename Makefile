@@ -165,16 +165,11 @@ require-%-version:
 # dependencies if needed. This is mostly useful for testing changes to the
 # script that creates the .d files.
 #
-.PHONY: dep clean-dep flag clean-flag check-links
-dep:
+.PHONY: meta clean-meta check-links
+meta:
 
-clean-dep:
-	-rm -r $(DEPDIR)
-
-flag:
-
-clean-flag:
-	-rm -r $(FLAGDIR)
+clean-meta:
+	-rm -r $(DEPDIR) $(FLAGDIR)
 
 check-links:
 	$(SHELL) $(FIND_BROKEN_SYMLINKS_SH)
