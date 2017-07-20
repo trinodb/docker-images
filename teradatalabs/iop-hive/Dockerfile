@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM teradatalabs/iop-base
+FROM teradatalabs/iop-base:unlabelled
 MAINTAINER Teradata Docker Team <docker@teradata.com>
 
 # INSTALL HADOOP AND HIVE

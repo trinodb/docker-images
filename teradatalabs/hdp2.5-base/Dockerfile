@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM teradatalabs/centos6-ssh-oj8
+FROM teradatalabs/centos6-ssh-oj8:unlabelled
 MAINTAINER Teradata Docker Team <docker@teradata.com>
 
 RUN \

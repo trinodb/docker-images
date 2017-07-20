@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM teradatalabs/centos6-java8-oracle
+FROM teradatalabs/centos6-java8-oracle:unlabelled
 MAINTAINER Teradata Docker Team <docker@teradata.com>
 
 RUN yum -y install openldap openldap-clients openldap-servers

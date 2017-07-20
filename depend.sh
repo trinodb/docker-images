@@ -1,7 +1,7 @@
-#!/bin/sh
+#!/bin/bash
 
 usage() {
-	echo "$0 {-d|-g|-x} {target image} [known images]" >&2
+	echo "$0 {-d|-g|-p {tag}|-x} {target image Dockerfile} [known image tags]" >&2
 }
 
 find_parent() {
@@ -43,25 +43,30 @@ make_friendly_name() {
 	echo "$1" | sed 's/:/@/g'
 }
 
+untag() {
+	echo "${1%:*}"
+}
+
 noop() {
 	:
 }
 
 depfiles_own_image() {
 	local target_image=$1
-	local parent_image=$2
+	local make_friendly_parent=$(make_friendly_name "$2")
+	local untagged_parent=$(untag "$2")
 
-	echo "$target_image: $parent_image"
-	echo "PHONY: $target_image.dependants $parent_image.dependants"
-	echo "$target_image.dependants: $target_image"
-	echo "$parent_image.dependants: $target_image.dependants"
+	echo "$target_image@latest: $make_friendly_parent"
+	echo ".PHONY: $target_image.dependants $untagged_parent.dependants"
+	echo "$untagged_parent.dependants: $target_image"
+	echo "$untagged_parent.dependants: $target_image.dependants"
 }
 
 depfiles_ext_image() {
 	local target_image="$1"
 	local make_friendly_parent=$(make_friendly_name "$2")
 
-	echo "$target_image: $make_friendly_parent"
+	echo "$target_image@latest: $make_friendly_parent"
 }
 
 list_ext_image() {
@@ -70,10 +75,11 @@ list_ext_image() {
 }
 
 graph_own_image() {
+	local untagged_parent=$(untag "$2")
 	cat <<-EOF
 	"$1" [shape=box]
-	"$2" [shape=box]
-	"$1" -> "$2"
+	"$untagged_parent" [shape=box]
+	"$1" -> "$untagged_parent"
 
 EOF
 }
@@ -83,11 +89,20 @@ graph_ext_image() {
 	"$1" [shape=box]
 	"$2" [shape=house; style=filled; fillcolor="#a0a0a0"]
 	"$1" -> "$2"
-
 EOF
 }
 
-while getopts ":dgx" c; do
+require_parent_tag() {
+	local target_image=$1
+	local parent_image=$2
+
+	if ! echo "$parent_image" | grep ":${required_parent_tag}\$"; then
+		echo "FROM in Dockerfile for $target_image must specify a parent with the tag '$required_parent_tag'" >&2
+		exit 1
+	fi
+}
+
+while getopts ":dgp:x" c; do
 	case $c in
 		d)
 			own_image_function=depfiles_own_image
@@ -101,6 +116,11 @@ while getopts ":dgx" c; do
 			own_image_function=graph_own_image
 			ext_image_function=graph_ext_image
 			;;
+		p)
+			own_image_function=require_parent_tag
+			required_parent_tag=$OPTARG
+			ext_image_function=noop
+			;;
 		\?)
 			echo "Unrecognized option -$OPTARG" >&2
 			exit 1
@@ -112,9 +132,9 @@ while getopts ":dgx" c; do
 	esac
 done
 
-shift "`dc -e"$OPTIND 1 - p"`"
+shift "$(dc -e"$OPTIND 1 - p")"
 
-if [ -z "$own_image_function" -o $# -lt 2 ]; then
+if [ -z "$own_image_function" ] || [ $# -lt 2 ]; then
 	usage
 	exit 1
 fi
@@ -124,7 +144,7 @@ target_image=$(dirname "$target_dockerfile")
 shift
 known_images="$*"
 
-parent_image=$(find_parent "$target_dockerfile")
+parent_image_tag=$(find_parent "$target_dockerfile")
 ec=$?
 case $ec in
 	0) ;;
@@ -138,8 +158,8 @@ case $ec in
 		;;
 esac
 
-if contains "$parent_image" "$known_images"; then
-	$own_image_function "$target_image" "$parent_image"
+if contains "$parent_image_tag" "$known_images"; then
+	$own_image_function "$target_image" "$parent_image_tag"
 else
-	$ext_image_function "$target_image" "$parent_image"
+	$ext_image_function "$target_image" "$parent_image_tag"
 fi

@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM teradatalabs/hdp2.5-slave
+FROM teradatalabs/hdp2.5-slave:unlabelled
 MAINTAINER Teradata Docker Team <docker@teradata.com>
 
 ARG JDK_PATH

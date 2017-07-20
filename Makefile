@@ -16,6 +16,7 @@ RELEASE_TYPE := $(if $(filter %-SNAPSHOT, $(VERSION)),snapshot,release)
 
 LABEL := com.teradata.git.hash=$(shell git rev-parse HEAD)
 
+LABEL_PARENT_SH=label-parent.sh
 DEPEND_SH=depend.sh
 FLAG_SH=flag.sh
 PUSH_SH=push.sh
@@ -65,6 +66,8 @@ JDK_PATH_BUILD_ARGS := \
 # indirect children.
 #
 IMAGE_DIRS := $(shell find $(ORGDIR) -type f -name Dockerfile -exec dirname {} \;)
+UNLABELLED_TAGS := $(addsuffix @unlabelled,$(IMAGE_DIRS))
+PARENT_CHECKS := $(addsuffix -parent-check,$(IMAGE_DIRS))
 LATEST_TAGS := $(addsuffix @latest,$(IMAGE_DIRS))
 VERSION_TAGS := $(addsuffix @$(VERSION),$(IMAGE_DIRS))
 GIT_HASH := $(shell git rev-parse --short HEAD)
@@ -81,10 +84,10 @@ SNAPSHOT_TAGS := $(GIT_HASH_TAGS) $(LATEST_TAGS)
 # Dockerfiles in this repository. Order doesn't matter, but sort() has the
 # side-effect of making the list unique.
 #
-EXTERNAL_DEPS := \
+EXTERNAL_DEPS = \
 	$(sort \
 		$(foreach dockerfile,$(DOCKERFILES),\
-			$(shell $(SHELL) $(DEPEND_SH) -x $(dockerfile) $(DOCKERFILES))))
+			$(shell $(SHELL) $(DEPEND_SH) -x $(dockerfile) $(call docker-tag,$(UNLABELLED_TAGS)))))
 
 #
 # Images that can be tested have a capabilities file in their directory. The
@@ -112,7 +115,8 @@ docker-tag = $(subst @,:,$(1))
 # continues to build them if a file with a matching name somehow comes into
 # existence
 #
-.PHONY: $(IMAGE_DIRS) $(LATEST_TAGS) $(VERSION_TAGS) $(GIT_HASH_TAGS) $(IMAGE_TESTS) $(EXTERNAL_DEPS)
+.PHONY: $(IMAGE_DIRS) $(LATEST_TAGS) $(UNLABELLED_TAGS) $(VERSION_TAGS) $(GIT_HASH_TAGS)
+.PHONY: $(PARENT_CHECKS) $(IMAGE_TESTS) $(EXTERNAL_DEPS)
 
 # By default, build all of the images.
 all: images tests
@@ -185,7 +189,7 @@ include $(TEST_RDEPS)
 
 $(DEPDIR)/%.d: %/Dockerfile $(DEPEND_SH)
 	-mkdir -p $(dir $@)
-	$(SHELL) $(DEPEND_SH) -d $< $(IMAGE_DIRS) >$@
+	$(SHELL) $(DEPEND_SH) -d $< $(call docker-tag,$(UNLABELLED_TAGS)) >$@
 
 $(FLAGDIR)/%.flags: %/Dockerfile $(FLAG_SH)
 	-mkdir -p $(dir $@)
@@ -203,22 +207,40 @@ $(TEST_RDEPS): depends/%.test.rd: Makefile
 	echo $*.dependants: test-$* >"$@"
 
 #
-# Finally, the static pattern rule that actually invokes docker build. If
+# Finally, the static pattern rules that actually invoke docker build/tag. If
 # teradatalabs/foo has a dependency on a foo_parent image in this repo, make
 # knows about it via the included .d file, and builds foo_parent before it
 # builds foo.
 #
-# We don't need to specify any dependencies other than the Dockerfile for the
-# image because these are .PHONY targets. In particular, if the DBFLAGS for an
-# image have changed without the Dockerfile changing, it's OK because we'll
-# invoke docker build for the image anyway and let Docker figure out if
+
+#
+# Images in the repo that are built FROM other images in the repo are built
+# from the special tag `unlabelled'. This is because LABEL data creates a new
+# layer in the image. Without building from the `unlabelled' tag, all direct or
+# indirect child images have to be fully rebuilt when the LABEL data changes.
+# Since we include the git hash in the LABEL data, this changes frequently.
+#
+# We take the approach of building the :latest tag first, then finding the
+# parent of the layer containing the LABEL information, and tagging that as
+# :unlabelled. This works because all of the LABEL information applied via a
+# --label option(s) to `docker build' is put in a single layer at the top of
+# the resulting stack of layers.
+#
+$(UNLABELLED_TAGS): %@unlabelled: %/Dockerfile %@latest
+	docker tag $(shell $(SHELL) $(LABEL_PARENT_SH) $*:latest) $(call docker-tag,$@)
+
+#
+# We don't need to specify any (real) dependencies other than the Dockerfile
+# for the image because these are .PHONY targets. In particular, if the DBFLAGS
+# for an image have changed without the Dockerfile changing, it's OK because
+# we'll invoke docker build for the image anyway and let Docker figure out if
 # anything has changed that requires a rebuild.
 #
-$(LATEST_TAGS): %@latest: %/Dockerfile check-links
+$(LATEST_TAGS): %@latest: %/Dockerfile %-parent-check check-links
 	@echo
-	@echo "Building [$*] image"
+	@echo "Building [$@] image"
 	@echo
-	cd $(dir $<) && time $(SHELL) -c "( tar -czh . | docker build $(DBFLAGS_$*) -t $(call docker-tag,$@) --label $(LABEL) - )"
+	cd $* && time $(SHELL) -c "( tar -czh . | docker build $(DBFLAGS_$*) -t $(call docker-tag,$@) --label $(LABEL) - )"
 
 $(VERSION_TAGS): %@$(VERSION): %@latest
 	docker tag $(call docker-tag,$^) $(call docker-tag,$@)
@@ -227,11 +249,16 @@ $(GIT_HASH_TAGS): %@$(GIT_HASH): %@latest
 	docker tag $(call docker-tag,$^) $(call docker-tag,$@)
 
 #
-# This has two important functions:
-# 1. Making it possible to type `make teradatalabs/image' without specifying
-# @latest
-# 2. Allowing the .d files to express the various forward and reverse
-# dependencies without having to specify the @latest tag.
+# Verify that the parent image specified in the Dockerfile is either
+# 1. External
+# 2. Has the tag :unlabelled
+#
+$(PARENT_CHECKS): %-parent-check: %/Dockerfile $(DEPEND_SH)
+	$(SHELL) $(DEPEND_SH) -p unlabelled $< $(call docker-tag,$(UNLABELLED_TAGS))
+
+#
+# This makes it possible it possible to type `make teradatalabs/image' without
+# specifying @latest
 #
 $(IMAGE_DIRS): %: %@latest
 
@@ -277,4 +304,4 @@ $(GVWHOLE): $(GVFRAGS) Makefile
 
 $(GVFRAGS): $(GVDIR)/%.gv.frag: %/Dockerfile $(DEPEND_SH)
 	-mkdir -p $(dir $@)
-	$(SHELL) $(DEPEND_SH) -g $< $(DOCKERFILES) >$@
+	$(SHELL) $(DEPEND_SH) -g $< $(call docker-tag,$(UNLABELLED_TAGS)) >$@

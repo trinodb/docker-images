@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM teradatalabs/cdh5-hive
+FROM teradatalabs/cdh5-hive:unlabelled
 MAINTAINER Teradata Docker Team <docker@teradata.com>
 
 # INSTALL KERBEROS

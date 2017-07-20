@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM teradatalabs/hdp2.5-base
+FROM teradatalabs/hdp2.5-base:unlabelled
 MAINTAINER Teradata Docker Team <docker@teradata.com>
 
 # Good grief. Get rid of the default hdp config.
