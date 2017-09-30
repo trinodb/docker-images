@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM prestosql/centos6-ssh-oj8:unlabelled
+FROM prestosql/centos6-oj8:unlabelled
 MAINTAINER Teradata Docker Team <docker@teradata.com>
 
 RUN \
@@ -35,12 +35,8 @@ RUN \
     hive-metastore \
     hive-server2 \
 
+  && yum install -y python-setuptools && easy_install supervisor \
+
   && yum -y clean all && rm -rf /tmp/* /var/tmp/*
 
-# Copy supervisord startup script and base configs
-COPY files/startup.sh /root/startup.sh
-COPY files/supervisord.conf /etc/supervisord.conf
-COPY files/supervisord.d/bootstrap.conf /etc/supervisord.d/bootstrap.conf
-
-# Add supervisord configs in child images
-ONBUILD COPY files/supervisord.d/* /etc/supervisord.d/
+COPY ./files /
