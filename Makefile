@@ -89,15 +89,6 @@ EXTERNAL_DEPS = \
 			$(shell $(SHELL) $(DEPEND_SH) -x $(dockerfile) $(call docker-tag,$(UNLABELLED_TAGS)))))
 
 #
-# Images that can be tested have a capabilities file in their directory. The
-# reverse dependencies for tests are handled here. They're listed in separate
-# files to avoid having to deal with dependencies between .d and .test.rd files.
-#
-TESTABLE_IMAGES=$(shell find $(ORGDIR) -type f -name capabilities.txt -exec dirname {} \;)
-IMAGE_TESTS=$(addprefix test-,$(TESTABLE_IMAGES))
-TEST_RDEPS=$(foreach testable_image,$(TESTABLE_IMAGES),$(DEPDIR)/$(testable_image).test.rd)
-
-#
 # Image tags in the Makefile use @ instead of : in full image:tag names.  This
 # is because there's no way to escape a colon in a target or prerequisite
 # name[0]. docker-tag reverses this transformation for places where we need to
@@ -118,11 +109,9 @@ docker-tag = $(subst @,:,$(1))
 .PHONY: $(PARENT_CHECKS) $(IMAGE_TESTS) $(EXTERNAL_DEPS)
 
 # By default, build all of the images.
-all: images tests
+all: images
 
 images: $(LATEST_TAGS)
-
-tests: $(IMAGE_TESTS)
 
 #
 # Release images to Dockerhub using docker-release
@@ -192,24 +181,6 @@ $(FLAGDIR)/%.flags: %/Dockerfile $(FLAG_SH)
 	$(SHELL) $(FLAG_SH) $< >$@
 
 #
-# Generate .test.rd files, adding a test target for an image to the dependants
-# of its corresponding image.
-#
-# Note that the .test.rd files need to be updated if the Makefile changes
-# because the Makefile is what generates the .test.rd files.
-#
-$(TEST_RDEPS): depends/%.test.rd: Makefile
-	-mkdir -p $(dir $@)
-	echo $*.dependants: test-$* >"$@"
-
-#
-# Finally, the static pattern rules that actually invoke docker build/tag. If
-# prestosql/foo has a dependency on a foo_parent image in this repo, make
-# knows about it via the included .d file, and builds foo_parent before it
-# builds foo.
-#
-
-#
 # Images in the repo that are built FROM other images in the repo are built
 # from the special tag `unlabelled'. This is because LABEL data creates a new
 # layer in the image. Without building from the `unlabelled' tag, all direct or
@@ -257,14 +228,6 @@ $(PARENT_CHECKS): %-parent-check: %/Dockerfile $(DEPEND_SH)
 # specifying @latest
 #
 $(IMAGE_DIRS): %: %@latest
-
-$(IMAGE_TESTS): test-%: %@latest %/capabilities.txt
-	@echo "Running tests for [$*]"
-	@echo
-	export TESTED_IMAGE=$(call docker-tag,$<) && \
-	  cd test && \
-	  docker-compose up -t 0 -d hadoop-master && \
-	  time docker-compose run -e EXPECTED_CAPABILITIES="`cat ../$*/capabilities.txt | tr '\n' ' '`" --rm test-runner
 
 #
 # Static pattern rule to pull docker images that are external dependencies of
