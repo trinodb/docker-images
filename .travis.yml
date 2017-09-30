@@ -1,12 +1,6 @@
 language: generic
 dist: trusty
 
-env:
-  matrix:
-    - IMAGES='prestosql/centos6-java8-oracle.dependants'
-    - IMAGES='prestosql/centos6-ssh-oj8.dependants'
-    - IMAGES=$( echo prestosql/{dns,ubuntu-trusty-python2.6,presto-admin-devenv} )
-
 # Prevent duplicate builds on tag pushes.
 # See https://github.com/mockito/mockito/commit/500519aac4cc13770aa47c1eb7d28e905c27e7aa
 branches:
@@ -25,7 +19,7 @@ before_install:
   - sudo apt-get -y install docker-ce
   - docker --version
 
-install: make ${IMAGES[@]}
+install: make
 
 before_deploy:
   # decrypt the github deploy key
