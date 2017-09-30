@@ -20,7 +20,6 @@ LABEL_PARENT_SH=label-parent.sh
 DEPEND_SH=depend.sh
 FLAG_SH=flag.sh
 PUSH_SH=push.sh
-FIND_BROKEN_SYMLINKS_SH=find_broken_symlinks.sh
 DEPDIR=depends
 FLAGDIR=flags
 ORGDIR=prestosql
@@ -169,14 +168,11 @@ require-%-version:
 # dependencies if needed. This is mostly useful for testing changes to the
 # script that creates the .d files.
 #
-.PHONY: meta clean-meta check-links
+.PHONY: meta clean-meta
 meta:
 
 clean-meta:
 	-rm -r $(DEPDIR) $(FLAGDIR)
-
-check-links:
-	$(SHELL) $(FIND_BROKEN_SYMLINKS_SH)
 
 #
 # Include the dependencies for every image we know how to build. These don't
@@ -236,7 +232,7 @@ $(UNLABELLED_TAGS): %@unlabelled: %/Dockerfile %@latest
 # we'll invoke docker build for the image anyway and let Docker figure out if
 # anything has changed that requires a rebuild.
 #
-$(LATEST_TAGS): %@latest: %/Dockerfile %-parent-check check-links
+$(LATEST_TAGS): %@latest: %/Dockerfile %-parent-check
 	@echo
 	@echo "Building [$@] image"
 	@echo
