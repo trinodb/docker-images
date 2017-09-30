@@ -16,6 +16,7 @@
   limitations under the License.
 -->
 <configuration>
+
     <property>
         <name>mapred.job.tracker</name>
         <value>hadoop-master:8021</value>
@@ -30,6 +31,7 @@
         <name>mapreduce.jobhistory.address</name>
         <value>hadoop-master:10020</value>
     </property>
+
     <property>
         <name>mapreduce.jobhistory.webapp.address</name>
         <value>hadoop-master:19888</value>
@@ -40,17 +42,18 @@
         <name>mapreduce.task.tmp.dir</name>
         <value>/var/lib/hadoop-mapreduce/cache/${user.name}/tasks</value>
     </property>
-    
+
     <!-- MapReduce Job History Server security configs -->
     <property>
         <name>mapreduce.jobhistory.keytab</name>
-        <value>/etc/hadoop/conf/mapred.keytab</value>	<!-- path to the MAPRED keytab for the Job History Server -->
-    </property>	
+        <value>/etc/hadoop/conf/mapred.keytab</value>    <!-- path to the MAPRED keytab for the Job History Server -->
+    </property>
+
     <property>
-        <name>mapreduce.jobhistory.principal</name>	
+        <name>mapreduce.jobhistory.principal</name>
         <value>mapred/hadoop-master@LABS.TERADATA.COM</value>
     </property>
-    
+
     <!-- JobTracker security configs -->
     <property>
         <name>mapreduce.jobtracker.kerberos.principal</name>
@@ -67,20 +70,10 @@
         <name>mapreduce.tasktracker.kerberos.principal</name>
         <value>mapred/hadoop-master@LABS.TERADATA.COM</value>
     </property>
+
     <property>
         <name>mapreduce.tasktracker.keytab.file</name>
         <value>/etc/hadoop/conf/mapred.keytab</value> <!-- path to the MapReduce keytab -->
     </property>
 
-    <!-- TaskController settings -->
-    <property>
-        <name>mapred.task.tracker.task-controller</name>
-        <value>org.apache.hadoop.mapred.LinuxTaskController</value>
-    </property>
-
-    <property>
-        <name>mapreduce.tasktracker.group</name>
-        <value>mapred</value>
-    </property>
-    
 </configuration>

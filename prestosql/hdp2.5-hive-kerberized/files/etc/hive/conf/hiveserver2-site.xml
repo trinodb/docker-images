@@ -17,6 +17,13 @@
 -->
 <configuration>
 
+    <!-- Enable authentication -->
+    <property>
+        <name>hive.security.authenticator.manager</name>
+        <value>org.apache.hadoop.hive.ql.security.SessionStateUserAuthenticator</value>
+    </property>
+
+    <!-- Enable authorization -->
     <property>
         <name>hive.security.authorization.manager</name>
         <value>org.apache.hadoop.hive.ql.security.authorization.plugin.sqlstd.SQLStdHiveAuthorizerFactory</value>
@@ -26,16 +33,6 @@
     <property>
         <name>hive.security.authorization.enabled</name>
         <value>true</value>
-    </property>
-
-    <property>
-        <name>hive.security.authenticator.manager</name>
-        <value>org.apache.hadoop.hive.ql.security.SessionStateUserAuthenticator</value>
-    </property>
-
-    <property>
-        <name>hive.metastore.uris</name>
-        <value> </value>
     </property>
 
 </configuration>

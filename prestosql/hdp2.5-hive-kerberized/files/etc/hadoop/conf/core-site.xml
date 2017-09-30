@@ -16,9 +16,15 @@
   limitations under the License.
 -->
 <configuration>
+
     <property>
         <name>fs.defaultFS</name>
         <value>hdfs://hadoop-master:8020</value>
+    </property>
+
+    <property>
+        <name>fs.default.name</name>
+        <value>hdfs://hadoop-master:9000</value>
     </property>
 
     <!-- OOZIE proxy user setting -->
@@ -70,17 +76,6 @@
         <name>hadoop.proxyuser.mapred.groups</name>
         <value>*</value>
     </property>
-    
-    <!-- Authentication -->
-    <property>
-        <name>hadoop.security.authentication</name>
-        <value>kerberos</value>
-    </property>
-
-    <property>
-        <name>hadoop.security.authorization</name>
-        <value>true</value>
-    </property>
 
     <!-- Hive impersonation -->
     <property>
@@ -91,6 +86,39 @@
     <property>
         <name>hadoop.proxyuser.hive.groups</name>
         <value>*</value>
+    </property>
+
+    <!-- Hdfs impersonation -->
+    <property>
+        <name>hadoop.proxyuser.hdfs.groups</name>
+        <value>*</value>
+    </property>
+
+    <property>
+        <name>hadoop.proxyuser.hdfs.hosts</name>
+        <value>*</value>
+    </property>
+
+    <!-- Presto impersonation -->
+    <property>
+        <name>hadoop.proxyuser.presto-server.groups</name>
+        <value>*</value>
+    </property>
+
+    <property>
+        <name>hadoop.proxyuser.presto-server.hosts</name>
+        <value>*</value>
+    </property>
+
+    <!-- Enable authentication -->
+    <property>
+        <name>hadoop.security.authentication</name>
+        <value>kerberos</value>
+    </property>
+
+    <property>
+        <name>hadoop.security.authorization</name>
+        <value>true</value>
     </property>
 
 </configuration>

@@ -52,12 +52,24 @@
         <name>datanucleus.autoStartMechanism</name>
         <value>SchemaTable</value>
     </property>
-    
+
+    <property>
+        <name>hive.security.authorization.createtable.owner.grants</name>
+        <value>ALL</value>
+        <description>The set of privileges automatically granted to the owner whenever a table gets created.</description>
+    </property>
+
+    <property>
+        <name>hive.users.in.admin.role</name>
+        <value>hdfs,hive</value>
+    </property>
+
+    <!-- Enable authentication -->
     <property>
         <name>hive.server2.authentication</name>
         <value>KERBEROS</value>
     </property>
-    
+
     <property>
         <name>hive.server2.enable.impersonation</name>
         <value>true</value>
@@ -67,7 +79,7 @@
         <name>hive.server2.authentication.kerberos.principal</name>
         <value>hive/hadoop-master@LABS.TERADATA.COM</value>
     </property>
-   
+
     <property>
         <name>hive.server2.authentication.kerberos.keytab</name>
         <value>/etc/hive/conf/hive.keytab</value>
@@ -88,17 +100,7 @@
         <value>hive/hadoop-master@LABS.TERADATA.COM</value>
     </property>
 
-    <property>
-        <name>hive.security.authorization.createtable.owner.grants</name>
-        <value>ALL</value>
-        <description>The set of privileges automatically granted to the owner whenever a table gets created.</description>
-    </property>
-
-    <property>
-        <name>hive.users.in.admin.role</name>
-        <value>hdfs,hive</value>
-    </property>
-
+    <!-- Enable SQL based authorization -->
     <property>
         <name>hive.security.authorization.manager</name>
         <value>org.apache.hadoop.hive.ql.security.authorization.plugin.sqlstd.SQLStdConfOnlyAuthorizerFactory</value>

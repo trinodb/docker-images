@@ -12,23 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM prestosql/cdh5-hive:unlabelled
+FROM prestosql/hdp2.5-hive:unlabelled
 MAINTAINER Teradata Docker Team <docker@teradata.com>
 
 # INSTALL KERBEROS
 RUN yum install -y krb5-libs krb5-server krb5-workstation
 
-# ADD KERBEROS CONFIGURATION
-ADD files/kerberos/krb5.conf /etc/krb5.conf
-ADD files/kerberos/kdc.conf /var/kerberos/krb5kdc/kdc.conf
-ADD files/kerberos/kadm5.acl /var/kerberos/krb5kdc/kadm5.acl
+# COPY CONFIGURATION
+COPY ./files /
 
 # CREATE KERBEROS DATABASE
 RUN /usr/sbin/kdb5_util create -s -P password
-
-# ADD SUPERVISORD BOOTSTRAP KERBEROS SCRIPT
-ADD files/bootstrap-kerberos.sh /root/bootstrap-kerberos.sh
-ADD files/supervisord.d/bootstrap-kerberos.conf /etc/supervisord.d/bootstrap-kerberos.conf
 
 # ADD HADOOP PRINCIPALS
 RUN /usr/sbin/kadmin.local -q "addprinc -randkey hdfs/hadoop-master@LABS.TERADATA.COM"
@@ -47,30 +41,11 @@ RUN chown yarn:hadoop /etc/hadoop/conf/yarn.keytab
 RUN chown hdfs:hadoop /etc/hadoop/conf/HTTP.keytab
 RUN chmod 644 /etc/hadoop/conf/*.keytab
 
-# ENABLE HADOOP SECURITY
-ADD files/conf/core-site.xml /etc/hadoop/conf/core-site.xml
-ADD files/conf/hdfs-site.xml /etc/hadoop/conf/hdfs-site.xml
-
-# ENABLE MAPRED SECURITY
-ADD files/conf/mapred-site.xml /etc/hadoop/conf/mapred-site.xml
-ADD files/conf/taskcontroller.cfg /etc/hadoop/conf/taskcontroller.cfg
-
-# ENABLE YARN SECURITY
-ADD files/conf/yarn-site.xml /etc/hadoop/conf/yarn-site.xml
-ADD files/conf/container-executor.cfg /etc/hadoop/conf/container-executor.cfg
-RUN chmod 6050 /etc/hadoop/conf/container-executor.cfg
-
 # CREATE HIVE PRINCIPAL AND KEYTAB
 RUN /usr/sbin/kadmin.local -q "addprinc -randkey hive/hadoop-master@LABS.TERADATA.COM"
 RUN /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/hive/conf/hive.keytab hive/hadoop-master"
-
-# ENABLE HIVE SECURITY
-ADD files/conf/hive-site.xml /etc/hive/conf/hive-site.xml
 RUN chown hive:hadoop /etc/hive/conf/hive.keytab
 RUN chmod 644 /etc/hive/conf/hive.keytab
-
-# ENABLE AUTHORIZATION IN HIVE SERVER 
-ADD files/conf/hiveserver2-site.xml /etc/hive/conf/hiveserver2-site.xml
 
 # CREATE PRESTO PRINCIPAL AND KEYTAB
 RUN /usr/sbin/kadmin.local -q "addprinc -randkey presto-server/presto-master.docker.cluster@LABS.TERADATA.COM"
@@ -101,4 +76,4 @@ RUN chmod 644 /etc/presto/conf/keystore.jks
 EXPOSE	88
 EXPOSE	749
 
-CMD /root/startup.sh
+CMD supervisord -c /etc/supervisord.conf
