@@ -1,1 +1,0 @@
-../../../../commons/conf/hive-env.sh
