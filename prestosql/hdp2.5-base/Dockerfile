@@ -41,7 +41,6 @@ RUN \
 COPY files/startup.sh /root/startup.sh
 COPY files/supervisord.conf /etc/supervisord.conf
 COPY files/supervisord.d/bootstrap.conf /etc/supervisord.d/bootstrap.conf
-COPY files/change_timezone.sh /root/change_timezone.sh
 
 # Add supervisord configs in child images
 ONBUILD COPY files/supervisord.d/* /etc/supervisord.d/
