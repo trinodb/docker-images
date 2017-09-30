@@ -1,5 +1,8 @@
 #!/bin/bash -ex
 
+# 0 make file system hostname resolvable
+echo "127.0.0.1 hadoop-master" >> /etc/hosts
+
 # 1 format namenode
 chown hdfs:hdfs /var/lib/hadoop-hdfs/cache/
 
@@ -19,6 +22,11 @@ sleep 10
 
 # 4.1 Create an hdfs home directory for the yarn user. For some reason, init-hdfs doesn't do so.
 su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir /user/yarn && /usr/bin/hadoop fs -chown yarn:yarn /user/yarn'
+su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chmod -R 1777 /tmp/hadoop-yarn'
+su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir /tmp/hadoop-yarn/staging && /usr/bin/hadoop fs -chown mapred:mapred /tmp/hadoop-yarn/staging && /usr/bin/hadoop fs -chmod -R 1777 /tmp/hadoop-yarn/staging'
+su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir /tmp/hadoop-yarn/staging/history && /usr/bin/hadoop fs -chown mapred:mapred /tmp/hadoop-yarn/staging/history && /usr/bin/hadoop fs -chmod -R 1777 /tmp/hadoop-yarn/staging/history'
+
+
 
 # 5 init hive directories
 su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir /user/hive/warehouse'

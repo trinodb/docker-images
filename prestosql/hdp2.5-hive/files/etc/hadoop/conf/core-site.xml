@@ -16,6 +16,7 @@
   limitations under the License.
 -->
 <configuration>
+
     <property>
         <name>fs.defaultFS</name>
         <value>hdfs://hadoop-master:8020</value>
@@ -89,13 +90,13 @@
 
     <!-- Hdfs impersonation -->
     <property>
-      <name>hadoop.proxyuser.hdfs.groups</name>
-      <value>*</value>
+        <name>hadoop.proxyuser.hdfs.groups</name>
+        <value>*</value>
     </property>
 
     <property>
-      <name>hadoop.proxyuser.hdfs.hosts</name>
-      <value>*</value>
+        <name>hadoop.proxyuser.hdfs.hosts</name>
+        <value>*</value>
     </property>
 
 </configuration>

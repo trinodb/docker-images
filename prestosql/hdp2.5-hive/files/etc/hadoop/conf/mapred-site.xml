@@ -16,6 +16,7 @@
   limitations under the License.
 -->
 <configuration>
+
     <property>
         <name>mapred.job.tracker</name>
         <value>hadoop-master:8021</value>
@@ -30,6 +31,7 @@
         <name>mapreduce.jobhistory.address</name>
         <value>hadoop-master:10020</value>
     </property>
+
     <property>
         <name>mapreduce.jobhistory.webapp.address</name>
         <value>hadoop-master:19888</value>
