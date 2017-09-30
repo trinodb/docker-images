@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM teradatalabs/cdh5-hive-slave:unlabelled
+FROM prestosql/cdh5-hive-slave:unlabelled
 MAINTAINER Teradata Docker Team <docker@teradata.com>
 
 RUN yum install -y openssh-server openssh-clients passwd libcgroup

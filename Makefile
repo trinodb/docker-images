@@ -23,7 +23,7 @@ PUSH_SH=push.sh
 FIND_BROKEN_SYMLINKS_SH=find_broken_symlinks.sh
 DEPDIR=depends
 FLAGDIR=flags
-ORGDIR=teradatalabs
+ORGDIR=prestosql
 
 #
 # This should be the only place you need to touch to update the version of Java
@@ -208,7 +208,7 @@ $(TEST_RDEPS): depends/%.test.rd: Makefile
 
 #
 # Finally, the static pattern rules that actually invoke docker build/tag. If
-# teradatalabs/foo has a dependency on a foo_parent image in this repo, make
+# prestosql/foo has a dependency on a foo_parent image in this repo, make
 # knows about it via the included .d file, and builds foo_parent before it
 # builds foo.
 #
@@ -257,7 +257,7 @@ $(PARENT_CHECKS): %-parent-check: %/Dockerfile $(DEPEND_SH)
 	$(SHELL) $(DEPEND_SH) -p unlabelled $< $(call docker-tag,$(UNLABELLED_TAGS))
 
 #
-# This makes it possible it possible to type `make teradatalabs/image' without
+# This makes it possible it possible to type `make prestosql/image' without
 # specifying @latest
 #
 $(IMAGE_DIRS): %: %@latest

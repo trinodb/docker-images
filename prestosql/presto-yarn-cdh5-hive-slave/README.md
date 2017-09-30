@@ -1,9 +1,9 @@
 # presto-yarn-cdh5-hive-slave [![][layers-badge]][layers-link] [![][version-badge]][dockerhub-link]
            
-[layers-badge]: https://images.microbadger.com/badges/image/teradatalabs/presto-yarn-cdh5-hive-slave.svg
-[layers-link]: https://microbadger.com/images/teradatalabs/presto-yarn-cdh5-hive-slave
-[version-badge]: https://images.microbadger.com/badges/version/teradatalabs/presto-yarn-cdh5-hive-slave.svg
-[dockerhub-link]: https://hub.docker.com/r/teradatalabs/presto-yarn-cdh5-hive-slave
+[layers-badge]: https://images.microbadger.com/badges/image/prestosql/presto-yarn-cdh5-hive-slave.svg
+[layers-link]: https://microbadger.com/images/prestosql/presto-yarn-cdh5-hive-slave
+[version-badge]: https://images.microbadger.com/badges/version/prestosql/presto-yarn-cdh5-hive-slave.svg
+[dockerhub-link]: https://hub.docker.com/r/prestosql/presto-yarn-cdh5-hive-slave
 
 A Hadoop slave image for testing presto-yarn, using the CDH distro.
 

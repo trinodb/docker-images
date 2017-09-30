@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM teradatalabs/cdh5-base:unlabelled
+FROM prestosql/cdh5-base:unlabelled
 MAINTAINER Teradata Docker Team <docker@teradata.com>
 
 # INSTALL HDFS DATANODE and YARN NODEMANAGER

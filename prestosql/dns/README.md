@@ -1,9 +1,9 @@
 # docker-dnsmasq [![][layers-badge]][layers-link] [![][version-badge]][dockerhub-link]
            
-[layers-badge]: https://images.microbadger.com/badges/image/teradatalabs/dns.svg
-[layers-link]: https://microbadger.com/images/teradatalabs/dns
-[version-badge]: https://images.microbadger.com/badges/version/teradatalabs/dns.svg
-[dockerhub-link]: https://hub.docker.com/r/teradatalabs/dns
+[layers-badge]: https://images.microbadger.com/badges/image/prestosql/dns.svg
+[layers-link]: https://microbadger.com/images/prestosql/dns
+[version-badge]: https://images.microbadger.com/badges/version/prestosql/dns.svg
+[dockerhub-link]: https://hub.docker.com/r/prestosql/dns
 
 Based on https://github.com/andyshinn/docker-dnsmasq
 
@@ -13,9 +13,9 @@ It's a [dnsmasq][dnsmasq] Docker image. It is only 6 MB in size. It is just an `
 
 It is usually a good idea to use a tag other than `latest` if you are using this image in a production setting.
 
-[dnsmasq][dnsmasq] requires `NET_ADMIN` capabilities to run correctly. Start it with something like `docker run -p 53:53/tcp -p 53:53/udp --cap-add=NET_ADMIN teradatalabs/dns:2.75`.
+[dnsmasq][dnsmasq] requires `NET_ADMIN` capabilities to run correctly. Start it with something like `docker run -p 53:53/tcp -p 53:53/udp --cap-add=NET_ADMIN prestosql/dns:2.75`.
 
-The configuration is all handled on the command line (no wrapper scripts here). The `ENTRYPOINT` is `dnsmasq -k` to keep it running in the foreground. If you wanted to send requests for an internal domain (such as Consul) you can forward the requests upstream using something like `docker run -p 53:53/tcp -p 53:53/udp --cap-add=NET_ADMIN teradatalabs/dns:2.75 -S /consul/10.17.0.2`. This will send a request for `redis.service.consul` to `10.17.0.2`
+The configuration is all handled on the command line (no wrapper scripts here). The `ENTRYPOINT` is `dnsmasq -k` to keep it running in the foreground. If you wanted to send requests for an internal domain (such as Consul) you can forward the requests upstream using something like `docker run -p 53:53/tcp -p 53:53/udp --cap-add=NET_ADMIN prestosql/dns:2.75 -S /consul/10.17.0.2`. This will send a request for `redis.service.consul` to `10.17.0.2`
 
 As this is a very barebones entrypoint with just enough to run in the foreground, there is no logging enabled by default. To send logging to stdout you can add `--log-facility=-` as an option.
 

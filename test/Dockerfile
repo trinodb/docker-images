@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM teradatalabs/centos6-java8-oracle
+FROM prestosql/centos6-java8-oracle
 
 ENV DOCKERIZE_VERSION v0.3.0
 

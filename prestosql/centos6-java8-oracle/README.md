@@ -1,9 +1,9 @@
 # centos6-java8-oracle [![][layers-badge]][layers-link] [![][version-badge]][dockerhub-link]
            
-[layers-badge]: https://images.microbadger.com/badges/image/teradatalabs/centos6-java8-oracle.svg
-[layers-link]: https://microbadger.com/images/teradatalabs/centos6-java8-oracle
-[version-badge]: https://images.microbadger.com/badges/version/teradatalabs/centos6-java8-oracle.svg
-[dockerhub-link]: https://hub.docker.com/r/teradatalabs/centos6-java8-oracle
+[layers-badge]: https://images.microbadger.com/badges/image/prestosql/centos6-java8-oracle.svg
+[layers-link]: https://microbadger.com/images/prestosql/centos6-java8-oracle
+[version-badge]: https://images.microbadger.com/badges/version/prestosql/centos6-java8-oracle.svg
+[dockerhub-link]: https://hub.docker.com/r/prestosql/centos6-java8-oracle
 
 Docker image of CentOS 6 with Oracle JDK 8 installed.
 
