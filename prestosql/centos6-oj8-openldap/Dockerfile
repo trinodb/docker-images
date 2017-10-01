@@ -12,65 +12,67 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM prestosql/centos6-java8-oracle:unlabelled
+FROM prestosql/centos6-oj8:unlabelled
 MAINTAINER Teradata Docker Team <docker@teradata.com>
 
 ARG JDK_PATH
 
-ENV LDAP_PATH=/etc/ldap JAVA_HOME=$JDK_PATH
+ENV JAVA_HOME=$JDK_PATH
 
-# Import the Active Directory certificate into presto-coordinator
-COPY files $LDAP_PATH/files
+# INSTALL OPENLDAP
+RUN yum -y install openldap openldap-clients openldap-servers
+
+# COPY CONFIGURATION
+COPY ./files /
+
+# CONFIGURE OPENLDAP SERVER
+RUN service slapd start && \
+    ldapmodify -Y EXTERNAL -H ldapi:/// -f /etc/openldap/setup/modify_server.ldif && \
+    ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/setup/memberof.ldif && \
+    ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/setup/refint.ldif && \
+    ldapadd -f /etc/openldap/setup/createOU.ldif -D cn=admin,dc=presto,dc=testldap,dc=com -w admin
+
+# Import the Active Directory LDAP certificate into presto-coordinator
 RUN keytool -import -alias presto -storepass changeit -keystore $JAVA_HOME/jre/lib/security/cacerts \
-    -noprompt -trustcacerts -file $LDAP_PATH/files/active-directory-certificate.crt && \
-    rm -rf $LDAP_PATH/files/active-directory-certificate.crt
+    -noprompt -trustcacerts -file /etc/openldap/certs/active-directory-certificate.crt
 
 # Import the Open LDAP certificate into presto-coordinator
 RUN keytool -import -alias prestowithopenldap -storepass changeit -keystore $JAVA_HOME/jre/lib/security/cacerts \
-    -noprompt -trustcacerts -file $LDAP_PATH/files/openldap-certificate.pem && \
-    rm -rf $LDAP_PATH/files/openldap-certificate.pem
+    -noprompt -trustcacerts -file /etc/openldap/certs/openldap-certificate.pem
 
 # Generate a keystore.
-RUN keytool -genkey -alias coordinator -storepass testldap -keystore $LDAP_PATH/coordinator.jks \
+RUN keytool -genkey -alias coordinator -storepass testldap -keystore /etc/openldap/certs/coordinator.jks \
     -keypass testldap -keyalg RSA -sigalg SHA1withRSA -dname "CN=presto-master, OU=, O=, L=, S=, C="
+
 # Generate a certificate and CSR for the keystore. CN should match the hostname of presto-coordinator
-RUN keytool -export -alias coordinator -storepass testldap -keystore $LDAP_PATH/coordinator.jks \
-    -file $LDAP_PATH/coordinator.cer && \
-    keytool -certreq -alias coordinator -storepass testldap -keystore $LDAP_PATH/coordinator.jks \
-    -file $LDAP_PATH/coordinator.csr
+RUN keytool -export -alias coordinator -storepass testldap -keystore /etc/openldap/certs/coordinator.jks \
+    -file /etc/openldap/certs/coordinator.cer && \
+    keytool -certreq -alias coordinator -storepass testldap -keystore /etc/openldap/certs/coordinator.jks \
+    -file /etc/openldap/certs/coordinator.csr
 
 # create a test CA and generate caroot.cer( root certificate of the CA ).
-RUN openssl req -new -keyout $LDAP_PATH/cakey.pem -out $LDAP_PATH/careq.pem -nodes \
+RUN openssl req -new -keyout /etc/openldap/certs/cakey.pem -out /etc/openldap/certs/careq.pem -nodes \
     -subj "/C=US/ST=Massachusetts/L=Boston/O=Teradata/OU=Finance/CN=teradata" && \
-    openssl x509 -req -in $LDAP_PATH/careq.pem -out $LDAP_PATH/caroot.cer -days 3650 \
-    -signkey $LDAP_PATH/cakey.pem
+    openssl x509 -req -in /etc/openldap/certs/careq.pem -out /etc/openldap/certs/caroot.cer -days 3650 \
+    -signkey /etc/openldap/certs/cakey.pem
 
 # sign the server certificate using the testCA
-RUN openssl x509 -req -in $LDAP_PATH/coordinator.csr -out $LDAP_PATH/TestCA.cer -days 365 \
-    -CA $LDAP_PATH/caroot.cer -CAkey $LDAP_PATH/cakey.pem -CAserial $LDAP_PATH/files/serial.txt
+RUN openssl x509 -req -in /etc/openldap/certs/coordinator.csr -out /etc/openldap/certs/TestCA.cer -days 365 \
+    -CA /etc/openldap/certs/caroot.cer -CAkey /etc/openldap/certs/cakey.pem -CAserial /etc/openldap/certs/serial.txt
 
 # Import the caroot.cer to the keystore and replace the previously generated self-signed cert with the new CA signed one in the keystore
 # Note: The -alias name (coordinator) should be the same as the alias used when coordinator.cer was generated
-RUN keytool -import -alias TestCA -storepass testldap -keystore $LDAP_PATH/coordinator.jks \
-    -noprompt -file $LDAP_PATH/caroot.cer && \
-    keytool -import -alias coordinator -storepass testldap -keystore $LDAP_PATH/coordinator.jks \
-    -file $LDAP_PATH/TestCA.cer
+RUN keytool -import -alias TestCA -storepass testldap -keystore /etc/openldap/certs/coordinator.jks \
+    -noprompt -file /etc/openldap/certs/caroot.cer && \
+    keytool -import -alias coordinator -storepass testldap -keystore /etc/openldap/certs/coordinator.jks \
+    -file /etc/openldap/certs/TestCA.cer
 
 # Import the root certificate of the issuer of the presto-coordinator certificate.
 # This would be used by clients ( cli, jdbc ) to run tests
-RUN keytool -import -alias caroot -storepass testldap -keystore $LDAP_PATH/cacerts.jks -noprompt \
-    -file $LDAP_PATH/caroot.cer
+RUN keytool -import -alias caroot -storepass testldap -keystore /etc/openldap/certs/cacerts.jks -noprompt \
+    -file /etc/openldap/certs/caroot.cer
 
-RUN yum -y install openldap openldap-clients openldap-servers
-COPY files /tmp/files
-RUN cp -r /tmp/files/openldap-certificate.pem /etc/openldap/
-RUN cp -r /tmp/files/certs/* /etc/openldap/certs/
-RUN chmod a+x /tmp/files/start_slapd.sh
-RUN service slapd restart && \
-    ldapmodify -Y EXTERNAL -H ldapi:/// -f /tmp/files/setup/modify_server.ldif && \
-    ldapadd -Y EXTERNAL -H ldapi:/// -f /tmp/files/overlay/memberof.ldif && \
-    ldapadd -Y EXTERNAL -H ldapi:/// -f /tmp/files/overlay/refint.ldif && \
-    ldapadd -f /tmp/files/setup/createOU.ldif -D cn=admin,dc=presto,dc=testldap,dc=com -w admin && \
-    sed -i 's/SLAPD_LDAPS=no/SLAPD_LDAPS=yes/g' /etc/sysconfig/ldap && \
-    service slapd restart
-CMD /tmp/files/start_slapd.sh
+# Install supervisor.d
+RUN yum install -y python-setuptools && easy_install supervisor
+
+CMD supervisord -c /etc/supervisord.conf
