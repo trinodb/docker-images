@@ -13,7 +13,7 @@
 # limitations under the License.
 
 FROM prestosql/hdp2.5-hive:unlabelled
-MAINTAINER Teradata Docker Team <docker@teradata.com>
+MAINTAINER Presto community <https://prestodb.io/community.html>
 
 # INSTALL KERBEROS
 RUN yum install -y krb5-libs krb5-server krb5-workstation

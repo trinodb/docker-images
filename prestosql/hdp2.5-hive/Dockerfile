@@ -13,7 +13,7 @@
 # limitations under the License.
 
 FROM prestosql/hdp2.5-base:unlabelled
-MAINTAINER Teradata Docker Team <docker@teradata.com>
+MAINTAINER Presto community <https://prestodb.io/community.html>
 
 # CHANGE DEFAULT TIMEZONE
 RUN ln -snf "/usr/share/zoneinfo/Asia/Kathmandu" /etc/localtime && echo "Asia/Kathmandu" > /etc/timezone

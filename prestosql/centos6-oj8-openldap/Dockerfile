@@ -13,7 +13,7 @@
 # limitations under the License.
 
 FROM prestosql/centos6-oj8:unlabelled
-MAINTAINER Teradata Docker Team <docker@teradata.com>
+MAINTAINER Presto community <https://prestodb.io/community.html>
 
 ARG JDK_PATH
 

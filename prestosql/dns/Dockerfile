@@ -13,7 +13,7 @@
 # limitations under the License.
 
 FROM alpine:3.3
-MAINTAINER Teradata Docker Team <docker@teradata.com>
+MAINTAINER Presto community <https://prestodb.io/community.html>
 RUN apk --no-cache add dnsmasq
 EXPOSE 53 53/udp
 ENTRYPOINT ["dnsmasq", "-k"]
