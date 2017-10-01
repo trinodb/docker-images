@@ -5,7 +5,7 @@
 [version-badge]: https://images.microbadger.com/badges/version/prestosql/hdp2.5-hive.svg
 [dockerhub-link]: https://hub.docker.com/r/prestosql/hdp2.5-hive
 
-A Hadoop master + slave image for testing Presto, based on the HDP distro.
+A pseudo-distributed Hadoop image for testing Presto, based on the HDP distro.
 
 ## Oracle license
 

@@ -59,7 +59,7 @@ JDK_PATH_BUILD_ARGS := \
 # Also, find on Mac doesn't support -exec {} +
 #
 # Note that the generated .d files also include reverse dependencies so that
-# you can e.g. `make cdh5-hive.dependants' and cdh5-hive, and all of its
+# you can e.g. `make hdp2.5-base.dependants' and hdp2.5-hive, and all of its
 # dependent images will be rebuilt. This is used in .travis.yml to break the
 # build up into pieces based on image that have a large number of direct and
 # indirect children.

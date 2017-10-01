@@ -3,9 +3,9 @@
 ## Docker Image Names
 
 The docker images in this repository are expected to be given names of the form
-prestosql/cdh5-hive. The Dockerfile and other files needed to build the
-prestosql/cdh5-hive image are located in the directory
-prestosql/cdh5-hive.
+prestosql/hdp2.5-base. The Dockerfile and other files needed to build the
+prestosql/hdp2.5-base image are located in the directory
+prestosql/hdp2.5-base.
 
 Generally speaking, the images should *not* be built manually with docker
 build.
@@ -13,34 +13,28 @@ build.
 ## Building docker images
 
 The docker images should be built using `make`. To build the docker image named
-`prestosql/cdh5-hive`, run `make prestosql/cdh5-hive`. Make will build
+`prestosql/hdp2.5-hive`, run `make prestosql/hdp2.5-hive`. Make will build
 the image and its dependencies in the correct order.
-
-If you are going to release an image, you should release it and all of its
-dependencies. Master and slave images should be built from the same chain of
-parent images. You can ensure that both are built from the same set of parent
-images by running e.g. `make prestosql/cdh5-hive-master
-terdatalabs/cdh5-hive-slave`
 
 If you want to build a base image and all the images depending on it,
 you can use the `*.dependants` targets. E.g.
 
 ```
-make prestosql/cdh5-base.dependants
+make prestosql/hdp2.5-base.dependants
 ```
 
-will build the `cdh5-base` and all the images depending on it (transitively).
+will build the `hdp2.5-base` and all the images depending on it (transitively).
 
 ## Releasing (pushing) docker image
 
 All of the docker images in the repository share the same version number. This
 is because most of the images depend on a parent image that is also in the
-repository (e.g. prestosql/hdp2.5-master is FROM prestosql/hdp2.5-base),
-or are meant to be used together in testing (prestosql/cdh5-hive-master and
-prestosql/cdh5-hive-slave).
+repository (e.g. prestosql/hdp2.5-hive is FROM prestosql/hdp2.5-base),
+or are meant to be used together in testing (prestosql/hdp2.5-hive and
+prestosql/hdp2.5-hive-kerberized).
 
 Having all of the images on the same version number make troubleshooting easy:
-Iff all of the docker images you are using have the same version number then
+If all of the docker images you are using have the same version number then
 they are in a consistent state. 
 
 This means that we treat the repository as a single codebase that creates
