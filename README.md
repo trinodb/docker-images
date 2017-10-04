@@ -3,9 +3,9 @@
 ## Docker Image Names
 
 The docker images in this repository are expected to be given names of the form
-prestosql/hdp2.5-base. The Dockerfile and other files needed to build the
-prestosql/hdp2.5-base image are located in the directory
-prestosql/hdp2.5-base.
+prestodb/hdp2.5-base. The Dockerfile and other files needed to build the
+prestodb/hdp2.5-base image are located in the directory
+prestodb/hdp2.5-base.
 
 Generally speaking, the images should *not* be built manually with docker
 build.
@@ -13,14 +13,14 @@ build.
 ## Building docker images
 
 The docker images should be built using `make`. To build the docker image named
-`prestosql/hdp2.5-hive`, run `make prestosql/hdp2.5-hive`. Make will build
+`prestodb/hdp2.5-hive`, run `make prestodb/hdp2.5-hive`. Make will build
 the image and its dependencies in the correct order.
 
 If you want to build a base image and all the images depending on it,
 you can use the `*.dependants` targets. E.g.
 
 ```
-make prestosql/hdp2.5-base.dependants
+make prestodb/hdp2.5-base.dependants
 ```
 
 will build the `hdp2.5-base` and all the images depending on it (transitively).
@@ -29,9 +29,9 @@ will build the `hdp2.5-base` and all the images depending on it (transitively).
 
 All of the docker images in the repository share the same version number. This
 is because most of the images depend on a parent image that is also in the
-repository (e.g. prestosql/hdp2.5-hive is FROM prestosql/hdp2.5-base),
-or are meant to be used together in testing (prestosql/hdp2.5-hive and
-prestosql/hdp2.5-hive-kerberized).
+repository (e.g. prestodb/hdp2.5-hive is FROM prestodb/hdp2.5-base),
+or are meant to be used together in testing (prestodb/hdp2.5-hive and
+prestodb/hdp2.5-hive-kerberized).
 
 Having all of the images on the same version number make troubleshooting easy:
 If all of the docker images you are using have the same version number then
@@ -176,14 +176,14 @@ Using the relative directory from the root of the repo as the image name, we
 could, in principle, write a rule of the form
 
 ```
-prestosql/foo: prestosql/foo/Dockerfile $(extract_parent prestosql/foo/Dockerfile)
-	cd prestosql/foo && docker build -t prestosql/foo .
+prestodb/foo: prestodb/foo/Dockerfile $(extract_parent prestodb/foo/Dockerfile)
+	cd prestodb/foo && docker build -t prestodb/foo .
 ```
 
 Using automatic variables we could shorten that to the following:
 
 ```
-prestosql/foo: $@/Dockerfile $(extract_parent $@/Dockerfile)
+prestodb/foo: $@/Dockerfile $(extract_parent $@/Dockerfile)
 	cd $@ && docker build -t $@ .
 ```
 
@@ -209,8 +209,8 @@ commands to build the target.
 look for a rule to create that file.
 
 ```
-prestosql/foo: prestosql/foo_parent
-prestosql/foo: prestosql/foo/Dockerfile
+prestodb/foo: prestodb/foo_parent
+prestodb/foo: prestodb/foo/Dockerfile
 	...
 ```
 
@@ -227,7 +227,7 @@ The depend.sh script generates a .d file in $(DEPDIR) from the Dockerfile for
 the image:
 
 ```
-$(DEPDIR)/prestosql/foo.d: prestosql/foo/Dockerfile
+$(DEPDIR)/prestodb/foo.d: prestodb/foo/Dockerfile
 	...
 ```
 
@@ -236,13 +236,13 @@ The corresponding .d file will take one of two forms:
 1. if foo's parent is built from this repository
 
    ```
-   prestosql/foo: prestosql/foo_parent
+   prestodb/foo: prestodb/foo_parent
    ```
 
 2. if foo's parent should be pulled from dockerhub
 
    ```
-   prestosql/foo:
+   prestodb/foo:
    ```
 
 In the first case, make now knows that foo_parent is a dependency of foo, and

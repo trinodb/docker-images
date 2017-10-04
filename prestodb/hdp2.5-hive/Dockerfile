@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM prestosql/hdp2.5-base:unlabelled
+FROM prestodb/hdp2.5-base:unlabelled
 MAINTAINER Presto community <https://prestodb.io/community.html>
 
 # CHANGE DEFAULT TIMEZONE

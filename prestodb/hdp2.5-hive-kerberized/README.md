@@ -1,9 +1,9 @@
 # hdp2.5-hive-kerberized [![][layers-badge]][layers-link] [![][version-badge]][dockerhub-link]
            
-[layers-badge]: https://images.microbadger.com/badges/image/prestosql/hdp2.5-hive-kerberized.svg
-[layers-link]: https://microbadger.com/images/prestosql/hdp2.5-hive-kerberized
-[version-badge]: https://images.microbadger.com/badges/version/prestosql/hdp2.5-hive-kerberized.svg
-[dockerhub-link]: https://hub.docker.com/r/prestosql/hdp2.5-hive-kerberized
+[layers-badge]: https://images.microbadger.com/badges/image/prestodb/hdp2.5-hive-kerberized.svg
+[layers-link]: https://microbadger.com/images/prestodb/hdp2.5-hive-kerberized
+[version-badge]: https://images.microbadger.com/badges/version/prestodb/hdp2.5-hive-kerberized.svg
+[dockerhub-link]: https://hub.docker.com/r/prestodb/hdp2.5-hive-kerberized
 
 A pseudo-distributed Hadoop image with Kerberos authentication enabled, based on the HDP distro.
 

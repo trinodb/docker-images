@@ -1,9 +1,9 @@
 # centos6-oj8 [![][layers-badge]][layers-link] [![][version-badge]][dockerhub-link]
            
-[layers-badge]: https://images.microbadger.com/badges/image/prestosql/centos6-oj8.svg
-[layers-link]: https://microbadger.com/images/prestosql/centos6-oj8
-[version-badge]: https://images.microbadger.com/badges/version/prestosql/centos6-oj8.svg
-[dockerhub-link]: https://hub.docker.com/r/prestosql/centos6-oj8
+[layers-badge]: https://images.microbadger.com/badges/image/prestodb/centos6-oj8.svg
+[layers-link]: https://microbadger.com/images/prestodb/centos6-oj8
+[version-badge]: https://images.microbadger.com/badges/version/prestodb/centos6-oj8.svg
+[dockerhub-link]: https://hub.docker.com/r/prestodb/centos6-oj8
 
 Docker image of CentOS 6 with Oracle JDK 8 installed.
 

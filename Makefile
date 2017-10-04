@@ -22,7 +22,7 @@ FLAG_SH=flag.sh
 PUSH_SH=push.sh
 DEPDIR=depends
 FLAGDIR=flags
-ORGDIR=prestosql
+ORGDIR=prestodb
 
 #
 # This should be the only place you need to touch to update the version of Java
@@ -224,7 +224,7 @@ $(PARENT_CHECKS): %-parent-check: %/Dockerfile $(DEPEND_SH)
 	$(SHELL) $(DEPEND_SH) -p unlabelled $< $(call docker-tag,$(UNLABELLED_TAGS))
 
 #
-# This makes it possible it possible to type `make prestosql/image' without
+# This makes it possible it possible to type `make prestodb/image' without
 # specifying @latest
 #
 $(IMAGE_DIRS): %: %@latest

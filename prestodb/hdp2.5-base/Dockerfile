@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM prestosql/centos6-oj8:unlabelled
+FROM prestodb/centos6-oj8:unlabelled
 MAINTAINER Presto community <https://prestodb.io/community.html>
 
 RUN \
