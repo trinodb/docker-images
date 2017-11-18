@@ -35,7 +35,7 @@ RUN \
     hive-metastore \
     hive-server2 \
 
-  && yum install -y python-setuptools && easy_install supervisor \
+  && yum install -y python-setuptools epel-release && yum install -y python-pip && pip install supervisor \
 
   && yum -y clean all && rm -rf /tmp/* /var/tmp/*
 
