@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM teradatalabs/centos6-java8-oracle:unlabelled
-MAINTAINER Teradata Docker Team <docker@teradata.com>
+FROM prestodb/centos6-oj8:unlabelled
+MAINTAINER Presto community <https://prestodb.io/community.html>
 
 # Setup CDH repo, pin the CDH distribution to a concrete version
 RUN wget -nv http://archive.cloudera.com/cdh5/one-click-install/redhat/6/x86_64/cloudera-cdh-5-0.x86_64.rpm \
@@ -25,16 +25,6 @@ RUN wget -nv http://archive.cloudera.com/cdh5/one-click-install/redhat/6/x86_64/
 # Install hive, as it's needed by all child images
   && yum install -y hive \
 
-# Install supervisord
-  && yum install -y python-setuptools \
-  && easy_install pip \
-  && pip install supervisor \
-  && mkdir /etc/supervisord.d/ \
-# ... and its missing dependency
-  && wget -nv http://dl.fedoraproject.org/pub/epel/6/x86_64/python-meld3-0.6.7-1.el6.x86_64.rpm \
-  && rpm -ihv python-meld3-0.6.7-1.el6.x86_64.rpm \
-  && rm python-meld3-0.6.7-1.el6.x86_64.rpm \
-
 # Cleanup
   && yum -y clean all && rm -rf /tmp/* /var/tmp/* \
 
@@ -44,11 +34,4 @@ RUN wget -nv http://archive.cloudera.com/cdh5/one-click-install/redhat/6/x86_64/
   && ln -s /var/log/hadoop-mapreduce /var/log/hadoop/mapreduce \
   && ln -s /var/log/hadoop-yarn /var/log/hadoop/yarn
 
-# Copy supervisord startup script and base configs
-COPY files/startup.sh /root/startup.sh
-COPY files/supervisord.conf /etc/supervisord.conf
-COPY files/supervisord.d/bootstrap.conf /etc/supervisord.d/bootstrap.conf
-COPY files/change_timezone.sh /root/change_timezone.sh
-
-# Add supervisord configs in child images
-ONBUILD COPY files/supervisord.d/* /etc/supervisord.d/
+COPY ./files /

@@ -1,7 +1,7 @@
 # cdh5-base [![][layers-badge]][layers-link] [![][version-badge]][dockerhub-link]
             
-[layers-badge]: https://images.microbadger.com/badges/image/teradatalabs/cdh5-base.svg
-[layers-link]: https://microbadger.com/images/teradatalabs/cdh5-base
+[layers-badge]: https://images.microbadger.com/badges/image/prestodb/hdp2.5-base.svg
+[layers-link]: https://microbadger.com/images/prestodb/hdp2.5-base
 [version-badge]: https://images.microbadger.com/badges/version/teradatalabs/cdh5-base.svg
 [dockerhub-link]: https://hub.docker.com/r/teradatalabs/cdh5-base
 

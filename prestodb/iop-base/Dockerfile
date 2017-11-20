@@ -12,23 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM teradatalabs/centos6-java8-oracle:unlabelled
-MAINTAINER Teradata Docker Team <docker@teradata.com>
+FROM prestodb/centos6-oj8:unlabelled
+MAINTAINER Presto community <https://prestodb.io/community.html>
 
 RUN \
 # Add IBM IOP repo
   wget -nv https://ibm-open-platform.ibm.com/repos/IOP/rhel/6/x86_64/4.2.x/GA/IOP.repo -P /etc/yum.repos.d \
-
-# Install supervisord
-  && yum install -y python-setuptools \
-  && easy_install pip \
-  && pip install supervisor \
-  && mkdir /etc/supervisord.d/ \
-  && yum -y clean all && rm -rf /tmp/* /var/tmp/* \
-# ... and its missing dependency
-  && wget http://dl.fedoraproject.org/pub/epel/6/x86_64/python-meld3-0.6.7-1.el6.x86_64.rpm \
-  && rpm -ihv python-meld3-0.6.7-1.el6.x86_64.rpm \
-  && rm python-meld3-0.6.7-1.el6.x86_64.rpm \
 
 # Install hive
   && yum install -y hive_4_2_0_0 \
@@ -37,12 +26,9 @@ RUN \
   && mkdir -p /var/log/hadoop \
   && ln -s /var/log/hadoop-hdfs /var/log/hadoop/hdfs \
   && ln -s /var/log/hadoop-mapreduce /var/log/hadoop/mapreduce \
-  && ln -s /var/log/hadoop-yarn /var/log/hadoop/yarn
+  && ln -s /var/log/hadoop-yarn /var/log/hadoop/yarn \
 
-# Copy supervisord startup script and base configs
-COPY files/startup.sh /root/startup.sh
-COPY files/supervisord.conf /etc/supervisord.conf
-COPY files/supervisord.d/bootstrap.conf /etc/supervisord.d/bootstrap.conf
+# Cleanup
+  && yum -y clean all && rm -rf /tmp/* /var/tmp/*
 
-# Add supervisord configs in child images
-ONBUILD COPY files/supervisord.d/* /etc/supervisord.d/
+COPY ./files /

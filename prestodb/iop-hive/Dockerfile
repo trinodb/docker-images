@@ -12,8 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM teradatalabs/iop-base:unlabelled
-MAINTAINER Teradata Docker Team <docker@teradata.com>
+FROM prestodb/iop-base:unlabelled
+MAINTAINER Presto community <https://prestodb.io/community.html>
+
+# CHANGE DEFAULT TIMEZONE
+RUN ln -snf "/usr/share/zoneinfo/Asia/Kathmandu" /etc/localtime && echo "Asia/Kathmandu" > /etc/timezone
 
 # INSTALL HADOOP AND HIVE
 RUN \
@@ -27,30 +30,27 @@ RUN yum install -y mysql-server mysql-connector-java \
     && yum -y clean all && rm -rf /tmp/* /var/tmp/* \
     && ln -s /usr/share/java/mysql-connector-java.jar /usr/iop/4.2.0.0/hive/lib/mysql-connector-java.jar
 
-# ADD SETUP AND BOOTSTRAP SCRIPTS
-COPY files/bootstrap.sh files/setup.sh /root/
-
-# CREATE CONF DIRECTORIES
-RUN mkdir /tmp/hadoop_conf
-COPY files/conf/ /tmp/hadoop_conf
-
-# COPY SETUP CONFIGURATION
-COPY files/conf-setup/ /etc/hadoop/conf
-
-COPY files/conf-zookeeper/* /etc/zookeeper/conf/
-
 # Create needed dirs
 RUN mkdir /var/lib/zookeeper
 RUN chown zookeeper:hadoop /var/lib/zookeeper
 
-# RUN SETUP script
-RUN /root/setup.sh && rm -rf /tmp/* /var/tmp/*
+# COPY CONFIGURATION FILES
+COPY ./files /
 
+# RUN SETUP
+RUN /root/setup.sh
+
+# DO CLEANUP
+RUN rm -rf /tmp/* /var/tmp/*
+        
 # SETUP SOCKS PROXY
 RUN yum install -y openssh openssh-clients openssh-server
 RUN ssh-keygen -t rsa -b 4096 -C "automation@teradata.com" -N "" -f /root/.ssh/id_rsa
+RUN ssh-keygen -t rsa -b 4096 -N "" -f /etc/ssh/ssh_host_rsa_key
+RUN ssh-keygen -t dsa -b 1024 -N "" -f /etc/ssh/ssh_host_dsa_key
 RUN cp /root/.ssh/id_rsa.pub /root/.ssh/authorized_keys
-ADD files/socks-proxy.sh /root/socks-proxy.sh
+RUN chmod 755 /root && chmod 700 /root/.ssh
+RUN passwd --unlock root
 
 # HDFS PORTS
 EXPOSE 1004 1006 8020 50010 50020 50070 50075 50470
@@ -64,4 +64,4 @@ EXPOSE 9083 10000
 # SOCKS PORT
 EXPOSE 1180
 
-CMD /root/startup.sh
+CMD supervisord -c /etc/supervisord.conf
