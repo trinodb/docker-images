@@ -21,9 +21,6 @@ ARG JDK_PATH
 
 # Install Oracle Java and presto-admin dependences (already has python 2.6)
 RUN \
-    # disable the notoriuosly unstable EPEL repo...
-    rm -rf /etc/yum.repos.d/epel* && \
-
     yum install -y \
       wget && \
     # install and trim Oracle JDK
