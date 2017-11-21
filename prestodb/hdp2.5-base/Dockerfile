@@ -35,8 +35,5 @@ RUN \
     hive-metastore \
     hive-server2 \
 
-  && yum install -y epel-release && yum install -y python-pip && pip install supervisor \
-
   && yum -y clean all && rm -rf /tmp/* /var/tmp/*
-
 COPY ./files /

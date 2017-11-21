@@ -72,7 +72,4 @@ RUN keytool -import -alias TestCA -storepass testldap -keystore /etc/openldap/ce
 RUN keytool -import -alias caroot -storepass testldap -keystore /etc/openldap/certs/cacerts.jks -noprompt \
     -file /etc/openldap/certs/caroot.cer
 
-# Install supervisor.d
-RUN yum install -y epel-release && yum install -y python-pip && pip install supervisor && yum -y clean all && rm -rf /tmp/* /var/tmp/*
-
 CMD supervisord -c /etc/supervisord.conf
