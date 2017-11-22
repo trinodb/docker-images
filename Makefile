@@ -16,10 +16,10 @@ RELEASE_TYPE := $(if $(filter %-SNAPSHOT, $(VERSION)),snapshot,release)
 
 LABEL := com.teradata.git.hash=$(shell git rev-parse HEAD)
 
-LABEL_PARENT_SH=label-parent.sh
-DEPEND_SH=depend.sh
-FLAG_SH=flag.sh
-PUSH_SH=push.sh
+LABEL_PARENT_SH=bin/label-parent.sh
+DEPEND_SH=bin/depend.sh
+FLAG_SH=bin/flag.sh
+PUSH_SH=bin/push.sh
 DEPDIR=depends
 FLAGDIR=flags
 ORGDIR=prestodb

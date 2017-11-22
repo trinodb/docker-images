@@ -148,7 +148,7 @@ figuring out what the correct dependency order is for building the images,
 described below.
 
 Build args with a default value are not handled at present. Feel free to add
-that functionality in `flag.sh` if needed.
+that functionality in `bin/flag.sh` if needed.
 
 ## Java
 
@@ -223,7 +223,7 @@ on the Dockerfile and builds the image using docker build.
 explains this technique in section 5.4 and applies it to C source files and the
 .h files they include. I've adapted it here.
 
-The depend.sh script generates a .d file in $(DEPDIR) from the Dockerfile for
+The `bin/depend.sh` script generates a .d file in $(DEPDIR) from the Dockerfile for
 the image:
 
 ```
@@ -253,7 +253,7 @@ responsible for pulling foo's parent from dockerhub as part of the docker build
 process.
 
 A major difference between the approach explained in Recursive Make
-Considered Harmful is that depend.sh needs to know what images the repo knows
+Considered Harmful is that `bin/depend.sh` needs to know what images the repo knows
 how to build so it can output the second form for parent images we *don't*
 know how to build. We do this by passing in the names of all of the images we
 know how to build.
