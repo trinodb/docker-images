@@ -242,7 +242,7 @@ $(EXTERNAL_DEPS): %:
 #
 GVDIR=graphviz
 GVWHOLE=$(GVDIR)/dependency_graph.gv
-DEPENDENCY_GRAPH=dependency_graph.svg
+DEPENDENCY_GRAPH=$(GVDIR)/dependency_graph.svg
 GVFRAGS=$(addprefix $(GVDIR)/,$(addsuffix .gv.frag,$(IMAGE_DIRS)))
 
 .PHONY: graph clean-graph
@@ -250,7 +250,6 @@ graph: $(DEPENDENCY_GRAPH)
 
 clean-graph:
 	-rm -r $(GVDIR)
-	-rm -r $(DEPENDENCY_GRAPH)
 
 $(DEPENDENCY_GRAPH): $(GVWHOLE) Makefile
 	dot -T svg $(filter %.gv,$^) > $@
