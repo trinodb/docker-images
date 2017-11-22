@@ -158,11 +158,8 @@ require-%-version:
 # dependencies if needed. This is mostly useful for testing changes to the
 # script that creates the .d files.
 #
-.PHONY: meta clean-meta
+.PHONY: meta
 meta:
-
-clean-meta:
-	-rm -r $(DEPDIR) $(FLAGDIR)
 
 #
 # Include the dependencies for every image we know how to build. These don't
@@ -246,11 +243,8 @@ GVWHOLE=$(GVDIR)/dependency_graph.gv
 DEPENDENCY_GRAPH=$(GVDIR)/dependency_graph.svg
 GVFRAGS=$(addprefix $(GVDIR)/,$(addsuffix .gv.frag,$(IMAGE_DIRS)))
 
-.PHONY: graph clean-graph
+.PHONY: graph
 graph: $(DEPENDENCY_GRAPH)
-
-clean-graph:
-	-rm -r $(GVDIR)
 
 $(DEPENDENCY_GRAPH): $(GVWHOLE) Makefile
 	dot -T svg $(filter %.gv,$^) > $@
@@ -264,3 +258,7 @@ $(GVWHOLE): $(GVFRAGS) Makefile
 $(GVFRAGS): $(GVDIR)/%.gv.frag: %/Dockerfile $(DEPEND_SH)
 	-mkdir -p $(dir $@)
 	$(SHELL) $(DEPEND_SH) -g $< $(call docker-tag,$(UNLABELLED_TAGS)) >$@
+
+.PHONY: clean 
+clean:
+	-rm -r $(BUILDDIR)
