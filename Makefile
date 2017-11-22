@@ -20,8 +20,9 @@ LABEL_PARENT_SH=bin/label-parent.sh
 DEPEND_SH=bin/depend.sh
 FLAG_SH=bin/flag.sh
 PUSH_SH=bin/push.sh
-DEPDIR=depends
-FLAGDIR=flags
+BUILDDIR=build
+DEPDIR=$(BUILDDIR)/depends
+FLAGDIR=$(BUILDDIR)/flags
 ORGDIR=prestodb
 
 #
@@ -240,7 +241,7 @@ $(EXTERNAL_DEPS): %:
 # Targets and variables for creating the dependency graph of the docker images
 # as an image file.
 #
-GVDIR=graphviz
+GVDIR=$(BUILDDIR)/graphviz
 GVWHOLE=$(GVDIR)/dependency_graph.gv
 DEPENDENCY_GRAPH=$(GVDIR)/dependency_graph.svg
 GVFRAGS=$(addprefix $(GVDIR)/,$(addsuffix .gv.frag,$(IMAGE_DIRS)))
