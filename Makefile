@@ -20,6 +20,7 @@ LABEL_PARENT_SH=bin/label-parent.sh
 DEPEND_SH=bin/depend.sh
 FLAG_SH=bin/flag.sh
 PUSH_SH=bin/push.sh
+TEST_SH=bin/test.sh
 BUILDDIR=build
 DEPDIR=$(BUILDDIR)/depends
 FLAGDIR=$(BUILDDIR)/flags
@@ -258,6 +259,10 @@ $(GVWHOLE): $(GVFRAGS) Makefile
 $(GVFRAGS): $(GVDIR)/%.gv.frag: %/Dockerfile $(DEPEND_SH)
 	-mkdir -p $(dir $@)
 	$(SHELL) $(DEPEND_SH) -g $< $(call docker-tag,$(UNLABELLED_TAGS)) >$@
+
+.PHONY: test
+test: 
+	$(TEST_SH) hdp2.5-hive
 
 .PHONY: clean 
 clean:

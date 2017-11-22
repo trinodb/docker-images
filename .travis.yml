@@ -21,6 +21,8 @@ before_install:
 
 install: make
 
+script: make test
+
 before_deploy:
   # decrypt the github deploy key
   - openssl aes-256-cbc -K $encrypted_cd2beb64619c_key -iv $encrypted_cd2beb64619c_iv
