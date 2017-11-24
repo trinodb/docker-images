@@ -263,7 +263,9 @@ $(GVFRAGS): $(GVDIR)/%.gv.frag: %/Dockerfile $(DEPEND_SH)
 .PHONY: test
 test: 
 	$(TEST_SH) hdp2.5-hive
+	$(TEST_SH) cdh5-hive
+	$(TEST_SH) iop-hive
 
-.PHONY: clean 
+.PHONY: clean
 clean:
 	-rm -r $(BUILDDIR)
