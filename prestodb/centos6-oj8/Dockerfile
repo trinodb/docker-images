@@ -46,6 +46,9 @@ RUN \
            $JDK_PATH/jre/lib/amd64/libjavafx*.so \
            $JDK_PATH/jre/lib/amd64/libjfx*.so && \
     
+    # make java fixed (so further layers don't accidentally override it)
+    update-alternatives --set java $JDK_PATH/jre/bin/java && \
+
     # install supervisor
     yum install -y setuptools epel-release && \
     yum install -y python-pip && \
