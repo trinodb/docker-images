@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM prestodb/iop-base:unlabelled
+FROM prestodb/iop4.2-base:unlabelled
 MAINTAINER Presto community <https://prestodb.io/community.html>
 
 # CHANGE DEFAULT TIMEZONE

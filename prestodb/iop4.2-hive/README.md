@@ -1,9 +1,9 @@
-# iop-hive [![][layers-badge]][layers-link] [![][version-badge]][dockerhub-link]
+# iop4.2-hive [![][layers-badge]][layers-link] [![][version-badge]][dockerhub-link]
            
-[layers-badge]: https://images.microbadger.com/badges/image/teradatalabs/iop-hive.svg
-[layers-link]: https://microbadger.com/images/teradatalabs/iop-hive
-[version-badge]: https://images.microbadger.com/badges/version/teradatalabs/iop-hive.svg
-[dockerhub-link]: https://hub.docker.com/r/teradatalabs/iop-hive
+[layers-badge]: https://images.microbadger.com/badges/image/teradatalabs/iop4.2-hive.svg
+[layers-link]: https://microbadger.com/images/teradatalabs/iop4.2-hive
+[version-badge]: https://images.microbadger.com/badges/version/teradatalabs/iop4.2-hive.svg
+[dockerhub-link]: https://hub.docker.com/r/teradatalabs/iop4.2-hive
 
 Docker image with HDFS, YARN and HIVE installed. Please note that running services have lower memory heap size set.
 For more details please check the [hadoop-env.sh](files/conf/hadoop-env.sh) configuration file.
@@ -13,7 +13,7 @@ for general correctness testing.
 ## Run
 
 ```
-$ docker run -d --name hadoop-master -h hadoop-master teradatalabs/iop-hive
+$ docker run -d --name hadoop-master -h hadoop-master prestodb/iop4.2-hive
 ```
 
 ## Oracle license
