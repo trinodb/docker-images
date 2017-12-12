@@ -43,6 +43,3 @@ killall mysqld
 sleep 10s
 mkdir /var/log/mysql/
 chown mysql:mysql /var/log/mysql/
-
-# 8 Init zookeeper
-/usr/iop/4.2.0.0/zookeeper/bin/zookeeper-server-initialize

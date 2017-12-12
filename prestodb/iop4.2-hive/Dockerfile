@@ -18,21 +18,10 @@ MAINTAINER Presto community <https://prestodb.io/community.html>
 # CHANGE DEFAULT TIMEZONE
 RUN ln -snf "/usr/share/zoneinfo/Asia/Kathmandu" /etc/localtime && echo "Asia/Kathmandu" > /etc/timezone
 
-# INSTALL HADOOP AND HIVE
-RUN \
-  yum install -y \
-    zookeeper_4_2_0_0-server \
-  && ln -s /usr/iop/4.2.0.0/zookeeper/bin/zookeeper-server /usr/bin/zookeeper-server \
-  && yum -y clean all && rm -rf /tmp/* /var/tmp/*
-
 # INSTALL MYSQL (Hive Metastore)
 RUN yum install -y mysql-server mysql-connector-java \
     && yum -y clean all && rm -rf /tmp/* /var/tmp/* \
     && ln -s /usr/share/java/mysql-connector-java.jar /usr/iop/4.2.0.0/hive/lib/mysql-connector-java.jar
-
-# Create needed dirs
-RUN mkdir /var/lib/zookeeper
-RUN chown zookeeper:hadoop /var/lib/zookeeper
 
 # COPY CONFIGURATION FILES
 COPY ./files /
