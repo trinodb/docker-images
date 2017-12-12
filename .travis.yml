@@ -1,6 +1,13 @@
 language: generic
 dist: trusty
 
+env:
+  - IMAGE_TO_BUILD=prestodb/hdp2.5-hive-kerberized IMAGE_TO_TEST=hdp2.5-hive
+  - IMAGE_TO_BUILD=prestodb/hdp2.6-hive-kerberized IMAGE_TO_TEST=hdp2.6-hive
+  - IMAGE_TO_BUILD=prestodb/cdh5-hive-kerberized IMAGE_TO_TEST=cdh5-hive
+  - IMAGE_TO_BUILD=prestodb/cdh5.13-hive-kerberized IMAGE_TO_TEST=cdh5.13-hive
+  - IMAGE_TO_BUILD=prestodb/iop4.2-hive IMAGE_TO_TEST=iop4.2-hive
+
 # Prevent duplicate builds on tag pushes.
 # See https://github.com/mockito/mockito/commit/500519aac4cc13770aa47c1eb7d28e905c27e7aa
 branches:
@@ -19,9 +26,9 @@ before_install:
   - sudo apt-get -y install docker-ce
   - docker --version
 
-install: make
+install: make ${IMAGE_TO_BUILD}
 
-script: make test
+script: make test IMAGE_TO_TEST=${IMAGE_TO_TEST}
 
 before_deploy:
   # decrypt the github deploy key
