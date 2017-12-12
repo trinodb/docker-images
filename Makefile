@@ -265,6 +265,7 @@ test:
 	$(TEST_SH) hdp2.5-hive
 	$(TEST_SH) hdp2.6-hive
 	$(TEST_SH) cdh5-hive
+	$(TEST_SH) cdh5.13-hive
 	$(TEST_SH) iop4.2-hive
 
 .PHONY: clean
