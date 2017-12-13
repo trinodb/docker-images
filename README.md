@@ -1,11 +1,11 @@
-# Teradata docker images
+# Prestodb docker images
 
 ## Docker Image Names
 
 The docker images in this repository are expected to be given names of the form
-prestodb/hdp2.5-base. The Dockerfile and other files needed to build the
-prestodb/hdp2.5-base image are located in the directory
-prestodb/hdp2.5-base.
+prestodb/hdp2.5-hive. The Dockerfile and other files needed to build the
+prestodb/hdp2.5-hive image are located in the directory
+prestodb/hdp2.5-hive.
 
 Generally speaking, the images should *not* be built manually with docker
 build.
