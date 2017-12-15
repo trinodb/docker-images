@@ -11,7 +11,7 @@
 # 6) Continue developing
 # 7) `make snapshot' as needed to push snapshot images to dockerhub
 #
-VERSION := 3-SNAPSHOT
+VERSION := 3
 RELEASE_TYPE := $(if $(filter %-SNAPSHOT, $(VERSION)),snapshot,release)
 
 LABEL := com.teradata.git.hash=$(shell git rev-parse HEAD)
