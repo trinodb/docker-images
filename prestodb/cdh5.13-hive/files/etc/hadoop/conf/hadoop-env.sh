@@ -20,7 +20,7 @@
 # export HADOOP_MAPRED_HOME=/usr/lib/hadoop-mapreduce
 
 # The maximum amount of heap to use, in MB. Default is 1000.
-export HADOOP_HEAPSIZE=256
+export HADOOP_HEAPSIZE=512
 
 # Extra Java runtime options.  Empty by default.
 export HADOOP_NAMENODE_OPTS="$HADOOP_NAMENODE_OPTS -Xmx512m"
