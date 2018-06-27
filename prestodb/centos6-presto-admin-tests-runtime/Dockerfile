@@ -11,7 +11,7 @@ ENV JDK_PATH=/usr/java/jdk1.8.0_162
 RUN \
     # disable the notoriuosly unstable EPEL repo...
     # rm -rf /etc/yum.repos.d/epel* && \
-
+    \
     yum install -y \
       wget \
       python \

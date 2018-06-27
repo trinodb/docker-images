@@ -26,22 +26,22 @@ RUN yum install -y \
     hadoop-hdfs-namenode \
     hadoop-hdfs-secondarynamenode \
     hadoop-hdfs-datanode \
-
+    \
     hadoop-mapreduce \
-
+    \
     hadoop-yarn-resourcemanager \
     hadoop-yarn-nodemanager \
-
+    \
     hadoop-client \
     hadoop-conf-pseudo \
-
+    \
     hive \
     hive-metastore \
     hive-server2 \
-
+    \
     mysql-server mysql-connector-java \
-
-# Cleanup
+    \
+  # Cleanup
   && yum -y clean all && rm -rf /tmp/* /var/tmp/* \
   && ln -s /usr/share/java/mysql-connector-java.jar /usr/lib/hive/lib/mysql-connector-java.jar
 

@@ -43,17 +43,17 @@ RUN \
            $JDK_PATH/jre/lib/amd64/libgstreamer-lite.so \
            $JDK_PATH/jre/lib/amd64/libjavafx*.so \
            $JDK_PATH/jre/lib/amd64/libjfx*.so && \
-    
+    \
     # make java fixed (so further layers don't accidentally override it)
     update-alternatives --set java $JDK_PATH/jre/bin/java && \
-
+    \
     # install supervisor
     yum install -y setuptools epel-release && \
     yum install -y python-pip && \
     pip install --upgrade pip && \
     pip install --upgrade setuptools && \
     pip install supervisor && \
-
+    \
     # cleanup
     yum -y clean all && rm -rf /tmp/* /var/tmp/*
 
