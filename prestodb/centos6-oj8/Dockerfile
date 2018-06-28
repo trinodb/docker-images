@@ -24,7 +24,7 @@ RUN \
     # install and trim Oracle JDK
     wget -nv --header "Cookie: oraclelicense=accept-securebackup-cookie" $JDK_URL && \
     rpm -ivh $JDK_RPM && rm $JDK_RPM && \
-    rm -rf $JDK_PATH/*src.zip \
+    rm -r $JDK_PATH/*src.zip \
            $JDK_PATH/lib/missioncontrol \
            $JDK_PATH/lib/visualvm \
            $JDK_PATH/lib/*javafx* \
