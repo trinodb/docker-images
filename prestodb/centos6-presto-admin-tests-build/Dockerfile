@@ -6,11 +6,9 @@ RUN yum install -y \
       gcc \
       python-devel \
       python-devel \
+      python-pip \
       openssl-devel \
       libffi-devel && \
+    pip install --upgrade pip==9.0.3 `# latest version for Python 2.6` && \
     # cleanup
     yum -y clean all && rm -rf /tmp/* /var/tmp/*
-
-# install pip
-RUN wget -O /tmp/get-pip.py https://bootstrap.pypa.io/get-pip.py && \
-    python /tmp/get-pip.py
