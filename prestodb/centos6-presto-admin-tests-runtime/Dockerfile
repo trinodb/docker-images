@@ -9,6 +9,7 @@ ENV JDK_PATH=/usr/java/jdk1.8.0_162
 
 # Install Oracle Java and presto-admin dependences (already has python 2.6)
 RUN \
+    set -xeu && \
     # disable the notoriuosly unstable EPEL repo...
     # rm -rf /etc/yum.repos.d/epel* && \
     \

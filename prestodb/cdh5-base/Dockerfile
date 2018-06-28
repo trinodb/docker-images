@@ -14,7 +14,9 @@ FROM prestodb/centos6-oj8:unlabelled
 MAINTAINER Presto community <https://prestodb.io/community.html>
 
 # Setup CDH repo, pin the CDH distribution to a concrete version
-RUN wget -nv http://archive.cloudera.com/cdh5/one-click-install/redhat/6/x86_64/cloudera-cdh-5-0.x86_64.rpm \
+RUN \
+  set -xeu \
+  && wget -nv http://archive.cloudera.com/cdh5/one-click-install/redhat/6/x86_64/cloudera-cdh-5-0.x86_64.rpm \
   && yum --nogpgcheck localinstall -y cloudera-cdh-5-0.x86_64.rpm \
   && rm cloudera-cdh-5-0.x86_64.rpm \
   && rpm --import http://archive.cloudera.com/cdh5/redhat/6/x86_64/cdh/RPM-GPG-KEY-cloudera \

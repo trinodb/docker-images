@@ -22,7 +22,9 @@ RUN wget -nv https://archive.cloudera.com/cdh5/redhat/6/x86_64/cdh/cloudera-cdh5
   && sed -i '/^baseurl=/c\baseurl=https://archive.cloudera.com/cdh5/redhat/6/x86_64/cdh/5.13.1/' /etc/yum.repos.d/cloudera-cdh5.repo
 
 # Install Hadoop, Hive (w/ MySQL)
-RUN yum install -y \
+RUN \
+    set -xeu && \
+    yum install -y \
     hadoop-hdfs-namenode \
     hadoop-hdfs-secondarynamenode \
     hadoop-hdfs-datanode \

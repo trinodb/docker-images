@@ -18,6 +18,7 @@ RUN ln -snf "/usr/share/zoneinfo/Asia/Kathmandu" /etc/localtime && echo "Asia/Ka
  
 # INSTALL HADOOP AND HIVE
 RUN \
+  set -xeu && \
   yum install -y \
     hive \
     hive-server2 \

@@ -19,6 +19,7 @@ ARG JDK_PATH
 
 # Install Oracle Java and presto-admin dependences (already has python 2.6)
 RUN \
+    set -xeu && \
     yum install -y wget && \
     # install and trim Oracle JDK
     wget -nv --header "Cookie: oraclelicense=accept-securebackup-cookie" $JDK_URL && \
