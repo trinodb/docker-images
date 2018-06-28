@@ -34,9 +34,6 @@ ORGDIR=prestodb
 #
 JDK_URL := http://download.oracle.com/otn-pub/java/jdk/8u162-b12/0da788060d494f5095bf8624735fa2f1/jdk-8u162-linux-x64.rpm
 JDK_RPM := $(notdir $(JDK_URL))
-INSTALL_JDK_BUILD_ARGS := \
-	--build-arg JDK_URL=$(JDK_URL) \
-	--build-arg JDK_RPM=$(JDK_RPM)
 
 #
 # Generate path to installed JDK from the JDK RPM name.
