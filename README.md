@@ -157,8 +157,8 @@ of the RPM, or the path that java gets installed in. Doing this makes upgrading
 Java across the repo a pain with a bunch of touch points.
 
 Instead, the build system exposes the [Docker build
-arguments](https://docs.docker.com/engine/reference/builder/#/arg) `JDK_URL`,
-`JDK_RPM`, and `JDK_PATH`. These can be used in your Dockerfile as follows:
+arguments](https://docs.docker.com/engine/reference/builder/#/arg) `JDK_URL`
+and `JDK_PATH`. These can be used in your Dockerfile as follows:
 
 ```
 ARG JDK_URL

@@ -14,7 +14,6 @@ FROM library/centos:6.9
 MAINTAINER Presto community <https://prestodb.io/community.html>
 
 ARG JDK_URL
-ARG JDK_RPM
 ARG JDK_PATH
 
 # Install Oracle Java and presto-admin dependences (already has python 2.6)
@@ -22,8 +21,8 @@ RUN \
     set -xeu && \
     yum install -y wget && \
     # install and trim Oracle JDK
-    wget -nv --header "Cookie: oraclelicense=accept-securebackup-cookie" $JDK_URL && \
-    rpm -ivh $JDK_RPM && rm $JDK_RPM && \
+    wget -nv --header "Cookie: oraclelicense=accept-securebackup-cookie" $JDK_URL -O jdk.rpm && \
+    rpm -ivh jdk.rpm && rm jdk.rpm && \
     rm -r $JDK_PATH/*src.zip \
            $JDK_PATH/lib/missioncontrol \
            $JDK_PATH/lib/visualvm \
