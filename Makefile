@@ -32,21 +32,9 @@ ORGDIR=prestodb
 # indirectly from this one, and you should pass those variables to the
 # Dockerfiles using ARG and --build-arg.
 #
-JDK_URL := http://download.oracle.com/otn-pub/java/jdk/8u162-b12/0da788060d494f5095bf8624735fa2f1/jdk-8u162-linux-x64.rpm
+JDK_URL := http://download.oracle.com/otn-pub/java/jdk/8u171-b11/512cd62ec5174c3487ac17c61aaa89e8/jdk-8u171-linux-x64.rpm
 JDK_RPM := $(notdir $(JDK_URL))
-
-#
-# Generate path to installed JDK from the JDK RPM name.
-#
-# Assumes that the Java version number in the installed JDK path will remain in
-# the format 1.<major version>.0_<update number>
-#
-# jdk-8u92-linux-x64.rpm -> /usr/java/jdk1.8.0_92/
-#
-# Use only BREs in sed for cross-platform compatibility.
-#
-JDK_PATH := $(shell echo $(JDK_RPM) | \
-	sed 's!jdk-\([0-9][0-9]*\)u\([0-9][0-9]*\).*!/usr/java/jdk1.\1.0_\2!')
+JDK_PATH := /usr/java/jdk1.8.0_171-amd64
 JDK_PATH_BUILD_ARGS := \
 	--build-arg JDK_PATH=$(JDK_PATH)
 
