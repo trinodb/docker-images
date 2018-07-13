@@ -32,8 +32,8 @@ ORGDIR=prestodb
 # indirectly from this one, and you should pass those variables to the
 # Dockerfiles using ARG and --build-arg.
 #
-JDK_URL := http://download.oracle.com/otn-pub/java/jdk/8u171-b11/512cd62ec5174c3487ac17c61aaa89e8/jdk-8u171-linux-x64.rpm
-JDK_PATH := /usr/java/jdk1.8.0_171-amd64
+JDK_URL := http://download.oracle.com/otn-pub/java/jdk/8u172-b11/a58eab1ec242421181065cdc37240b08/jdk-8u172-linux-x64.rpm
+JDK_PATH := /usr/java/jdk1.8.0_172-amd64
 JDK_PATH_BUILD_ARGS := \
 	--build-arg JDK_PATH=$(JDK_PATH)
 
