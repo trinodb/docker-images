@@ -18,9 +18,6 @@ branches:
 services: 
   - docker
 
-before_install: 
-  - sudo apt-get install dc
-
 install: make ${IMAGE_TO_BUILD}
 
 script: make test IMAGE_TO_TEST=${IMAGE_TO_TEST}

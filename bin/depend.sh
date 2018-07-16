@@ -132,7 +132,7 @@ while getopts ":dgp:x" c; do
 	esac
 done
 
-shift "$(dc -e"$OPTIND 1 - p")"
+shift $((OPTIND-1))
 
 if [ -z "$own_image_function" ] || [ $# -lt 2 ]; then
 	usage
