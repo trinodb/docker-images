@@ -23,6 +23,9 @@ COPY ./files /
 # CREATE KERBEROS DATABASE
 RUN /usr/sbin/kdb5_util create -s -P password
 
+# CREATE ANOTHER KERBEROS DATABASE
+RUN /usr/sbin/kdb5_util create -d /var/kerberos/krb5kdc/principal-other -r OTHERLABS.TERADATA.COM -s -P password
+
 # ADD HADOOP PRINCIPALS
 RUN /usr/sbin/kadmin.local -q "addprinc -randkey hdfs/hadoop-master@LABS.TERADATA.COM" \
   && /usr/sbin/kadmin.local -q "addprinc -randkey mapred/hadoop-master@LABS.TERADATA.COM" \
@@ -45,6 +48,22 @@ RUN /usr/sbin/kadmin.local -q "addprinc -randkey hive/hadoop-master@LABS.TERADAT
   && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/hive/conf/hive.keytab hive/hadoop-master"
 RUN chown hive:hadoop /etc/hive/conf/hive.keytab \
   && chmod 644 /etc/hive/conf/hive.keytab
+
+# CREATE HIVE PRINCIPAL IN THE OTHER REALM
+RUN /usr/sbin/kadmin.local -r OTHERLABS.TERADATA.COM -d /var/kerberos/krb5kdc/principal-other -q "addprinc -randkey hive/hadoop-master@OTHERLABS.TERADATA.COM" \
+  && /usr/sbin/kadmin.local -r OTHERLABS.TERADATA.COM -d /var/kerberos/krb5kdc/principal-other -q "xst -norandkey -k /etc/hive/conf/hive-other.keytab hive/hadoop-master"
+RUN chown hive:hadoop /etc/hive/conf/hive-other.keytab \
+  && chmod 644 /etc/hive/conf/hive-other.keytab
+
+# CREATE HDFS PRINCIPAL IN OTHER REALM
+RUN /usr/sbin/kadmin.local -r OTHERLABS.TERADATA.COM -d /var/kerberos/krb5kdc/principal-other -q "addprinc -randkey hdfs/hadoop-master@OTHERLABS.TERADATA.COM" \
+  && /usr/sbin/kadmin.local -r OTHERLABS.TERADATA.COM -d /var/kerberos/krb5kdc/principal-other -q "xst -norandkey -k /etc/hadoop/conf/hdfs-other.keytab hdfs/hadoop-master"
+RUN chown hdfs:hadoop /etc/hadoop/conf/hdfs-other.keytab \
+  && chmod 644 /etc/hadoop/conf/hdfs-other.keytab
+
+# MAKE 'LABS.TERADATA.COM' TRUST 'OTHERLABS.TERADATA.COM'
+RUN /usr/sbin/kadmin.local -q "addprinc -pw 123456 krbtgt/LABS.TERADATA.COM@OTHERLABS.TERADATA.COM"
+RUN /usr/sbin/kadmin.local -r OTHERLABS.TERADATA.COM -d /var/kerberos/krb5kdc/principal-other -q "addprinc -pw 123456 krbtgt/LABS.TERADATA.COM"
 
 # CREATE PRESTO PRINCIPAL AND KEYTAB
 RUN /usr/sbin/kadmin.local -q "addprinc -randkey presto-server/presto-master.docker.cluster@LABS.TERADATA.COM" \
@@ -73,6 +92,7 @@ RUN chmod 644 /etc/presto/conf/keystore.jks
 
 # EXPOSE KERBEROS PORTS
 EXPOSE	88
+EXPOSE	89
 EXPOSE	749
 
 CMD supervisord -c /etc/supervisord.conf
