@@ -57,4 +57,4 @@ RUN \
     # cleanup
     yum -y clean all && rm -rf /tmp/* /var/tmp/*
 
-ENV JAVA_HOME $JDK_PATH/jre/
+ENV JAVA_HOME $JDK_PATH
