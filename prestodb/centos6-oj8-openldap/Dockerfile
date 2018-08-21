@@ -18,7 +18,9 @@ ARG JDK_PATH
 ENV JAVA_HOME=$JDK_PATH
 
 # INSTALL OPENLDAP
-RUN yum -y install openldap openldap-clients openldap-servers
+RUN yum -y install openldap openldap-clients openldap-servers \
+    # Cleanup
+    && yum -y clean all && rm -rf /tmp/* /var/tmp/*
 
 # COPY CONFIGURATION
 COPY ./files /
