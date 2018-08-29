@@ -42,7 +42,7 @@ RUN keytool -import -alias prestowithopenldap -storepass changeit -keystore $JAV
 
 # Generate a keystore.
 RUN keytool -genkey -alias coordinator -storepass testldap -keystore /etc/openldap/certs/coordinator.jks \
-    -keypass testldap -keyalg RSA -sigalg SHA1withRSA -dname "CN=presto-master, OU=, O=, L=, S=, C="
+    -keypass testldap -keyalg RSA -sigalg SHA1withRSA -dname "CN=presto-master, OU=, O=, L=, S=, C=" -validity 100000
 
 # Generate a certificate and CSR for the keystore. CN should match the hostname of presto-coordinator
 RUN keytool -export -alias coordinator -storepass testldap -keystore /etc/openldap/certs/coordinator.jks \
@@ -53,11 +53,11 @@ RUN keytool -export -alias coordinator -storepass testldap -keystore /etc/openld
 # create a test CA and generate caroot.cer( root certificate of the CA ).
 RUN openssl req -new -keyout /etc/openldap/certs/cakey.pem -out /etc/openldap/certs/careq.pem -nodes \
     -subj "/C=US/ST=Massachusetts/L=Boston/O=Teradata/OU=Finance/CN=teradata" && \
-    openssl x509 -req -in /etc/openldap/certs/careq.pem -out /etc/openldap/certs/caroot.cer -days 3650 \
+    openssl x509 -req -in /etc/openldap/certs/careq.pem -out /etc/openldap/certs/caroot.cer -days 100000 \
     -signkey /etc/openldap/certs/cakey.pem
 
 # sign the server certificate using the testCA
-RUN openssl x509 -req -in /etc/openldap/certs/coordinator.csr -out /etc/openldap/certs/TestCA.cer -days 365 \
+RUN openssl x509 -req -in /etc/openldap/certs/coordinator.csr -out /etc/openldap/certs/TestCA.cer -days 100000 \
     -CA /etc/openldap/certs/caroot.cer -CAkey /etc/openldap/certs/cakey.pem -CAserial /etc/openldap/certs/serial.txt
 
 # Import the caroot.cer to the keystore and replace the previously generated self-signed cert with the new CA signed one in the keystore

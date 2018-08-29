@@ -70,7 +70,8 @@ RUN keytool -genkeypair \
     -keystore /etc/presto/conf/keystore.jks \
     -keypass password \
     -storepass password \
-    -dname "CN=presto-master, OU=, O=, L=, S=, C="
+    -dname "CN=presto-master, OU=, O=, L=, S=, C=" \
+    -validity 100000
 RUN chmod 644 /etc/presto/conf/keystore.jks
 
 # EXPOSE KERBEROS PORTS
