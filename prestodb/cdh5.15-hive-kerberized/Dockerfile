@@ -10,7 +10,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM prestodb/cdh5.13-hive:unlabelled
+FROM prestodb/cdh5.15-hive:unlabelled
 MAINTAINER Presto community <https://prestodb.io/community.html>
 
 # INSTALL KERBEROS

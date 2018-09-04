@@ -1,9 +1,9 @@
-# cdh5.13-hive [![][layers-badge]][layers-link] [![][version-badge]][dockerhub-link]
+# cdh5.15-hive [![][layers-badge]][layers-link] [![][version-badge]][dockerhub-link]
            
-[layers-badge]: https://images.microbadger.com/badges/image/prestodb/cdh5.13-hive.svg
-[layers-link]: https://microbadger.com/images/prestodb/cdh5.13-hive
-[version-badge]: https://images.microbadger.com/badges/version/prestodb/cdh5.13-hive.svg
-[dockerhub-link]: https://hub.docker.com/r/prestodb/cdh5.13-hive
+[layers-badge]: https://images.microbadger.com/badges/image/prestodb/cdh5.15-hive.svg
+[layers-link]: https://microbadger.com/images/prestodb/cdh5.15-hive
+[version-badge]: https://images.microbadger.com/badges/version/prestodb/cdh5.15-hive.svg
+[dockerhub-link]: https://hub.docker.com/r/prestodb/cdh5.15-hive
 
 Docker image with HDFS, YARN and HIVE installed. Please note that running services have lower memory heap size set.
 For more details please check the [hadoop-env.sh](files/conf/hadoop-env.sh) configuration file.
@@ -13,7 +13,7 @@ for general correctness testing.
 ## Run
 
 ```
-$ docker run -d --name hadoop-master -h hadoop-master prestodb/cdh5.13-hive
+$ docker run -d --name hadoop-master -h hadoop-master prestodb/cdh5.15-hive
 ```
 
 ## Oracle license

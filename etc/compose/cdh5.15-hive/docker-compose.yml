@@ -2,5 +2,5 @@ version: '2.0'
 services:
   hadoop-master:
     hostname: hadoop-master
-    image: prestodb/cdh5.13-hive:latest
+    image: prestodb/cdh5.15-hive:latest
 
