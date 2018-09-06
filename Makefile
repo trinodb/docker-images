@@ -62,7 +62,7 @@ DEPS := $(foreach dockerfile,$(DOCKERFILES),$(DEPDIR)/$(dockerfile:/Dockerfile=.
 FLAGS := $(foreach dockerfile,$(DOCKERFILES),$(FLAGDIR)/$(dockerfile:/Dockerfile=.flags))
 
 RELEASE_TAGS := $(VERSION_TAGS) $(GIT_HASH_TAGS) $(LATEST_TAGS)
-SNAPSHOT_TAGS := $(GIT_HASH_TAGS) $(LATEST_TAGS)
+SNAPSHOT_TAGS := $(GIT_HASH_TAGS)
 
 #
 # Make a list of the Docker images we depend on, but aren't built from
