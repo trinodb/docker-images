@@ -87,7 +87,6 @@ the following:
 
 `make snapshot` does the following:
 
-* Updates the 'latest' tag for the image on dockerhub
 * Creates a tag for the image with the git hash of the git repository on dockerhub
 
 `make release` does the following:
