@@ -6,7 +6,7 @@
 # 1) Change VERSION to a non-SNAPSHOT release: 35-SNAPSHOT -> 35
 # 2) Commit the repo
 # 3) `make release' to push the images to dockerhub and tag the repo
-# 4) Change VERSION to tne next SHAPSHOT release: 35 -> 36-SNAPSHOT
+# 4) Change VERSION to tne next SNAPSHOT release: 35 -> 36-SNAPSHOT
 # 5) Commit
 # 6) Continue developing
 # 7) `make snapshot' as needed to push snapshot images to dockerhub
