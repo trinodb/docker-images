@@ -4,6 +4,7 @@ dist: trusty
 env:
   - IMAGE_TO_BUILD=prestodb/hdp2.5-hive-kerberized IMAGE_TO_TEST=hdp2.5-hive
   - IMAGE_TO_BUILD=prestodb/hdp2.6-hive-kerberized IMAGE_TO_TEST=hdp2.6-hive
+  - IMAGE_TO_BUILD=prestodb/cdh5.12-hive-kerberized IMAGE_TO_TEST=cdh5.12-hive
   - IMAGE_TO_BUILD=prestodb/cdh5.15-hive-kerberized IMAGE_TO_TEST=cdh5.15-hive
   - IMAGE_TO_BUILD=prestodb/iop4.2-hive IMAGE_TO_TEST=iop4.2-hive
 
