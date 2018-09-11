@@ -5,7 +5,7 @@
 # When a version is final, do the following:
 # 1) Change VERSION to a non-SNAPSHOT release: 35-SNAPSHOT -> 35
 # 2) Commit the repo
-# 3) `make release' to push the images to dockerhub and tag the repo
+# 3) `make release' to push the images to dockerhub
 # 4) Change VERSION to tne next SNAPSHOT release: 35 -> 36-SNAPSHOT
 # 5) Commit
 # 6) Continue developing

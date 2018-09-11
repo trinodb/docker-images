@@ -80,7 +80,7 @@ the following:
 
 1. Change `VERSION` to the release version: 35-SNAPSHOT -> 35
 2. Commit the repository
-3. `make release` to push the images to dockerhub and tag the repository
+3. `make release` to push the images to dockerhub
 4. Change `VERSION` to the next snapshot version: 35 -> 36-SNAPSHOT
 5. Commit the repository
 6. Continue developing as described above
