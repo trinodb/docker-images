@@ -8,34 +8,9 @@ env:
   - IMAGE_TO_BUILD=prestodb/cdh5.15-hive-kerberized IMAGE_TO_TEST=cdh5.15-hive
   - IMAGE_TO_BUILD=prestodb/iop4.2-hive IMAGE_TO_TEST=iop4.2-hive
 
-# Prevent duplicate builds on tag pushes.
-# See https://github.com/mockito/mockito/commit/500519aac4cc13770aa47c1eb7d28e905c27e7aa
-branches:
-  except:
-    - /^release.*/
-    - /^latest-snapshot.*/
-
 services: 
   - docker
 
 install: make ${IMAGE_TO_BUILD}
 
 script: make test IMAGE_TO_TEST=${IMAGE_TO_TEST}
-
-before_deploy:
-  # decrypt the github deploy key
-  - openssl aes-256-cbc -K $encrypted_cd2beb64619c_key -iv $encrypted_cd2beb64619c_iv
-    -in .travis/github_tags_push_deploy_key.enc -out .travis/github_tags_push_deploy_key -d
-  - chmod 600 .travis/github_tags_push_deploy_key
-  - eval "$(ssh-agent -s)"
-  - ssh-add .travis/github_tags_push_deploy_key
-  - docker login --username=${DOCKERHUB_LOGIN} --password=${DOCKERHUB_PASSWORD}
-
-# Publish snapshots to Dockerhub for commits tagged `latest-snapshot-*`
-deploy:
-  on:
-    all_branches: true
-    condition: $( git tag --points-at HEAD | grep '^latest-snapshot' ) != ''
-  skip_cleanup: true
-  provider: script
-  script: make snapshot
