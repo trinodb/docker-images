@@ -3,8 +3,8 @@ MAINTAINER Teradata Docker Team <docker@teradata.com>
 
 ENV DOCKERIZE_VERSION v0.3.0
 
-ENV JDK_URL=http://download.oracle.com/otn-pub/java/jdk/8u181-b13/96a7b8442fe848ef90c96a2fad6ed6d1/jdk-8u181-linux-x64.rpm
-ENV JDK_PATH=/usr/java/jdk1.8.0_181-amd64
+ENV JDK_URL=https://download.oracle.com/otn-pub/java/jdk/8u202-b08/1961070e4c9b4e26a04e7f5a083f551e/jdk-8u202-linux-x64.rpm
+ENV JDK_PATH=/usr/java/jdk1.8.0_202-amd64
 
 # Install Oracle Java and presto-admin dependences (already has python 2.6)
 RUN \
