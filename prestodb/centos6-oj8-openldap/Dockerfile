@@ -11,7 +11,7 @@
 # limitations under the License.
 
 FROM prestodb/centos6-oj8:unlabelled
-MAINTAINER Presto community <https://prestodb.io/community.html>
+MAINTAINER Presto community <https://prestosql.io/community.html>
 
 ARG JDK_PATH
 

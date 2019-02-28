@@ -11,7 +11,7 @@
 # limitations under the License.
 
 FROM prestodb/centos6-oj8:unlabelled
-MAINTAINER Presto community <https://prestodb.io/community.html>
+MAINTAINER Presto community <https://prestosql.io/community.html>
 
 RUN \
   wget -nv http://public-repo-1.hortonworks.com/HDP/centos6/2.x/updates/2.5.0.0/hdp.repo -P /etc/yum.repos.d \

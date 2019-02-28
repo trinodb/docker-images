@@ -11,7 +11,7 @@
 # limitations under the License.
 
 FROM prestodb/hdp2.5-base:unlabelled
-MAINTAINER Presto community <https://prestodb.io/community.html>
+MAINTAINER Presto community <https://prestosql.io/community.html>
 
 # CHANGE DEFAULT TIMEZONE
 RUN ln -snf "/usr/share/zoneinfo/Asia/Kathmandu" /etc/localtime && echo "Asia/Kathmandu" > /etc/timezone

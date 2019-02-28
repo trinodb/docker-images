@@ -11,7 +11,7 @@
 # limitations under the License.
 
 FROM library/centos:6.9
-MAINTAINER Presto community <https://prestodb.io/community.html>
+MAINTAINER Presto community <https://prestosql.io/community.html>
 
 ARG JDK_URL
 ARG JDK_PATH
