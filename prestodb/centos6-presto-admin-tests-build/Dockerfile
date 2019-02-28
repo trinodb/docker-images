@@ -1,5 +1,5 @@
 FROM prestodb/centos6-presto-admin-tests-runtime:unlabelled
-MAINTAINER Presto community <https://prestodb.io/community.html>
+MAINTAINER Presto community <https://prestosql.io/community.html>
 
 RUN yum install -y \
       wget \

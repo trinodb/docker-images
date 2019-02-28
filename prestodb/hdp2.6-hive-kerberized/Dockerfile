@@ -11,7 +11,7 @@
 # limitations under the License.
 
 FROM prestodb/hdp2.6-hive:unlabelled
-MAINTAINER Presto community <https://prestodb.io/community.html>
+MAINTAINER Presto community <https://prestosql.io/community.html>
 
 # INSTALL KERBEROS
 RUN yum install -y krb5-libs krb5-server krb5-workstation \
