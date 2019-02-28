@@ -51,7 +51,7 @@ RUN /root/setup.sh \
 
 # Setup sock proxy
 RUN yum install -y openssh openssh-clients openssh-server && yum -y clean all
-RUN ssh-keygen -t rsa -b 4096 -C "automation@prestodb.io" -N "" -f /root/.ssh/id_rsa \
+RUN ssh-keygen -t rsa -b 4096 -C "automation@prestosql.io" -N "" -f /root/.ssh/id_rsa \
   && ssh-keygen -t rsa -b 4096 -N "" -f /etc/ssh/ssh_host_rsa_key \
   && ssh-keygen -t dsa -b 1024 -N "" -f /etc/ssh/ssh_host_dsa_key \
   && cp /root/.ssh/id_rsa.pub /root/.ssh/authorized_keys
