@@ -54,8 +54,11 @@ RUN \
     pip install --upgrade setuptools==36.8.0 `# latest version for Python 2.6` && \
     pip install supervisor && \
     \
-    # install tools helpful when troubleshooting product tests
-    yum install -y vim && \
+    # install commonly needed packages
+    yum install -y \
+        sudo \
+        vim `# helpful when troubleshooting product tests` \
+        && \
     # cleanup
     yum -y clean all && rm -rf /tmp/* /var/tmp/*
 
