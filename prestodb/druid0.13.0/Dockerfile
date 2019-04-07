@@ -13,19 +13,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM ubuntu:16.04
+FROM prestodb/centos6-oj8:latest
 MAINTAINER Presto community <https://prestosql.io/community.html>
 
-# Copy configuration files
-COPY ./files/root/*.sh /root/
+RUN yum install -y openjdk-8-jdk perl supervisor wget sudo vim \
+    && yum -y clean all && rm -rf /tmp/* /var/tmp/*
 
-COPY ./files/data/*.json /root/data/
+RUN wget -q -O - https://www-us.apache.org/dist/incubator/druid/0.13.0-incubating/apache-druid-0.13.0-incubating-bin.tar.gz | tar -xzf - -C /usr/local \
+  && ln -s /usr/local/apache-druid-0.13.0-incubating /usr/local/druid
 
-RUN chmod +x /root/*.sh && /root/setup.sh
+RUN wget -q -O - https://archive.apache.org/dist/zookeeper/zookeeper-3.4.12/zookeeper-3.4.12.tar.gz | tar -xzf - -C /usr/local \
+  && cp /usr/local/zookeeper-3.4.12/conf/zoo_sample.cfg /usr/local/zookeeper-3.4.12/conf/zoo.cfg \
+  && ln -s /usr/local/zookeeper-3.4.12 /usr/local/zookeeper && ln -s /usr/local/zookeeper-3.4.12 /usr/local/druid/zk
 
-RUN rm -rf ./files
+COPY ./files /
 
-# Expose ports:
+RUN chmod +x /root/*.sh
+
+# ports & processes:
 # - 8081: HTTP (coordinator)
 # - 8082: HTTP (broker)
 # - 8083: HTTP (historical)
@@ -33,13 +38,9 @@ RUN rm -rf ./files
 # - 8091: HTTP (middlemanager)
 # - 2181 2888 3888: ZooKeeper
 
-EXPOSE 8081
+# Exposing broker & overlord
 EXPOSE 8082
-EXPOSE 8083
 EXPOSE 8090
-EXPOSE 8091
-EXPOSE 2181 2888 3888
 
 WORKDIR /usr/local/druid
 ENTRYPOINT ["/root/entrypoint.sh"]
-

@@ -1,1 +1,0 @@
-Druid 0.13.0 quick start container - requires 4GB of container memory atleast.
