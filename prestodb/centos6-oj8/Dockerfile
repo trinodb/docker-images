@@ -52,7 +52,7 @@ RUN \
     yum install -y python-pip && \
     pip install --upgrade pip==9.0.3 `# latest version for Python 2.6` && \
     pip install --upgrade setuptools==36.8.0 `# latest version for Python 2.6` && \
-    pip install supervisor && \
+    pip install supervisor==3.4.0 && \
     \
     # install commonly needed packages
     yum install -y \
