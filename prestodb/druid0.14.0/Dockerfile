@@ -13,22 +13,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM prestodb/centos6-oj8:latest
+FROM library/centos:6.9
 MAINTAINER Presto community <https://prestosql.io/community.html>
 
-RUN yum install -y openjdk-8-jdk perl supervisor wget sudo vim \
+RUN \
+    set -xeu && \
+    yum install -y java-1.8.0-openjdk-devel perl supervisor wget sudo vim \
     && yum -y clean all && rm -rf /tmp/* /var/tmp/*
 
-RUN wget -q -O - https://www-us.apache.org/dist/incubator/druid/0.13.0-incubating/apache-druid-0.13.0-incubating-bin.tar.gz | tar -xzf - -C /usr/local \
-  && ln -s /usr/local/apache-druid-0.13.0-incubating /usr/local/druid
+RUN \
+    set -xeu && \
+    wget -q -O - https://www-us.apache.org/dist/incubator/druid/0.14.0-incubating/apache-druid-0.14.0-incubating-bin.tar.gz | tar -xzf - -C /usr/local \
+  && ln -s /usr/local/apache-druid-0.14.0-incubating /usr/local/druid
 
-RUN wget -q -O - https://archive.apache.org/dist/zookeeper/zookeeper-3.4.12/zookeeper-3.4.12.tar.gz | tar -xzf - -C /usr/local \
+RUN \
+    set -xeu && \
+    wget -q -O - https://archive.apache.org/dist/zookeeper/zookeeper-3.4.12/zookeeper-3.4.12.tar.gz | tar -xzf - -C /usr/local \
   && cp /usr/local/zookeeper-3.4.12/conf/zoo_sample.cfg /usr/local/zookeeper-3.4.12/conf/zoo.cfg \
   && ln -s /usr/local/zookeeper-3.4.12 /usr/local/zookeeper && ln -s /usr/local/zookeeper-3.4.12 /usr/local/druid/zk
 
 COPY ./files /
-
-RUN chmod +x /root/*.sh
 
 # ports & processes:
 # - 8081: HTTP (coordinator)
@@ -42,5 +46,13 @@ RUN chmod +x /root/*.sh
 EXPOSE 8082
 EXPOSE 8090
 
+RUN \
+    set -xeu && \
+    cp -r /usr/local/druid/quickstart/tutorial/conf/druid /root/conf/ && cd /root/conf/ && \
+    cp -r /usr/local/druid/quickstart/tutorial/conf/zk /root/conf/ && cd /root/conf/ && \
+    cp overrides/broker/jvm.config druid/broker/ && cp overrides/coordinator/jvm.config druid/coordinator/ && \
+    cp overrides/historical/jvm.config druid/historical/ && cp overrides/middleManager/jvm.config druid/middleManager/ && \
+    cp overrides/overlord/jvm.config druid/overlord/ &&  cp overrides/zk/jvm.config zk/
+
 WORKDIR /usr/local/druid
-ENTRYPOINT ["/root/entrypoint.sh"]
+CMD ["bin/supervise", "-c", "/root/conf/cluster.conf"]
