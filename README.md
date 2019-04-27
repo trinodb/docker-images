@@ -149,21 +149,6 @@ described below.
 Build args with a default value are not handled at present. Feel free to add
 that functionality in `bin/flag.sh` if needed.
 
-## Java
-
-Individual Dockerfiles shouldn't contain the URL for downloading Java, the name
-of the RPM, or the path that java gets installed in. Doing this makes upgrading
-Java across the repo a pain with a bunch of touch points.
-
-Instead, the build system exposes the [Docker build
-arguments](https://docs.docker.com/engine/reference/builder/#/arg) `JDK_URL`
-and `JDK_PATH`. These can be used in your Dockerfile as follows:
-
-```
-ARG JDK_URL
-RUN wget $JDK_URL
-```
-
 ## How the build system works.
 
 At a high level, a docker image depends on two things:

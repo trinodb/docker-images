@@ -13,10 +13,6 @@
 FROM prestodev/centos6-oj8:unlabelled
 MAINTAINER Presto community <https://prestosql.io/community.html>
 
-ARG JDK_PATH
-
-ENV JAVA_HOME=$JDK_PATH
-
 # INSTALL OPENLDAP
 RUN yum -y install openldap openldap-clients openldap-servers \
     # Cleanup
