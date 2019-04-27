@@ -27,17 +27,6 @@ FLAGDIR=$(BUILDDIR)/flags
 ORGDIR=prestodev
 
 #
-# This should be the only place you need to touch to update the version of Java
-# we install in the images. Every other variable should be derived directly or
-# indirectly from this one, and you should pass those variables to the
-# Dockerfiles using ARG and --build-arg.
-#
-JDK_URL := https://download.oracle.com/otn-pub/java/jdk/8u202-b08/1961070e4c9b4e26a04e7f5a083f551e/jdk-8u202-linux-x64.rpm
-JDK_PATH := /usr/java/jdk1.8.0_202-amd64
-JDK_PATH_BUILD_ARGS := \
-	--build-arg JDK_PATH=$(JDK_PATH)
-
-#
 # In theory, we could just find all of the Dockerfiles and derive IMAGE_DIRS
 # from that, but make's dir function includes the trailing slash, which we'd
 # have to strip off to get a valid Docker image name.
