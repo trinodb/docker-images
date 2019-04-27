@@ -1,5 +1,5 @@
 FROM jdeathe/centos-ssh:centos-6-1.8.1
-MAINTAINER Teradata Docker Team <docker@teradata.com>
+MAINTAINER Presto community <https://prestosql.io/community.html>
 
 ENV DOCKERIZE_VERSION v0.3.0
 
