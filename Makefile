@@ -50,7 +50,7 @@ DOCKERFILES := $(addsuffix /Dockerfile,$(IMAGE_DIRS))
 DEPS := $(foreach dockerfile,$(DOCKERFILES),$(DEPDIR)/$(dockerfile:/Dockerfile=.d))
 FLAGS := $(foreach dockerfile,$(DOCKERFILES),$(FLAGDIR)/$(dockerfile:/Dockerfile=.flags))
 
-RELEASE_TAGS := $(VERSION_TAGS) $(GIT_HASH_TAGS) $(LATEST_TAGS)
+RELEASE_TAGS := $(VERSION_TAGS) $(LATEST_TAGS)
 SNAPSHOT_TAGS := $(GIT_HASH_TAGS)
 
 #
