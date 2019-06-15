@@ -1,6 +1,8 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
-while [ -n "$1" ]; do 
+set -xeuo pipefail
+
+while [ "$#" -gt 0 ]; do
 	docker push "$1"
 	shift
 done
