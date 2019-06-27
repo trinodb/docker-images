@@ -10,14 +10,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM prestodev/centos6-oj8:unlabelled
+FROM prestodev/centos7-oj8:unlabelled
 MAINTAINER Presto community <https://prestosql.io/community.html>
 
 # Change default timezone
 RUN ln -snf "/usr/share/zoneinfo/Asia/Kathmandu" /etc/localtime && echo "Asia/Kathmandu" > /etc/timezone
 
 # Install HDP repo
-RUN wget -nv http://public-repo-1.hortonworks.com/HDP/centos6/2.x/updates/2.6.5.0/hdp.repo -P /etc/yum.repos.d
+RUN wget -nv http://public-repo-1.hortonworks.com/HDP/centos7/3.x/updates/3.1.0.0/hdp.repo -P /etc/yum.repos.d
 
 # Install Hadoop, Hive (w/ MySQL)
 RUN yum install -y \
@@ -31,8 +31,11 @@ RUN yum install -y \
     hive \
     hive-metastore \
     hive-server2 \
+    tez \
 
-    mysql-server mysql-connector-java \
+    # Mysql is not present in Centos7 repositories, use mariadb as a replacement
+    mariadb-server \
+    mysql-connector-java \
 
 # Cleanup
   && yum -y clean all && rm -rf /tmp/* /var/tmp/* \
@@ -59,7 +62,7 @@ RUN chmod 755 /root && chmod 700 /root/.ssh
 RUN passwd --unlock root
 
 # HDFS ports
-EXPOSE 1004 1006 8020 50010 50020 50070 50075 50470
+EXPOSE 1004 1006 8020 9866 9867 9870 9864 50470
 
 # YARN ports
 EXPOSE 8030 8031 8032 8033 8040 8041 8042 8088 10020 19888

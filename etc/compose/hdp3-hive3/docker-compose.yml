@@ -1,0 +1,6 @@
+version: '2.0'
+services:
+  hadoop-master:
+    hostname: hadoop-master
+    image: prestodev/hdp3-hive3:latest
+
