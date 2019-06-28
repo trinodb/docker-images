@@ -33,9 +33,9 @@ function check_hadoop() {
 }
 
 function run_tests() {
-  run_in_hadoop_master_container su hdfs -c "hive -e 'SELECT 1'"
-  run_in_hadoop_master_container su hdfs -c "hive -e 'CREATE TABLE foo (a INT);'"
-  run_in_hadoop_master_container su hdfs -c "hive -e 'INSERT INTO foo VALUES (54);'"
+  run_in_hadoop_master_container su hdfs -c "hive -e 'SELECT 1'" &&
+  run_in_hadoop_master_container su hdfs -c "hive -e 'CREATE TABLE foo (a INT);'" &&
+  run_in_hadoop_master_container su hdfs -c "hive -e 'INSERT INTO foo VALUES (54);'" &&
   # SELECT with WHERE to make sure that map-reduce job is scheduled
   run_in_hadoop_master_container su hdfs -c "hive -e 'SELECT a FROM foo WHERE a > 0;'"
 }
