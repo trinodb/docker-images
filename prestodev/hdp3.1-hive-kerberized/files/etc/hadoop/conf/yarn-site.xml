@@ -87,6 +87,19 @@
         <value>http://hadoop-master:19888/jobhistory/logs</value>
     </property>
 
+    <property>
+        <name>yarn.nodemanager.vmem-check-enabled</name>
+        <value>false</value>
+        <description>Whether virtual memory limits will be enforced for containers.</description>
+    </property>
+
+    <!-- Minimum container memory, default value is 1024 which is too high for the test queries -->
+    <property>
+        <name>yarn.scheduler.minimum-allocation-mb</name>
+        <value>256</value>
+        <description>The minimum allocation for every container request at the RM, in MBs. Memory requests lower than this won't take effect, and the specified value will get allocated at minimum.</description>
+    </property>
+
     <!-- ResourceManager security configs -->
     <property>
         <name>yarn.resourcemanager.keytab</name>
