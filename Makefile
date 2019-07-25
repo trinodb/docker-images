@@ -89,7 +89,7 @@ all: images
 images: $(LATEST_TAGS)
 
 #
-# Release images to Dockerhub using docker-release
+# Release images to Dockerhub
 #
 .PHONY: release push-release snapshot push-snapshot
 

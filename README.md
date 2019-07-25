@@ -38,14 +38,7 @@ If all of the docker images you are using have the same version number then
 they are in a consistent state. 
 
 This means that we treat the repository as a single codebase that creates
-multiple artifacts (Docker images) that all need to be released together. The
-Makefile uses [docker-release](https://github.com/kokosing/docker-release) to
-automate this process and ensure that the images on dockerhub are in a
-consistent state provided all of the push operations run to completion.
-
-docker-release also handles tagging the images and repository appropriately so
-that you can easily find the Dockerfile used to create an image starting from
-just the tags on a Docker image.
+multiple artifacts (Docker images) that all need to be released together.
 
 Best practice for publishing a snapshot or release version is to use the Jenkins job.  Login to Jenkins and search for `docker-images`.  If you must publish a new version manually, follow these steps:
 
@@ -96,7 +89,7 @@ the following:
 * Creates a tag for the image on dockerhub with the $(VERSION) specified in the Makefile
 * Creates a tag in the git repository with the name release-$(VERSION)
 
-`docker-release` enforces several rules about the state of the repository when pushing to dockerhub:
+Several rules are enforced about the state of the repository when pushing to dockerhub:
 
 * For a snapshot or a release, the repository must be in a clean state (no uncommitted files)
 * For a release, the branch must be master
