@@ -10,7 +10,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM prestodev/hdp2.6-hive:unlabelled
+FROM prestodev/hdp3.1-hive:unlabelled
 MAINTAINER Presto community <https://prestosql.io/community.html>
 
 # INSTALL KERBEROS
