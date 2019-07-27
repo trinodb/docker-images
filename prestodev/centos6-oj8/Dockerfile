@@ -30,6 +30,7 @@ RUN \
     \
     # install commonly needed packages
     yum install -y \
+        net-tools `# netstat` \
         sudo \
         vim `# helpful when troubleshooting product tests` \
         && \
