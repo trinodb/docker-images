@@ -58,6 +58,17 @@ RUN ssh-keygen -t rsa -b 4096 -C "automation@prestosql.io" -N "" -f /root/.ssh/i
 RUN chmod 755 /root && chmod 700 /root/.ssh
 RUN passwd --unlock root
 
+# Provide convenience bash history
+RUN set -xeu; \
+    for user in root hive hdfs; do \
+        # ~hive might be owned by root
+        chown -R "${user}:" "$(eval echo ~"${user}")"; \
+        sudo -u "${user}" bash -c ' echo "beeline -u jdbc:hive2://localhost:10000/default -n hive" >> ~/.bash_history '; \
+        sudo -u "${user}" bash -c ' echo "hadoop dfs -ls -R /user/hive/warehouse" >> ~/.bash_history '; \
+        sudo -u "${user}" bash -c ' mkdir -p ~/.beeline '; \
+        sudo -u "${user}" bash -c ' echo "SELECT current_user();" >> ~/.beeline/history '; \
+    done
+
 # HDFS ports
 EXPOSE 1004 1006 8020 50010 50020 50070 50075 50470
 

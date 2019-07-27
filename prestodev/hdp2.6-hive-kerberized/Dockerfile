@@ -91,6 +91,14 @@ RUN keytool -genkeypair \
     -validity 100000
 RUN chmod 644 /etc/presto/conf/keystore.jks
 
+# Provide convenience bash history
+RUN set -xeu; \
+    for user in root hive hdfs; do \
+        sudo -u "${user}" bash -c ' echo "klist -kt /etc/hive/conf/hive.keytab" >> ~/.bash_history '; \
+        sudo -u "${user}" bash -c ' echo "kinit -kt /etc/hive/conf/hive.keytab hive/hadoop-master@LABS.TERADATA.COM" >> ~/.bash_history '; \
+        sudo -u "${user}" bash -c ' echo "beeline -u \"jdbc:hive2://hadoop-master:10000/default;principal=hive/hadoop-master@LABS.TERADATA.COM\"" >> ~/.bash_history '; \
+    done
+
 # EXPOSE KERBEROS PORTS
 EXPOSE	88
 EXPOSE	89
