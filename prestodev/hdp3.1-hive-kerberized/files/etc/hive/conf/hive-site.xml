@@ -65,11 +65,6 @@
     </property>
 
     <property>
-      <name>tez.lib.uris</name>
-      <value>file:///usr/hdp/3.1.0.0-78/tez</value>
-    </property>
-
-    <property>
       <name>hive.support.concurrency</name>
       <value>true</value>
     </property>
@@ -77,11 +72,6 @@
     <property>
       <name>hive.txn.manager</name>
       <value>org.apache.hadoop.hive.ql.lockmgr.DbTxnManager</value>
-    </property>
-
-    <property>
-      <name>tez.lib.uris</name>
-      <value>file:///usr/hdp/3.1.0.0-78/tez/lib/tez.tar.gz</value>
     </property>
 
     <!-- Enable authentication -->
