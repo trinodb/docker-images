@@ -28,7 +28,7 @@ RUN \
     \
     # install commonly needed packages
     yum install -y \
-        net-tools `# netstat` \
+        net-tools `# netstat is required by run_on_docker.sh` \
         sudo \
         vim `# helpful when troubleshooting product tests` \
         && \
