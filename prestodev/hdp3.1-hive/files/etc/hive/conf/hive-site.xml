@@ -65,13 +65,13 @@
     </property>
 
     <property>
-      <name>hive.support.concurrency</name>
-      <value>true</value>
+        <name>hive.support.concurrency</name>
+        <value>true</value>
     </property>
 
     <property>
-      <name>hive.txn.manager</name>
-      <value>org.apache.hadoop.hive.ql.lockmgr.DbTxnManager</value>
+        <name>hive.txn.manager</name>
+        <value>org.apache.hadoop.hive.ql.lockmgr.DbTxnManager</value>
     </property>
 
 </configuration>
