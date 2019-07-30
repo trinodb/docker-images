@@ -70,6 +70,16 @@
     </property>
 
     <property>
+        <name>hive.compactor.initiator.on</name>
+        <value>true</value>
+    </property>
+
+    <property>
+        <name>hive.compactor.worker.threads</name>
+        <value>1</value>
+    </property>
+
+    <property>
         <name>hive.txn.manager</name>
         <value>org.apache.hadoop.hive.ql.lockmgr.DbTxnManager</value>
     </property>
