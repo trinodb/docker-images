@@ -65,6 +65,12 @@
     </property>
 
     <property>
+        <!-- https://community.hortonworks.com/content/supportkb/247055/errorjavalangunsupportedoperationexception-storage.html -->
+        <name>metastore.storage.schema.reader.impl</name>
+        <value>org.apache.hadoop.hive.metastore.SerDeStorageSchemaReader</value>
+    </property>
+
+    <property>
         <name>hive.support.concurrency</name>
         <value>true</value>
     </property>
