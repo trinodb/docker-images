@@ -59,7 +59,7 @@
     </property>
     <property>
         <name>tez.am.launch.cmd-opts</name>
-        <value>-server -Djava.net.preferIPv4Stack=true -XX:+UseNUMA -XX:+UseParallelGC -Dhadoop.metrics.log.level=WARN</value>
+        <value>-server -Djava.net.preferIPv4Stack=true -XX:+UseParallelGC -Dhadoop.metrics.log.level=WARN</value>
     </property>
     <property>
         <name>tez.am.resource.memory.mb</name>
@@ -67,7 +67,7 @@
     </property>
     <property>
         <name>tez.task.launch.cmd-opts</name>
-        <value>-server -Djava.net.preferIPv4Stack=true -XX:+UseNUMA -XX:+UseParallelGC -Dhadoop.metrics.log.level=WARN</value>
+        <value>-server -Djava.net.preferIPv4Stack=true -XX:+UseParallelGC -Dhadoop.metrics.log.level=WARN</value>
     </property>
     <property>
         <name>tez.task.resource.memory.mb</name>
