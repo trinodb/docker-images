@@ -33,7 +33,16 @@ function run_tests() {
   environment_compose exec -u hdfs hadoop-master hive -e 'CREATE TABLE foo (a INT);' &&
   environment_compose exec -u hdfs hadoop-master hive -e 'INSERT INTO foo VALUES (54);' &&
   # SELECT with WHERE to make sure that map-reduce job is scheduled
-  environment_compose exec -u hdfs hadoop-master hive -e 'SELECT a FROM foo WHERE a > 0;'
+  environment_compose exec -u hdfs hadoop-master hive -e 'SELECT a FROM foo WHERE a > 0;' &&
+  # Test table bucketing
+  environment_compose exec -u hdfs hadoop-master hive -e '
+    CREATE TABLE bucketed_table(a INT) CLUSTERED BY(a) INTO 32 BUCKETS;
+    SET hive.enforce.bucketing = true;
+    INSERT INTO bucketed_table VALUES (1), (2), (3), (4);
+  ' &&
+  test $(environment_compose exec -u hdfs hadoop-master hdfs dfs -ls /user/hive/warehouse/bucketed_table \
+    | tee /dev/stderr | grep /bucketed_table/ | wc -l) -ge 4 &&
+  true
 }
 
 function stop_all_containers() {
@@ -118,6 +127,7 @@ LOGS_PID=$!
 retry check_hadoop
 
 # run tests
+set -x
 set +e
 sleep 10
 run_tests
