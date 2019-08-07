@@ -42,10 +42,6 @@
         <value>8</value>
     </property>
     <property>
-        <name>tez.shuffle-vertex-manager.enable.auto-parallel</name>
-        <value>true</value>
-    </property>
-    <property>
         <name>tez.am.max.app.attempts</name>
         <value>1</value>
     </property>
