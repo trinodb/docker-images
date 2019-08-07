@@ -24,20 +24,16 @@ function environment_compose() {
   docker-compose -f "${DOCKER_CONF_LOCATION}/${ENVIRONMENT}/docker-compose.yml" "$@"
 }
 
-function run_in_hadoop_master_container() {
-  environment_compose exec hadoop-master "$@"
-}
-
 function check_hadoop() {
-  run_in_hadoop_master_container su hdfs -c "hive -e 'select 1;'" > /dev/null 2>&1
+  environment_compose exec -u hdfs hadoop-master hive -e 'select 1;' > /dev/null 2>&1
 }
 
 function run_tests() {
-  run_in_hadoop_master_container su hdfs -c "hive -e 'SELECT 1'" &&
-  run_in_hadoop_master_container su hdfs -c "hive -e 'CREATE TABLE foo (a INT);'" &&
-  run_in_hadoop_master_container su hdfs -c "hive -e 'INSERT INTO foo VALUES (54);'" &&
+  environment_compose exec -u hdfs hadoop-master hive -e 'SELECT 1' &&
+  environment_compose exec -u hdfs hadoop-master hive -e 'CREATE TABLE foo (a INT);' &&
+  environment_compose exec -u hdfs hadoop-master hive -e 'INSERT INTO foo VALUES (54);' &&
   # SELECT with WHERE to make sure that map-reduce job is scheduled
-  run_in_hadoop_master_container su hdfs -c "hive -e 'SELECT a FROM foo WHERE a > 0;'"
+  environment_compose exec -u hdfs hadoop-master hive -e 'SELECT a FROM foo WHERE a > 0;'
 }
 
 function stop_all_containers() {
