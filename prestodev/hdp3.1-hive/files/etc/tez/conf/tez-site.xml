@@ -19,7 +19,7 @@
     </property>
     <property>
         <name>tez.lib.uris</name>
-        <value>file:///usr/hdp/3.1.0.0-78/tez/lib/tez.tar.gz</value>
+        <value>file:///usr/hdp/current/tez-client/lib/tez.tar.gz</value>
     </property>
     <property>
         <name>tez.am.mode.session</name>
