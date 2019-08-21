@@ -57,10 +57,6 @@ RUN rm -r /etc/hadoop/conf/* \
 # Copy configuration files
 COPY ./files /
 
-# Run setup script
-RUN /root/setup.sh \
-  && rm -rf /tmp/* /var/tmp/*
-
 # Setup sock proxy
 RUN yum install -y openssh openssh-clients openssh-server && yum -y clean all
 RUN ssh-keygen -t rsa -b 4096 -C "automation@prestosql.io" -N "" -f /root/.ssh/id_rsa \
@@ -69,6 +65,10 @@ RUN ssh-keygen -t rsa -b 4096 -C "automation@prestosql.io" -N "" -f /root/.ssh/i
   && cp /root/.ssh/id_rsa.pub /root/.ssh/authorized_keys
 RUN chmod 755 /root && chmod 700 /root/.ssh
 RUN passwd --unlock root
+
+# Run setup script
+RUN /root/setup.sh \
+  && rm -rf /tmp/* /var/tmp/*
 
 # Provide convenience bash history
 RUN set -xeu; \

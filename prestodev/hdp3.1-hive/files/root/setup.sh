@@ -58,5 +58,15 @@ sleep 10s
 mkdir /var/log/mysql/
 chown -R mysql:mysql /var/log/mysql/
 
+# Create `information_schema` and `sys` schemas in Hive
+supervisord -c /etc/supervisord.conf &
+while ! beeline -n hive -e "SELECT 1"; do
+    echo "Waiting for HiveServer2 ..."
+    sleep 10s
+done
+/usr/hdp/current/hive-client/bin/schematool -userName hive -metaDbType mysql -dbType hive -initSchema \
+    -url jdbc:hive2://localhost:10000/default -driver org.apache.hive.jdbc.HiveDriver
+supervisorctl stop all
+
 # Additional libs
 cp -av /usr/hdp/current/hadoop-client/lib/native/Linux-amd64-64/* /usr/lib64/
