@@ -48,10 +48,10 @@ chown -R mysql:mysql /var/lib/mysql
 /usr/bin/mysqld_safe &
 sleep 10s
 
-cd /usr/hdp/current/hive-metastore/scripts/metastore/upgrade/mysql/
 echo "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION; FLUSH PRIVILEGES;" | mysql
-echo "CREATE DATABASE metastore; USE metastore; SOURCE hive-schema-3.1.0.mysql.sql;" | mysql
+echo "CREATE DATABASE metastore;" | mysql
 /usr/bin/mysqladmin -u root password 'root'
+/usr/hdp/current/hive-client/bin/schematool -dbType mysql -initSchema
 
 killall mysqld
 sleep 10s
