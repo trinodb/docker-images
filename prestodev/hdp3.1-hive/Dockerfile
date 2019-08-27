@@ -19,7 +19,7 @@ RUN ln -snf "/usr/share/zoneinfo/Asia/Kathmandu" /etc/localtime && echo "Asia/Ka
 # Install HDP repo
 RUN wget -nv http://public-repo-1.hortonworks.com/HDP/centos7/3.x/updates/3.1.0.0/hdp.repo -P /etc/yum.repos.d
 
-# Install Hadoop, Hive (w/ MySQL)
+# Install Hadoop, Hive
 RUN yum install -y \
     hadoop-hdfs-namenode \
     hadoop-hdfs-secondarynamenode \
