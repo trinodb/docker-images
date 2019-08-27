@@ -17,7 +17,10 @@ MAINTAINER Presto community <https://prestosql.io/community.html>
 RUN ln -snf "/usr/share/zoneinfo/Asia/Kathmandu" /etc/localtime && echo "Asia/Kathmandu" > /etc/timezone
 
 # Install HDP repo
-RUN wget -nv http://public-repo-1.hortonworks.com/HDP/centos7/3.x/updates/3.1.0.0/hdp.repo -P /etc/yum.repos.d
+RUN set -xeu; \
+    wget -nv http://public-repo-1.hortonworks.com/HDP/centos7/3.x/updates/3.1.0.0/hdp.repo -P /etc/yum.repos.d; \
+    wget -nv http://public-repo-1.hortonworks.com/HDP-GPL/centos7/3.x/updates/3.1.0.0/hdp.gpl.repo -P /etc/yum.repos.d; \
+    echo OK
 
 # Install Hadoop, Hive
 RUN yum install -y \
@@ -32,6 +35,12 @@ RUN yum install -y \
     hive-metastore \
     hive-server2 \
     tez \
+
+    hadooplzo \
+    hadooplzo-native \
+    lzo \
+    lzo-devel \
+    lzop \
 
     # Mysql is not present in Centos7 repositories, use mariadb as a replacement
     mariadb-server \
