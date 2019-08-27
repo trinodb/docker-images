@@ -57,3 +57,6 @@ killall mysqld
 sleep 10s
 mkdir /var/log/mysql/
 chown -R mysql:mysql /var/log/mysql/
+
+# Additional libs
+cp -av /usr/hdp/current/hadoop-client/lib/native/Linux-amd64-64/* /usr/lib64/
