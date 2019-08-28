@@ -32,6 +32,7 @@ RUN \
     yum install -y \
         net-tools `# netstat` \
         sudo \
+        telnet `# helpful when troubleshooting product tests` \
         vim `# helpful when troubleshooting product tests` \
         && \
     # cleanup

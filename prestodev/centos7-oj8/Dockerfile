@@ -30,6 +30,7 @@ RUN \
     yum install -y \
         net-tools `# netstat is required by run_on_docker.sh` \
         sudo \
+        telnet `# helpful when troubleshooting product tests` \
         vim `# helpful when troubleshooting product tests` \
         && \
     # cleanup
