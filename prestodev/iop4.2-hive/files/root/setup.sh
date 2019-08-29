@@ -1,9 +1,9 @@
 #!/bin/bash -ex
 
-# 0 make file system hostname resolvable
+# make file system hostname resolvable
 echo "127.0.0.1 hadoop-master" >> /etc/hosts
 
-# 1 format namenode
+# format namenode
 chown hdfs:hdfs /var/lib/hadoop-hdfs/cache/
 
 # workaround for 'could not open session' bug as suggested here:
@@ -11,25 +11,25 @@ chown hdfs:hdfs /var/lib/hadoop-hdfs/cache/
 rm -f /etc/security/limits.d/hdfs.conf
 su -c "echo 'N' | hdfs namenode -format" hdfs
 
-# 2 start hdfs
+# start hdfs
 su -c "hdfs datanode  2>&1 > /var/log/hadoop/hdfs/hadoop-hdfs-datanode.log" hdfs&
 su -c "hdfs namenode  2>&1 > /var/log/hadoop/hdfs/hadoop-hdfs-namenode.log" hdfs&
 
-# 3 wait for process starting
+# wait for process starting
 sleep 10
 
 # 4 exec hdfs init script
 /usr/iop/4.2.0.0/hadoop/libexec/init-hdfs.sh
 
-# 5 init hive directories
+# init hive directories
 su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -mkdir /user/hive/warehouse'
 su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chmod 1777 /user/hive/warehouse'
 su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chown hive /user/hive/warehouse'
 
-# 6 stop hdfs
+# stop hdfs
 killall java
 
-# 7 setup metastore
+# setup metastore
 mysql_install_db
 
 /usr/bin/mysqld_safe &
