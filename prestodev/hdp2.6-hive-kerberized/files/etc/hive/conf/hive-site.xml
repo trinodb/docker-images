@@ -64,6 +64,21 @@
         <value>hdfs,hive</value>
     </property>
 
+    <property>
+        <name>hive.support.concurrency</name>
+        <value>true</value>
+    </property>
+
+    <property>
+        <name>hive.compactor.worker.threads</name>
+        <value>1</value>
+    </property>
+
+    <property>
+        <name>hive.txn.manager</name>
+        <value>org.apache.hadoop.hive.ql.lockmgr.DbTxnManager</value>
+    </property>
+
     <!-- Enable authentication -->
     <property>
         <name>hive.server2.authentication</name>
