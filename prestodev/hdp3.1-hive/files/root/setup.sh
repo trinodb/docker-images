@@ -68,3 +68,5 @@ supervisorctl stop all
 
 # Additional libs
 cp -av /usr/hdp/current/hadoop-client/lib/native/Linux-amd64-64/* /usr/lib64/
+mkdir -v /usr/hdp/current/hive-client/auxlib || test -d /usr/hdp/current/hive-client/auxlib
+ln -vs /usr/hdp/current/hadoop-client/lib/hadoop-lzo-*.jar /usr/hdp/current/hive-client/auxlib
