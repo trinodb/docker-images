@@ -69,6 +69,7 @@ RUN passwd --unlock root
 
 # Provide convenience bash history
 RUN set -xeu; \
+    echo "supervisorctl restart all" >> ~root/.bash_history; \
     for user in root hive hdfs; do \
         # ~hive might be owned by root
         chown -R "${user}:" "$(eval echo ~"${user}")"; \
