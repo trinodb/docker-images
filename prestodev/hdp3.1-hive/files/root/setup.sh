@@ -39,6 +39,7 @@ su -s /bin/bash hdfs -c '/usr/bin/hadoop fs -chown hive /user/hive/warehouse'
 killall java
 
 # setup metastore
+ln -s /usr/bin/resolveip /usr/libexec # mariadb-server installs resolveip in /usr/bin but mysql_install_db expects it in /usr/libexec
 mysql_install_db
 
 chown -R mysql:mysql /var/lib/mysql
