@@ -73,7 +73,7 @@ RUN passwd --unlock root
 # Provide convenience bash history
 RUN set -xeu; \
     for user in root hive hdfs; do \
-        sudo -u "${user}" bash -c ' echo "beeline -n hive" >> ~/.bash_history '; \
+        sudo -u "${user}" bash -c ' echo "beeline --verbose -n hive" >> ~/.bash_history '; \
         sudo -u "${user}" bash -c ' echo "hdfs dfs -ls -R /user/hive/warehouse" >> ~/.bash_history '; \
         sudo -u "${user}" bash -c ' mkdir -p ~/.beeline '; \
         sudo -u "${user}" bash -c ' echo "SELECT current_user();" >> ~/.beeline/history '; \
