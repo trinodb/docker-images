@@ -23,20 +23,17 @@ COPY ./files /
 # CREATE KERBEROS DATABASE
 RUN /usr/sbin/kdb5_util create -s -P password
 
-# CREATE ANOTHER KERBEROS DATABASE
-RUN /usr/sbin/kdb5_util create -d /var/kerberos/krb5kdc/principal-other -r OTHERLABS.TERADATA.COM -s -P password
-
 # ADD HADOOP PRINCIPALS
-RUN /usr/sbin/kadmin.local -q "addprinc -randkey hdfs/hadoop-master@LABS.TERADATA.COM" \
-  && /usr/sbin/kadmin.local -q "addprinc -randkey mapred/hadoop-master@LABS.TERADATA.COM" \
-  && /usr/sbin/kadmin.local -q "addprinc -randkey yarn/hadoop-master@LABS.TERADATA.COM" \
-  && /usr/sbin/kadmin.local -q "addprinc -randkey HTTP/hadoop-master@LABS.TERADATA.COM"
+RUN /usr/sbin/kadmin.local -q "addprinc -randkey hdfs/hadoop-master-2@OTHERREALM.COM" \
+  && /usr/sbin/kadmin.local -q "addprinc -randkey mapred/hadoop-master-2@OTHERREALM.COM" \
+  && /usr/sbin/kadmin.local -q "addprinc -randkey yarn/hadoop-master-2@OTHERREALM.COM" \
+  && /usr/sbin/kadmin.local -q "addprinc -randkey HTTP/hadoop-master-2@OTHERREALM.COM"
 
 # CREATE HADOOP KEYTAB FILES
-RUN /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/hadoop/conf/hdfs.keytab hdfs/hadoop-master HTTP/hadoop-master" \
-  && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/hadoop/conf/mapred.keytab mapred/hadoop-master HTTP/hadoop-master" \
-  && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/hadoop/conf/yarn.keytab yarn/hadoop-master HTTP/hadoop-master" \
-  && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/hadoop/conf/HTTP.keytab HTTP/hadoop-master"
+RUN /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/hadoop/conf/hdfs.keytab hdfs/hadoop-master-2 HTTP/hadoop-master-2" \
+  && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/hadoop/conf/mapred.keytab mapred/hadoop-master-2 HTTP/hadoop-master-2" \
+  && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/hadoop/conf/yarn.keytab yarn/hadoop-master-2 HTTP/hadoop-master-2" \
+  && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/hadoop/conf/HTTP.keytab HTTP/hadoop-master-2"
 RUN chown hdfs:hadoop /etc/hadoop/conf/hdfs.keytab \
   && chown mapred:hadoop /etc/hadoop/conf/mapred.keytab \
   && chown yarn:hadoop /etc/hadoop/conf/yarn.keytab \
@@ -44,35 +41,19 @@ RUN chown hdfs:hadoop /etc/hadoop/conf/hdfs.keytab \
   && chmod 644 /etc/hadoop/conf/*.keytab
 
 # CREATE HIVE PRINCIPAL AND KEYTAB
-RUN /usr/sbin/kadmin.local -q "addprinc -randkey hive/hadoop-master@LABS.TERADATA.COM" \
-  && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/hive/conf/hive.keytab hive/hadoop-master"
+RUN /usr/sbin/kadmin.local -q "addprinc -randkey hive/hadoop-master-2@OTHERREALM.COM" \
+  && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/hive/conf/hive.keytab hive/hadoop-master-2"
 RUN chown hive:hadoop /etc/hive/conf/hive.keytab \
   && chmod 644 /etc/hive/conf/hive.keytab
 
-# CREATE HIVE PRINCIPAL IN THE OTHER REALM
-RUN /usr/sbin/kadmin.local -r OTHERLABS.TERADATA.COM -d /var/kerberos/krb5kdc/principal-other -q "addprinc -randkey hive/hadoop-master@OTHERLABS.TERADATA.COM" \
-  && /usr/sbin/kadmin.local -r OTHERLABS.TERADATA.COM -d /var/kerberos/krb5kdc/principal-other -q "xst -norandkey -k /etc/hive/conf/hive-other.keytab hive/hadoop-master"
-RUN chown hive:hadoop /etc/hive/conf/hive-other.keytab \
-  && chmod 644 /etc/hive/conf/hive-other.keytab
-
-# CREATE HDFS PRINCIPAL IN OTHER REALM
-RUN /usr/sbin/kadmin.local -r OTHERLABS.TERADATA.COM -d /var/kerberos/krb5kdc/principal-other -q "addprinc -randkey hdfs/hadoop-master@OTHERLABS.TERADATA.COM" \
-  && /usr/sbin/kadmin.local -r OTHERLABS.TERADATA.COM -d /var/kerberos/krb5kdc/principal-other -q "xst -norandkey -k /etc/hadoop/conf/hdfs-other.keytab hdfs/hadoop-master"
-RUN chown hdfs:hadoop /etc/hadoop/conf/hdfs-other.keytab \
-  && chmod 644 /etc/hadoop/conf/hdfs-other.keytab
-
-# MAKE 'LABS.TERADATA.COM' TRUST 'OTHERLABS.TERADATA.COM'
-RUN /usr/sbin/kadmin.local -q "addprinc -pw 123456 krbtgt/LABS.TERADATA.COM@OTHERLABS.TERADATA.COM"
-RUN /usr/sbin/kadmin.local -r OTHERLABS.TERADATA.COM -d /var/kerberos/krb5kdc/principal-other -q "addprinc -pw 123456 krbtgt/LABS.TERADATA.COM"
-
 # CREATE PRESTO PRINCIPAL AND KEYTAB
-RUN /usr/sbin/kadmin.local -q "addprinc -randkey presto-server/presto-master.docker.cluster@LABS.TERADATA.COM" \
-  && /usr/sbin/kadmin.local -q "addprinc -randkey presto-server/presto-worker.docker.cluster@LABS.TERADATA.COM" \
-  && /usr/sbin/kadmin.local -q "addprinc -randkey presto-server/presto-worker-1.docker.cluster@LABS.TERADATA.COM" \
-  && /usr/sbin/kadmin.local -q "addprinc -randkey presto-server/presto-worker-2.docker.cluster@LABS.TERADATA.COM" \
-  && /usr/sbin/kadmin.local -q "addprinc -randkey HTTP/presto-master.docker.cluster@LABS.TERADATA.COM" \
-  && /usr/sbin/kadmin.local -q "addprinc -randkey presto-client/presto-master.docker.cluster@LABS.TERADATA.COM" \
-  && /usr/sbin/kadmin.local -q "addprinc -randkey hive/presto-master.docker.cluster@LABS.TERADATA.COM" \
+RUN /usr/sbin/kadmin.local -q "addprinc -randkey presto-server/presto-master.docker.cluster@OTHERREALM.COM" \
+  && /usr/sbin/kadmin.local -q "addprinc -randkey presto-server/presto-worker.docker.cluster@OTHERREALM.COM" \
+  && /usr/sbin/kadmin.local -q "addprinc -randkey presto-server/presto-worker-1.docker.cluster@OTHERREALM.COM" \
+  && /usr/sbin/kadmin.local -q "addprinc -randkey presto-server/presto-worker-2.docker.cluster@OTHERREALM.COM" \
+  && /usr/sbin/kadmin.local -q "addprinc -randkey HTTP/presto-master.docker.cluster@OTHERREALM.COM" \
+  && /usr/sbin/kadmin.local -q "addprinc -randkey presto-client/presto-master.docker.cluster@OTHERREALM.COM" \
+  && /usr/sbin/kadmin.local -q "addprinc -randkey hive/presto-master.docker.cluster@OTHERREALM.COM" \
   && mkdir -p /etc/presto/conf \
   && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/presto/conf/presto-server.keytab presto-server/presto-master.docker.cluster presto-server/presto-worker.docker.cluster presto-server/presto-worker-1.docker.cluster presto-server/presto-worker-2.docker.cluster" \
   && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/presto/conf/presto-server-HTTP.keytab HTTP/presto-master.docker.cluster" \
@@ -95,8 +76,8 @@ RUN chmod 644 /etc/presto/conf/keystore.jks
 RUN set -xeu; \
     for user in root hive hdfs; do \
         sudo -u "${user}" bash -c ' echo "klist -kt /etc/hive/conf/hive.keytab" >> ~/.bash_history '; \
-        sudo -u "${user}" bash -c ' echo "kinit -kt /etc/hive/conf/hive.keytab hive/hadoop-master@LABS.TERADATA.COM" >> ~/.bash_history '; \
-        sudo -u "${user}" bash -c ' echo "beeline -u \"jdbc:hive2://hadoop-master:10000/default;principal=hive/hadoop-master@LABS.TERADATA.COM\"" >> ~/.bash_history '; \
+        sudo -u "${user}" bash -c ' echo "kinit -kt /etc/hive/conf/hive.keytab hive/hadoop-master-2@OTHERREALM.COM" >> ~/.bash_history '; \
+        sudo -u "${user}" bash -c ' echo "beeline -u \"jdbc:hive2://hadoop-master-2:10000/default;principal=hive/hadoop-master-2@OTHERREALM.COM\"" >> ~/.bash_history '; \
     done
 
 # EXPOSE KERBEROS PORTS

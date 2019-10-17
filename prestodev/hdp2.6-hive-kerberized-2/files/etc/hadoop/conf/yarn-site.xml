@@ -74,7 +74,7 @@
 
     <property>
         <name>yarn.resourcemanager.hostname</name>
-        <value>hadoop-master</value>
+        <value>hadoop-master-2</value>
     </property>
 
     <property>
@@ -84,7 +84,7 @@
 
     <property>
         <name>yarn.log.server.url</name>
-        <value>http://hadoop-master:19888/jobhistory/logs</value>
+        <value>http://hadoop-master-2:19888/jobhistory/logs</value>
     </property>
 
     <!-- ResourceManager security configs -->
@@ -95,7 +95,7 @@
 
     <property>
         <name>yarn.resourcemanager.principal</name>
-        <value>yarn/hadoop-master@LABS.TERADATA.COM</value>
+        <value>yarn/hadoop-master-2@OTHERREALM.COM</value>
     </property>
 
     <!-- NodeManager security configs -->
@@ -106,7 +106,7 @@
 
     <property>
         <name>yarn.nodemanager.principal</name>
-        <value>yarn/hadoop-master@LABS.TERADATA.COM</value>
+        <value>yarn/hadoop-master-2@OTHERREALM.COM</value>
     </property>
 
 </configuration>
