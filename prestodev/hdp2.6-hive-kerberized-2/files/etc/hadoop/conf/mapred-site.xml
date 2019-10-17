@@ -19,7 +19,7 @@
 
     <property>
         <name>mapred.job.tracker</name>
-        <value>hadoop-master:8021</value>
+        <value>hadoop-master-2:8021</value>
     </property>
 
     <property>
@@ -29,12 +29,12 @@
 
     <property>
         <name>mapreduce.jobhistory.address</name>
-        <value>hadoop-master:10020</value>
+        <value>hadoop-master-2:10020</value>
     </property>
 
     <property>
         <name>mapreduce.jobhistory.webapp.address</name>
-        <value>hadoop-master:19888</value>
+        <value>hadoop-master-2:19888</value>
     </property>
 
     <property>
@@ -51,13 +51,13 @@
 
     <property>
         <name>mapreduce.jobhistory.principal</name>
-        <value>mapred/hadoop-master@LABS.TERADATA.COM</value>
+        <value>mapred/hadoop-master-2@OTHERREALM.COM</value>
     </property>
 
     <!-- JobTracker security configs -->
     <property>
         <name>mapreduce.jobtracker.kerberos.principal</name>
-        <value>mapred/hadoop-master@LABS.TERADATA.COM</value>
+        <value>mapred/hadoop-master-2@OTHERREALM.COM</value>
     </property>
 
     <property>
@@ -68,7 +68,7 @@
     <!-- TaskTracker security configs -->
     <property>
         <name>mapreduce.tasktracker.kerberos.principal</name>
-        <value>mapred/hadoop-master@LABS.TERADATA.COM</value>
+        <value>mapred/hadoop-master-2@OTHERREALM.COM</value>
     </property>
 
     <property>
