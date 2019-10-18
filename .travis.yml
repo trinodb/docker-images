@@ -4,6 +4,7 @@ dist: trusty
 env:
   - IMAGE_TO_BUILD=prestodev/hdp2.5-hive-kerberized IMAGE_TO_TEST=hdp2.5-hive
   - IMAGE_TO_BUILD=prestodev/hdp2.6-hive-kerberized IMAGE_TO_TEST=hdp2.6-hive
+  - IMAGE_TO_BUILD=prestodev/hdp2.6-hive-kerberized-2
   - IMAGE_TO_BUILD=prestodev/hdp3.1-hive-kerberized IMAGE_TO_TEST=hdp3.1-hive
   - IMAGE_TO_BUILD=prestodev/cdh5.12-hive-kerberized IMAGE_TO_TEST=cdh5.12-hive
   - IMAGE_TO_BUILD=prestodev/cdh5.15-hive-kerberized IMAGE_TO_TEST=cdh5.15-hive
@@ -14,4 +15,8 @@ services:
 
 install: make ${IMAGE_TO_BUILD}
 
-script: make test IMAGE_TO_TEST=${IMAGE_TO_TEST}
+script:
+  - |
+    if [[ -v IMAGE_TO_TEST ]]; then
+      make test IMAGE_TO_TEST=${IMAGE_TO_TEST}
+    fi
