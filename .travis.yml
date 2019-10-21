@@ -10,7 +10,7 @@ env:
   - IMAGE_TO_BUILD=prestodev/cdh5.15-hive-kerberized IMAGE_TO_TEST=cdh5.15-hive
   - IMAGE_TO_BUILD=prestodev/iop4.2-hive IMAGE_TO_TEST=iop4.2-hive
 
-services: 
+services:
   - docker
 
 install: make ${IMAGE_TO_BUILD}
