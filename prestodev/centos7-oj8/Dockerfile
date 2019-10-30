@@ -37,3 +37,4 @@ RUN \
     yum -y clean all && rm -rf /tmp/* /var/tmp/*
 
 ENV JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk
+ENV LANG=en_US.UTF-8
