@@ -1,0 +1,15 @@
+dn: ou=World,dc=presto,dc=testldap,dc=com
+objectClass: organizationalUnit
+ou: World
+
+dn: ou=West,ou=World,dc=presto,dc=testldap,dc=com
+objectClass: referral
+objectClass: extensibleObject
+ou: West
+ref: ldap://localhost:389/ou=America,dc=presto,dc=testldap,dc=com
+
+dn: ou=East,ou=World,dc=presto,dc=testldap,dc=com
+objectClass: referral
+objectClass: extensibleObject
+ou: East
+ref: ldap://localhost:389/ou=Asia,dc=presto,dc=testldap,dc=com
