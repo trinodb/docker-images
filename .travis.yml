@@ -7,8 +7,12 @@ env:
   - IMAGE_TO_BUILD=prestodev/hdp2.6-hive-kerberized-2
   - IMAGE_TO_BUILD=prestodev/hdp3.1-hive-kerberized IMAGE_TO_TEST=hdp3.1-hive
   - IMAGE_TO_BUILD=prestodev/cdh5.12-hive-kerberized IMAGE_TO_TEST=cdh5.12-hive
-  - IMAGE_TO_BUILD=prestodev/cdh5.15-hive-kerberized IMAGE_TO_TEST=cdh5.15-hive
+  - IMAGE_TO_BUILD=prestodev/cdh5.15-hive-kerberized-kms IMAGE_TO_TEST=cdh5.15-hive
   - IMAGE_TO_BUILD=prestodev/iop4.2-hive IMAGE_TO_TEST=iop4.2-hive
+  - IMAGE_TO_BUILD=prestodev/centos6-oj8-openldap-referrals
+  - IMAGE_TO_BUILD=prestodev/centos6-presto-admin-tests-build
+  - IMAGE_TO_BUILD=prestodev/centos7-oj11
+  - IMAGE_TO_BUILD=prestodev/dns
 
 services:
   - docker
