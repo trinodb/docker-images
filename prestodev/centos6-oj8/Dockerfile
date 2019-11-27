@@ -21,6 +21,7 @@ RUN \
         wget \
         && \
     \
+    yum install -y hardlink && \
     # install supervisor
     yum install -y setuptools epel-release && \
     yum install -y python-pip && \

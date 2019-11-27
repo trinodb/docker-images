@@ -43,6 +43,8 @@ RUN \
     \
     mysql-server mysql-connector-java \
     \
+  # Minimize
+  && hardlink -c /usr/lib/ \
   # Cleanup
   && yum -y clean all && rm -rf /tmp/* /var/tmp/* \
   && ln -s /usr/share/java/mysql-connector-java.jar /usr/lib/hive/lib/mysql-connector-java.jar

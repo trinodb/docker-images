@@ -46,6 +46,8 @@ RUN yum install -y \
     mariadb-server \
     mysql-connector-java \
 
+# Minimize
+  && hardlink -cf /usr/hdp/ \
 # Cleanup
   && yum -y clean all && rm -rf /tmp/* /var/tmp/* \
   && ln -s /usr/share/java/mysql-connector-java.jar /usr/hdp/current/hive-metastore/lib/mysql-connector-java.jar

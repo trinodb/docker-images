@@ -43,6 +43,8 @@ RUN yum install -y \
 
     mysql-server mysql-connector-java \
 
+# Minimize
+  && hardlink -c /usr/hdp/ \
 # Cleanup
   && yum -y clean all && rm -rf /tmp/* /var/tmp/* \
   && ln -s /usr/share/java/mysql-connector-java.jar /usr/hdp/current/hive-metastore/lib/mysql-connector-java.jar
