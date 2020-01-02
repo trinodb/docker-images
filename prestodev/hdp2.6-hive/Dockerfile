@@ -73,6 +73,7 @@ RUN set -xeu; \
     for user in root hive hdfs; do \
         # ~hive might be owned by root
         chown -R "${user}:" "$(eval echo ~"${user}")"; \
+        sudo -u "${user}" bash -c ' echo "netstat -ltnp" >> ~/.bash_history '; \
         sudo -u "${user}" bash -c ' echo "beeline -u jdbc:hive2://localhost:10000/default -n hive" >> ~/.bash_history '; \
         sudo -u "${user}" bash -c ' echo "hadoop dfs -ls -R /user/hive/warehouse" >> ~/.bash_history '; \
         sudo -u "${user}" bash -c ' mkdir -p ~/.beeline '; \
