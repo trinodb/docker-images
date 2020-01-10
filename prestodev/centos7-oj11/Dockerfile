@@ -18,6 +18,7 @@ RUN \
     set -xeu && \
     yum install -y \
         java-11-openjdk-devel \
+        nc \
         wget \
         && \
     \
