@@ -13,6 +13,8 @@
 FROM library/centos:7
 MAINTAINER Presto community <https://prestosql.io/community.html>
 
+COPY ./files /
+
 # Install Java and presto-admin dependences
 RUN \
     set -xeu && \
@@ -37,5 +39,6 @@ RUN \
     # cleanup
     yum -y clean all && rm -rf /tmp/* /var/tmp/*
 
+ENV PATH="/usr/local/bin:${PATH}"
 ENV JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk
 ENV LANG=en_US.UTF-8
