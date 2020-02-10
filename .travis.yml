@@ -13,6 +13,7 @@ env:
   - IMAGE_TO_BUILD=prestodev/centos6-presto-admin-tests-build
   - IMAGE_TO_BUILD=prestodev/centos7-oj11
   - IMAGE_TO_BUILD=prestodev/dns
+  - IMAGE_TO_BUILD=prestodev/kerberos TEST_COMMAND=bin/test_kerberos.sh
 
 services:
   - docker
@@ -23,4 +24,8 @@ script:
   - |
     if [[ -v IMAGE_TO_TEST ]]; then
       make test IMAGE_TO_TEST=${IMAGE_TO_TEST}
+    fi
+  - |
+    if [[ -v TEST_COMMAND ]]; then
+      $TEST_COMMAND
     fi
