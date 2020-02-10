@@ -1,0 +1,46 @@
+#!/bin/bash
+
+set -euo pipefail
+
+function usage() {
+    if [ $# -ne 2 ]; then
+        echo "Usage: $0 [-o] -p <principal> -k <output keytab file>" >&2
+        echo >&2
+        echo "-o - use non default realm" >&2
+        exit 1
+    fi
+}
+
+DEFAULT_REALM='STARBURSTDATA.COM'
+OTHER_REALM='OTHER.STARBURSTDATA.COM'
+OTHER_REALM_DATABASE='/var/kerberos/krb5kdc/principal-other'
+
+realm="$DEFAULT_REALM"
+kadmin_opts=''
+
+while getopts "op:k:" o; do
+    case "${o}" in
+        o)
+            realm="$OTHER_REALM"
+            kadmin_opts="-r $OTHER_REALM -d $OTHER_REALM_DATABASE"
+            ;;
+        p)
+            principal="$OPTARG"
+            ;;
+        k)
+            keytab="$OPTARG"
+            ;;
+        *)
+    esac
+done
+
+if [[ ! -v principal ]]; then
+    usage
+fi
+
+if [[ ! -v keytab ]]; then
+    usage
+fi
+
+/usr/sbin/kadmin.local $kadmin_opts -q "addprinc -randkey $principal@$realm"
+/usr/sbin/kadmin.local $kadmin_opts -q "xst -norandkey -k $keytab $principal"
