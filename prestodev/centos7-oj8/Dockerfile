@@ -39,3 +39,6 @@ RUN \
 
 ENV JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk
 ENV LANG=en_US.UTF-8
+
+# Copy configuration files
+COPY ./files /

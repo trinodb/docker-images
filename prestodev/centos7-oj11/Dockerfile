@@ -38,3 +38,6 @@ RUN \
     yum -y clean all && rm -rf /tmp/* /var/tmp/*
 
 ENV JAVA_HOME=/usr/lib/jvm/java-11
+
+# Copy configuration files
+COPY ./files /
