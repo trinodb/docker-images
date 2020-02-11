@@ -8,6 +8,8 @@ RUN \
     set -xeu && \
     # disable the notoriuosly unstable EPEL repo...
     # rm -rf /etc/yum.repos.d/epel* && \
+    # disable the unstable mirrors.iuscommunity.org repo...
+    rm -rf /etc/yum.repos.d/ius* && \
     \
     yum install -y \
       java-1.8.0-openjdk-devel \
