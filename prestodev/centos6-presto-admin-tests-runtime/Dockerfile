@@ -6,8 +6,6 @@ ENV DOCKERIZE_VERSION v0.3.0
 # Install Oracle Java and presto-admin dependences (already has python 2.6)
 RUN \
     set -xeu && \
-    # disable the notoriuosly unstable EPEL repo...
-    # rm -rf /etc/yum.repos.d/epel* && \
     # disable the unstable mirrors.iuscommunity.org repo...
     rm -rf /etc/yum.repos.d/ius* && \
     \
