@@ -14,7 +14,7 @@
 VERSION := 26-SNAPSHOT
 RELEASE_TYPE := $(if $(filter %-SNAPSHOT, $(VERSION)),snapshot,release)
 
-LABEL := com.teradata.git.hash=$(shell git rev-parse HEAD)
+LABEL := io.prestosql.git.hash=$(shell git rev-parse HEAD)
 
 LABEL_PARENT_SH=bin/label-parent.sh
 DEPEND_SH=bin/depend.sh
