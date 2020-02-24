@@ -2,7 +2,6 @@ language: generic
 dist: trusty
 
 env:
-  - IMAGE_TO_BUILD=prestodev/hdp2.5-hive-kerberized IMAGE_TO_TEST=hdp2.5-hive
   - IMAGE_TO_BUILD=prestodev/hdp2.6-hive-kerberized IMAGE_TO_TEST=hdp2.6-hive
   - IMAGE_TO_BUILD=prestodev/hdp2.6-hive-kerberized-2
   - IMAGE_TO_BUILD=prestodev/hdp3.1-hive-kerberized IMAGE_TO_TEST=hdp3.1-hive

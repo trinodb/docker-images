@@ -3,9 +3,9 @@
 ## Docker Image Names
 
 The docker images in this repository are expected to be given names of the form
-prestodev/hdp2.5-hive. The Dockerfile and other files needed to build the
-prestodev/hdp2.5-hive image are located in the directory
-prestodev/hdp2.5-hive.
+prestodev/hdp2.6-hive. The Dockerfile and other files needed to build the
+prestodev/hdp2.6-hive image are located in the directory
+prestodev/hdp2.6-hive.
 
 Generally speaking, the images should *not* be built manually with docker
 build.
@@ -13,25 +13,25 @@ build.
 ## Building docker images
 
 The docker images should be built using `make`. To build the docker image named
-`prestodev/hdp2.5-hive`, run `make prestodev/hdp2.5-hive`. Make will build
+`prestodev/hdp2.6-hive`, run `make prestodev/hdp2.6-hive`. Make will build
 the image and its dependencies in the correct order.
 
 If you want to build a base image and all the images depending on it,
 you can use the `*.dependants` targets. E.g.
 
 ```
-make prestodev/hdp2.5-base.dependants
+make prestodev/hdp2.6-base.dependants
 ```
 
-will build the `hdp2.5-base` and all the images depending on it (transitively).
+will build the `hdp2.6-base` and all the images depending on it (transitively).
 
 ## Releasing (pushing) docker image
 
 All of the docker images in the repository share the same version number. This
 is because most of the images depend on a parent image that is also in the
-repository (e.g. prestodev/hdp2.5-hive is FROM prestodev/hdp2.5-base),
-or are meant to be used together in testing (prestodev/hdp2.5-hive and
-prestodev/hdp2.5-hive-kerberized).
+repository (e.g. prestodev/hdp2.6-hive is FROM prestodev/hdp2.6-base),
+or are meant to be used together in testing (prestodev/hdp2.6-hive and
+prestodev/hdp2.6-hive-kerberized).
 
 Having all of the images on the same version number make troubleshooting easy:
 If all of the docker images you are using have the same version number then
