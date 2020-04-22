@@ -19,10 +19,12 @@ COPY ./files /
 RUN \
     set -xeu && \
     yum install -y \
-        java-11-openjdk-devel \
         nc \
         wget \
         && \
+    \
+    # install Zulu JDK
+    rpm -i https://cdn.azul.com/zulu/bin/zulu11.39.15-ca-jdk11.0.7-linux.x86_64.rpm && \
     \
     # install supervisor
     yum --enablerepo=extras install -y setuptools epel-release && \
@@ -40,4 +42,4 @@ RUN \
     yum -y clean all && rm -rf /tmp/* /var/tmp/*
 
 ENV PATH="/usr/local/bin:${PATH}"
-ENV JAVA_HOME=/usr/lib/jvm/java-11
+ENV JAVA_HOME=/usr/lib/jvm/zulu-11
