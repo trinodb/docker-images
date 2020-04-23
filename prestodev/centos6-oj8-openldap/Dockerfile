@@ -29,10 +29,6 @@ RUN service slapd start && \
     ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/setup/refint.ldif && \
     ldapadd -f /etc/openldap/setup/createOU.ldif -D cn=admin,dc=presto,dc=testldap,dc=com -w admin
 
-# Import the Open LDAP certificate into presto-coordinator
-RUN keytool -import -alias prestowithopenldap -storepass changeit -keystore $JAVA_HOME/jre/lib/security/cacerts \
-    -noprompt -trustcacerts -file /etc/openldap/certs/openldap-certificate.pem
-
 # Generate a keystore.
 RUN keytool -genkey -alias coordinator -storepass testldap -keystore /etc/openldap/certs/coordinator.jks \
     -keypass testldap -keyalg RSA -sigalg SHA1withRSA -dname "CN=presto-master, OU=, O=, L=, S=, C=" -validity 100000
