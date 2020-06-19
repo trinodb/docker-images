@@ -30,6 +30,12 @@
         <value>hdfs://hadoop-master:9000/user/hive/warehouse</value>
     </property>
 
+    <!-- This property explicitly forbids datanode to enter safe mode which results in 30 s penalty on environment startup -->
+    <property>
+        <name>dfs.safemode.threshold.pct</name>
+        <value>0</value>
+    </property>
+
     <!-- General HDFS security config -->
     <property>
         <name>dfs.block.access.token.enable</name>
