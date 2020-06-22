@@ -1,0 +1,20 @@
+#!/bin/bash
+
+set -euo pipefail
+
+fail() {
+  echo "$(basename "$0"): $*" >&2
+  exit 1
+}
+
+if [ $# -ne 1 ]; then
+  fail "Usage: $0 <overrides dir>" >&2
+fi
+
+overrides_dir="$1"
+
+for file in $(find $overrides_dir -name '*.xml'); do
+    target_filename="${file#"$overrides_dir"}"
+    echo "Applying configuration override from $file to $target_filename"
+    apply-site-xml-override "$target_filename" "$file"
+done
