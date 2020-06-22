@@ -38,6 +38,7 @@ RUN \
     yum install -y \
         net-tools `# netstat` \
         sudo \
+        libxslt \
         telnet `# helpful when troubleshooting product tests` \
         vim `# helpful when troubleshooting product tests` \
         && \
