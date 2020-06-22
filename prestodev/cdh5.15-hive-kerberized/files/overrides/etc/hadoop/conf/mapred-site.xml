@@ -17,27 +17,6 @@
 -->
 <configuration>
 
-    <property>
-        <name>mapred.job.tracker</name>
-        <value>hadoop-master:8021</value>
-    </property>
-
-    <property>
-        <name>mapreduce.jobhistory.address</name>
-        <value>hadoop-master:10020</value>
-    </property>
-
-    <property>
-        <name>mapreduce.jobhistory.webapp.address</name>
-        <value>hadoop-master:19888</value>
-    </property>
-
-    <property>
-        <description>To set the value of tmp directory for map and reduce tasks.</description>
-        <name>mapreduce.task.tmp.dir</name>
-        <value>/var/lib/hadoop-mapreduce/cache/${user.name}/tasks</value>
-    </property>
-
     <!-- MapReduce Job History Server security configs -->
     <property>
         <name>mapreduce.jobhistory.keytab</name>
