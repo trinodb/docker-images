@@ -19,6 +19,9 @@ RUN yum install -y krb5-libs krb5-server krb5-workstation
 # COPY CONFIGURATION
 COPY ./files /
 
+# Apply configuration overrides
+RUN /usr/local/bin/apply-all-site-xml-overrides /overrides
+
 # CREATE KERBEROS DATABASE
 RUN /usr/sbin/kdb5_util create -s -P password
 
