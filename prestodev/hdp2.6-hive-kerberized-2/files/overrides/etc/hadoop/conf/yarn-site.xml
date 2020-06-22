@@ -15,36 +15,39 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+
 <configuration>
 
-    <!-- Presto impersonation -->
     <property>
-        <name>hadoop.proxyuser.presto-server.groups</name>
-        <value>*</value>
+        <name>yarn.resourcemanager.hostname</name>
+        <value>hadoop-master-2</value>
     </property>
 
     <property>
-        <name>hadoop.proxyuser.presto-server.hosts</name>
-        <value>*</value>
+        <name>yarn.log.server.url</name>
+        <value>http://hadoop-master-2:19888/jobhistory/logs</value>
     </property>
 
-    <!-- Enable authentication -->
+    <!-- ResourceManager security configs -->
     <property>
-        <name>hadoop.security.authentication</name>
-        <value>kerberos</value>
-    </property>
-
-    <property>
-        <name>hadoop.security.authorization</name>
-        <value>true</value>
+        <name>yarn.resourcemanager.keytab</name>
+        <value>/etc/hadoop/conf/yarn.keytab</value>    <!-- path to the YARN keytab -->
     </property>
 
     <property>
-        <name>hadoop.security.auth_to_local</name>
-        <value>
-            RULE:[2:$1@$0](.*@OTHERLABS.TERADATA.COM)s/@.*//
-            DEFAULT
-        </value>
+        <name>yarn.resourcemanager.principal</name>
+        <value>yarn/hadoop-master-2@OTHERREALM.COM</value>
+    </property>
+
+    <!-- NodeManager security configs -->
+    <property>
+        <name>yarn.nodemanager.keytab</name>
+        <value>/etc/hadoop/conf/yarn.keytab</value>    <!-- path to the YARN keytab -->
+    </property>
+
+    <property>
+        <name>yarn.nodemanager.principal</name>
+        <value>yarn/hadoop-master-2@OTHERREALM.COM</value>
     </property>
 
 </configuration>
