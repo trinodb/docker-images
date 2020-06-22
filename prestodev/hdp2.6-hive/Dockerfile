@@ -42,6 +42,7 @@ RUN yum install -y \
     lzop \
 
     mysql-server mysql-connector-java \
+    libxslt \
 
 # Cleanup
   && yum -y clean all && rm -rf /tmp/* /var/tmp/* \
