@@ -93,6 +93,12 @@
         <description>Whether virtual memory limits will be enforced for containers.</description>
     </property>
 
+    <property>
+        <name>yarn.nodemanager.pmem-check-enabled</name>
+        <value>false</value>
+        <description>Whether physical memory limits will be enforced for containers.</description>
+    </property>
+
     <!-- Minimum container memory, default value is 1024 which is too high for the test queries -->
     <property>
         <name>yarn.scheduler.minimum-allocation-mb</name>
