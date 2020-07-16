@@ -33,6 +33,7 @@ RUN \
     \
     # install commonly needed packages
     yum install -y \
+        less `# helpful when troubleshooting product tests` \
         net-tools `# netstat is required by run_on_docker.sh` \
         sudo \
         telnet `# helpful when troubleshooting product tests` \
