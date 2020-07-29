@@ -35,7 +35,7 @@ prestodev/hdp2.6-hive-kerberized).
 
 Having all of the images on the same version number make troubleshooting easy:
 If all of the docker images you are using have the same version number then
-they are in a consistent state. 
+they are in a consistent state.
 
 This means that we treat the repository as a single codebase that creates
 multiple artifacts (Docker images) that all need to be released together.
@@ -138,9 +138,6 @@ just pass the union of all of the `--build-arg`s needed by every Dockerfile in
 the repository. The build system handles this largely the same way it handles
 figuring out what the correct dependency order is for building the images,
 described below.
-
-Build args with a default value are not handled at present. Feel free to add
-that functionality in `bin/flag.sh` if needed.
 
 ## How the build system works.
 

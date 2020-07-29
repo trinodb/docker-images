@@ -4,10 +4,6 @@ usage() {
 	echo "$0 {target image}" >&2
 }
 
-#
-# This doesn't handle ARGs with a default supplied in the Dockerfile.
-# Feel free to add that functionality if needed. For now, YAGNI.
-#
 find_args() {
 	local target_image=$(dirname "$target_dockerfile")
 	awk -v image="$target_image" '
@@ -17,8 +13,14 @@ find_args() {
 		}
 
 		$1 == "ARG" {
-			key = $2;
-			print "DBFLAGS_" image " += --build-arg " key "=$(" key ")";
+			n = split($2, arr, "=")
+			if (n >= 2) {
+				# the argument has a default value in the Dockerfile; parse out the argument name
+				key = arr[1];
+			} else {
+				key = $2;
+			}
+			print "DBFLAGS_" image " += --build-arg " key;
 		}' "$1"
 }
 
