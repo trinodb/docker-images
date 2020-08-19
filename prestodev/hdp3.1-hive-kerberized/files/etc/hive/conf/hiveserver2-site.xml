@@ -17,6 +17,12 @@
 -->
 <configuration>
 
+    <!-- Disable embedded Metastore -->
+    <property>
+        <name>hive.metastore.uris</name>
+        <value>thrift://localhost:9083</value>
+    </property>
+
     <!-- Enable authentication -->
     <property>
         <name>hive.security.authenticator.manager</name>
