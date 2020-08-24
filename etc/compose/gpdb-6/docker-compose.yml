@@ -1,0 +1,5 @@
+version: '2.0'
+services:
+  gpdb:
+    hostname: gpdb
+    image: prestodev/gpdb-6:latest
