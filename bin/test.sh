@@ -28,7 +28,7 @@ function check_hadoop() {
   environment_compose exec -u hdfs hadoop-master hive -e 'select 1;' > /dev/null 2>&1
 }
 
-function run_tests() {
+function run_hadoop_tests() {
   environment_compose exec -u hdfs hadoop-master hive -e 'SELECT 1' &&
   environment_compose exec -u hdfs hadoop-master hive -e 'CREATE TABLE foo (a INT);' &&
   environment_compose exec -u hdfs hadoop-master hive -e 'INSERT INTO foo VALUES (54);' &&
@@ -43,6 +43,17 @@ function run_tests() {
   test $(environment_compose exec -u hdfs hadoop-master hdfs dfs -ls /user/hive/warehouse/bucketed_table \
     | tee /dev/stderr | grep /bucketed_table/ | wc -l) -ge 4 &&
   true
+}
+
+function check_gpdb() {
+  environment_compose exec gpdb su gpadmin -l -c "pg_isready"
+}
+
+function run_gpdb_tests() {
+    environment_compose exec gpdb su gpadmin -l -c "psql -c 'CREATE TABLE foo (a INT) DISTRIBUTED RANDOMLY'" &&
+    environment_compose exec gpdb su gpadmin -l -c "psql -c 'INSERT INTO foo VALUES (54)'" &&
+    environment_compose exec gpdb su gpadmin -l -c "psql -c 'SELECT a FROM foo'" &&
+    true
 }
 
 function stop_all_containers() {
@@ -116,21 +127,33 @@ stop_all_containers
 # catch terminate signals
 trap terminate INT TERM EXIT
 
-environment_compose up -d 
+environment_compose up -d
 
 # start docker logs for the external services
 environment_compose logs --no-color -f &
 
 LOGS_PID=$!
 
-# wait until hadoop processes is started
-retry check_hadoop
+if [[ ${ENVIRONMENT} == *"gpdb"* ]]; then
+    # wait until gpdb process is started
+    retry check_gpdb
 
-# run tests
-set -x
-set +e
-sleep 10
-run_tests
+    # run tests
+    set -x
+    set +e
+    sleep 10
+    run_gpdb_tests
+else
+    # wait until hadoop processes is started
+    retry check_hadoop
+
+    # run tests
+    set -x
+    set +e
+    sleep 10
+    run_hadoop_tests
+fi
+
 EXIT_CODE=$?
 set -e
 
