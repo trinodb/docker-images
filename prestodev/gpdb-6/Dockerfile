@@ -19,15 +19,13 @@ COPY ./files /
 # Initialize GPDB
 # Allow client access from any host
 RUN apt-get update -y && \
-    apt-get install -y software-properties-common python python-dev && \
-    apt-get install -y openssh-server openssh-client locales locales-all iputils-ping && \
+    apt-get install -y software-properties-common && \
     add-apt-repository -y ppa:greenplum/db && \
     apt-get update -y && \
-    apt-get install -y greenplum-db-$GPDB_MAJOR_VERSION=$GPDB_VERSION && \
+    apt-get install -y python python-dev \
+        openssh-server openssh-client locales locales-all iputils-ping \
+        greenplum-db-$GPDB_MAJOR_VERSION=$GPDB_VERSION && \
     ln -s $GPDB_DIR ${GPHOME} && \
-    cat /home/gpadmin/limits.conf >> /etc/security/limits.conf && \
-    cat /home/gpadmin/sysctl.conf >> /etc/sysctl.conf && \
-    rm /home/gpadmin/limits.conf /home/gpadmin/sysctl.conf && \
     adduser --home /home/gpadmin gpadmin --disabled-password --gecos GECOS && \
     usermod --password gpadmin gpadmin && \
     chown gpadmin:gpadmin /home/gpadmin/gpinitsystem_singlenode /home/gpadmin/gpdb-hosts && \
