@@ -46,7 +46,7 @@ EXPOSE 5432
 # Start SSH service, start GPDB, then tail nothing to keep the container running
 CMD service ssh start && \
         su gpadmin -l -c "export MASTER_DATA_DIRECTORY=/gpmaster/gpsne-1 ; source ${GPHOME}/greenplum_path.sh ; gpstart -a ; createdb ${DATABASE}" && \
-        tail -f /dev/null
+        tail -f /gpmaster/gpsne-1/pg_log/gpdb-*.csv
 
 HEALTHCHECK --start-period=5m \
   CMD su gpadmin -l -c "pg_isready"
