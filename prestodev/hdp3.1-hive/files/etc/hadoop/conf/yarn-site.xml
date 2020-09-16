@@ -83,20 +83,28 @@
     </property>
 
     <property>
-        <name>yarn.log.server.url</name>
-        <value>http://hadoop-master:19888/jobhistory/logs</value>
+        <name>yarn.nodemanager.pmem-check-enabled</name>
+        <value>false</value>
     </property>
 
     <property>
         <name>yarn.nodemanager.vmem-check-enabled</name>
         <value>false</value>
-        <description>Whether virtual memory limits will be enforced for containers.</description>
     </property>
 
     <property>
-        <name>yarn.nodemanager.pmem-check-enabled</name>
+        <name>yarn.nodemanager.resource.memory.enforced</name>
         <value>false</value>
-        <description>Whether physical memory limits will be enforced for containers.</description>
+    </property>
+
+    <property>
+        <name>yarn.nodemanager.elastic-memory-control.enabled</name>
+        <value>false</value>
+    </property>
+
+    <property>
+        <name>yarn.log.server.url</name>
+        <value>http://hadoop-master:19888/jobhistory/logs</value>
     </property>
 
     <!-- Minimum container memory, default value is 1024 which is too high for the test queries -->
