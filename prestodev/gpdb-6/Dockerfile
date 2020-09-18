@@ -4,8 +4,8 @@ SHELL ["/bin/bash", "-c"]
 
 # Version arguments and install dir, GPHOME is symlink
 ARG GPDB_MAJOR_VERSION=6
-ARG GPDB_VERSION=6.11.0-1
-ARG GPDB_DIR=/opt/greenplum-db-$GPDB_MAJOR_VERSION-6.11.0
+ARG GPDB_VERSION=6.11.1-1
+ARG GPDB_DIR=/opt/greenplum-db-$GPDB_MAJOR_VERSION-6.11.1
 
 ENV GPHOME=/opt/greenplum-db
 ENV DATABASE gpadmin
