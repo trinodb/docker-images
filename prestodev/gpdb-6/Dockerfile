@@ -1,36 +1,37 @@
 FROM ubuntu:18.04
+MAINTAINER Presto community <https://prestosql.io/community.html>
 
 SHELL ["/bin/bash", "-c"]
 
 # Version arguments and install dir, GPHOME is symlink
-ARG GPDB_MAJOR_VERSION=6
-ARG GPDB_VERSION=6.11.0-1
-ARG GPDB_DIR=/opt/greenplum-db-$GPDB_MAJOR_VERSION-6.11.0
+ARG GPDB_VERSION=6.11.1
+ARG GPHOME=/usr/gpdb
+ARG GPDB_DIR=/usr/local/greenplum-db-$GPDB_VERSION
 
-ENV GPHOME=/opt/greenplum-db
+ENV GPHOME=/usr/gpdb
 ENV DATABASE gpadmin
 
 COPY ./files /
 
 # Install dependencies and GPDB
 RUN apt-get update -y && \
-    apt-get install -y software-properties-common && \
-    add-apt-repository -y ppa:greenplum/db && \
-    apt-get update -y && \
     apt-get install -y \
-        greenplum-db-$GPDB_MAJOR_VERSION=$GPDB_VERSION \
         iputils-ping \
         locales \
         locales-all \
         openssh-client \
-        openssh-server \
-        python \
-        python-dev && \
+        openssh-server && \
     apt-get clean
 
-RUN ln -s $GPDB_DIR ${GPHOME} && \
-    # Create gpadmin user
-    adduser --home /home/gpadmin gpadmin --disabled-password --gecos GECOS && \
+# Install GPDB
+RUN wget https://github.com/greenplum-db/gpdb/releases/download/$GPDB_VERSION/greenplum-db-$GPDB_VERSION-ubuntu18.04-amd64.deb && \
+    apt install -y ./greenplum-db-$GPDB_VERSION-ubuntu18.04-amd64.deb && \
+    rm greenplum-db-$GPDB_VERSION-ubuntu18.04-amd64.deb && \
+    ln -s $GPDB_DIR $GPHOME && \
+    apt-get clean
+
+# Create gpadmin user
+RUN adduser --home /home/gpadmin gpadmin --disabled-password --gecos GECOS && \
     usermod --password gpadmin gpadmin && \
     chown -R gpadmin: /home/gpadmin && \
     # Create data directories and set ownership
