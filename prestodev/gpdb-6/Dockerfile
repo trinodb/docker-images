@@ -39,6 +39,7 @@ RUN adduser --home /home/gpadmin gpadmin --disabled-password --gecos GECOS && \
     # Start SSH service and initialize GPDB
     service ssh start && \
     su gpadmin -l -c configure_gpdb.sh && \
+    hostname > ~/original_hostname && \
     # Allow client access from any host
     echo "host all all 0.0.0.0/0 md5" >> /gpmaster/gpsne-1/pg_hba.conf
 
