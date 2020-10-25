@@ -94,4 +94,34 @@
         <value>*</value>
     </property>
 
+    <!-- AWS S3 MOTO Connect S3 -->
+    <property>
+        <name>fs.s3a.aws.credentials.provider</name>
+        <value>
+            com.amazonaws.auth.EnvironmentVariableCredentialsProvider
+        </value>
+    </property>
+
+    <property>
+        <name>hadoop.security.authentication</name>
+        <value>simple</value>
+    </property>
+
+    <property>
+        <name>fs.s3a.impl</name>
+        <value>org.apache.hadoop.fs.s3a.S3AFileSystem</value>
+    </property>
+    <property>
+        <name>fs.s3a.endpoint</name>
+        <value> http://moto-server:5000 </value>
+    </property>
+    <property>
+        <name>fs.s3a.path.style.access</name>
+        <value>true</value>
+    </property>
+    <property>
+        <name>fs.s3a.connection.ssl.enabled</name>
+        <value>false</value>
+    </property>
+
 </configuration>
