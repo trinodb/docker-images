@@ -15,6 +15,7 @@ env:
   - IMAGE_TO_BUILD=prestodev/dns
   - IMAGE_TO_BUILD=prestodev/kerberos TEST_COMMAND=bin/test_kerberos.sh
   - IMAGE_TO_BUILD=prestodev/gpdb-6 IMAGE_TO_TEST=gpdb-6
+  - IMAGE_TO_BUILD=prestodev/sphinx
 
 services:
   - docker
