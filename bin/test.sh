@@ -25,24 +25,36 @@ function environment_compose() {
 }
 
 function check_hadoop() {
-  environment_compose exec -u hdfs hadoop-master hive -e 'select 1;' > /dev/null 2>&1
+  environment_compose exec hadoop-master hive -e 'select 1;' > /dev/null 2>&1
 }
 
 function run_hadoop_tests() {
-  environment_compose exec -u hdfs hadoop-master hive -e 'SELECT 1' &&
-  environment_compose exec -u hdfs hadoop-master hive -e 'CREATE TABLE foo (a INT);' &&
-  environment_compose exec -u hdfs hadoop-master hive -e 'INSERT INTO foo VALUES (54);' &&
+  environment_compose exec hadoop-master hive -e 'SELECT 1' &&
+  environment_compose exec hadoop-master hive -e 'CREATE TABLE foo (a INT);' &&
+  environment_compose exec hadoop-master hive -e 'INSERT INTO foo VALUES (54);' &&
   # SELECT with WHERE to make sure that map-reduce job is scheduled
-  environment_compose exec -u hdfs hadoop-master hive -e 'SELECT a FROM foo WHERE a > 0;' &&
+  environment_compose exec hadoop-master hive -e 'SELECT a FROM foo WHERE a > 0;' &&
   # Test table bucketing
-  environment_compose exec -u hdfs hadoop-master hive -e '
+  environment_compose exec hadoop-master hive -e '
     CREATE TABLE bucketed_table(a INT) CLUSTERED BY(a) INTO 32 BUCKETS;
     SET hive.enforce.bucketing = true;
     INSERT INTO bucketed_table VALUES (1), (2), (3), (4);
   ' &&
-  test $(environment_compose exec -u hdfs hadoop-master hdfs dfs -ls /user/hive/warehouse/bucketed_table \
+  test $(environment_compose exec hadoop-master hdfs dfs -ls /user/hive/warehouse/bucketed_table \
     | tee /dev/stderr | grep /bucketed_table/ | wc -l) -ge 4 &&
   true
+}
+
+function run_hive_transactional_tests() {
+    environment_compose exec hadoop-master hive -e "
+      CREATE TABLE transactional_table (x int) STORED AS orc TBLPROPERTIES ('transactional'='true');
+      INSERT INTO transactional_table VALUES (1), (2), (3), (4);
+    " &&
+    environment_compose exec hadoop-master hive -e 'SELECT x FROM transactional_table WHERE x > 0;' &&
+    environment_compose exec hadoop-master hive -e 'DELETE FROM transactional_table WHERE x = 2;' &&
+    environment_compose exec hadoop-master hive -e 'UPDATE transactional_table SET x = 14 WHERE x = 4;' &&
+    environment_compose exec hadoop-master hive -e 'SELECT x FROM transactional_table WHERE x > 0;' &&
+    true
 }
 
 function check_gpdb() {
@@ -152,6 +164,9 @@ else
     set +e
     sleep 10
     run_hadoop_tests
+    if [[ ${ENVIRONMENT} == *"3.1-hive" ]]; then
+      run_hive_transactional_tests
+    fi
 fi
 
 EXIT_CODE=$?
