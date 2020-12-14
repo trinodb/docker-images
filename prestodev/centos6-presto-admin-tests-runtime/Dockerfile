@@ -3,11 +3,14 @@ MAINTAINER Presto community <https://prestosql.io/community.html>
 
 ENV DOCKERIZE_VERSION v0.3.0
 
+COPY ./files /
+
 # Install Oracle Java and presto-admin dependences (already has python 2.6)
 RUN \
     set -xeu && \
     # disable the unstable mirrors.iuscommunity.org repo...
     rm -rf /etc/yum.repos.d/ius* && \
+    rm -rf /etc/yum.repos.d/CentOS-SCLo-scl*.repo && \
     \
     yum install -y \
       java-1.8.0-openjdk-devel \
