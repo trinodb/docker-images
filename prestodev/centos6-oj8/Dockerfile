@@ -10,7 +10,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM library/centos:6.9
+FROM library/centos:6.10
 MAINTAINER Presto community <https://prestosql.io/community.html>
 
 COPY ./files /
