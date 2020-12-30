@@ -50,11 +50,6 @@ RUN cp \
     $ACCUMULO_HOME/conf && \
     sed -i s/"<value><\/value>"/"<value>file:\/\/\/tmp\/accumulo<\/value>"/ $ACCUMULO_HOME/conf/accumulo-site.xml
 
-# Download Presto Accumulo Iterators
-RUN wget --quiet https://repo1.maven.org/maven2/io/prestosql/presto-accumulo-iterators/344/presto-accumulo-iterators-344.jar && \
-    mkdir -p $ACCUMULO_HOME/lib/ext && \
-    mv presto-accumulo-iterators-344.jar $ACCUMULO_HOME/lib/ext
-
 # Download ZooKeeper
 RUN wget --quiet $ZOOKEEPER_BINARY_PATH && \
     tar -xf zookeeper-$ZOOKEEPER_VERSION.tar.gz -C $IMAGE_ROOT_INSTALL && \
