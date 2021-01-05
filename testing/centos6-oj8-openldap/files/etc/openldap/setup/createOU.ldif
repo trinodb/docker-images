@@ -1,0 +1,13 @@
+dn: dc=trino,dc=testldap,dc=com
+dc: trino
+o: teradata
+objectClass: organization
+objectClass: dcObject
+
+dn: ou=America,dc=trino,dc=testldap,dc=com
+objectClass: organizationalUnit
+ou: America
+
+dn: ou=Asia,dc=trino,dc=testldap,dc=com
+objectClass: organizationalUnit
+ou: Asia
