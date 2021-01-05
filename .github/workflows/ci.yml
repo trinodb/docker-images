@@ -34,7 +34,7 @@ jobs:
       with:
         fetch-depth: 0 # checkout tags so version in Manifest is set properly
     - name: Build ${{ matrix.config.image }}
-      run: make "prestodev/${{ matrix.config.image }}"
+      run: make "testing/${{ matrix.config.image }}"
     - name: Test ${{ matrix.config.test }}
       if: ${{ matrix.config.test  != '' }}
       shell: 'script -q -e -c "bash {0}"'

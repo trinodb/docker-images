@@ -2,5 +2,4 @@ version: '2.0'
 services:
   hadoop-master:
     hostname: hadoop-master
-    image: prestodev/hdp2.6-hive:latest
-
+    image: testing/hdp2.6-hive:latest

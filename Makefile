@@ -14,7 +14,7 @@
 VERSION := 38-SNAPSHOT
 RELEASE_TYPE := $(if $(filter %-SNAPSHOT, $(VERSION)),snapshot,release)
 
-LABEL := io.prestosql.git.hash=$(shell git rev-parse HEAD)
+LABEL := io.trino.git.hash=$(shell git rev-parse HEAD)
 
 LABEL_PARENT_SH=bin/label-parent.sh
 DEPEND_SH=bin/depend.sh
@@ -38,7 +38,7 @@ FLAGDIR=$(BUILDDIR)/flags
 # build up into pieces based on image that have a large number of direct and
 # indirect children.
 #
-IMAGE_DIRS := $(shell find prestodev -type f -name Dockerfile -exec dirname {} \;)
+IMAGE_DIRS := $(shell find testing -type f -name Dockerfile -exec dirname {} \;)
 UNLABELLED_TAGS := $(addsuffix @unlabelled,$(IMAGE_DIRS))
 PARENT_CHECKS := $(addsuffix -parent-check,$(IMAGE_DIRS))
 LATEST_TAGS := $(addsuffix @latest,$(IMAGE_DIRS))
@@ -196,7 +196,7 @@ $(PARENT_CHECKS): %-parent-check: %/Dockerfile $(DEPEND_SH)
 	$(SHELL) $(DEPEND_SH) -p unlabelled $< $(call docker-tag,$(UNLABELLED_TAGS))
 
 #
-# This makes it possible it possible to type `make prestodev/image' without
+# This makes it possible it possible to type `make testing/image' without
 # specifying @latest
 #
 $(IMAGE_DIRS): %: %@latest

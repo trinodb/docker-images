@@ -1,11 +1,11 @@
-# Presto development docker images
+# Trino development docker images
 
 ## Docker Image Names
 
 The docker images in this repository are expected to be given names of the form
-prestodev/hdp2.6-hive. The Dockerfile and other files needed to build the
-prestodev/hdp2.6-hive image are located in the directory
-prestodev/hdp2.6-hive.
+testing/hdp2.6-hive. The Dockerfile and other files needed to build the
+testing/hdp2.6-hive image are located in the directory
+testing/hdp2.6-hive.
 
 Generally speaking, the images should *not* be built manually with docker
 build.
@@ -13,14 +13,14 @@ build.
 ## Building docker images
 
 The docker images should be built using `make`. To build the docker image named
-`prestodev/hdp2.6-hive`, run `make prestodev/hdp2.6-hive`. Make will build
+`testing/hdp2.6-hive`, run `make testing/hdp2.6-hive`. Make will build
 the image and its dependencies in the correct order.
 
 If you want to build a base image and all the images depending on it,
 you can use the `*.dependants` targets. E.g.
 
 ```
-make prestodev/hdp2.6-base.dependants
+make testing/hdp2.6-base.dependants
 ```
 
 will build the `hdp2.6-base` and all the images depending on it (transitively).
@@ -29,9 +29,9 @@ will build the `hdp2.6-base` and all the images depending on it (transitively).
 
 All of the docker images in the repository share the same version number. This
 is because most of the images depend on a parent image that is also in the
-repository (e.g. prestodev/hdp2.6-hive is FROM prestodev/hdp2.6-base),
-or are meant to be used together in testing (prestodev/hdp2.6-hive and
-prestodev/hdp2.6-hive-kerberized).
+repository (e.g. testing/hdp2.6-hive is FROM testing/hdp2.6-base),
+or are meant to be used together in testing (testing/hdp2.6-hive and
+testing/hdp2.6-hive-kerberized).
 
 Having all of the images on the same version number make troubleshooting easy:
 If all of the docker images you are using have the same version number then
@@ -150,14 +150,14 @@ Using the relative directory from the root of the repo as the image name, we
 could, in principle, write a rule of the form
 
 ```
-prestodev/foo: prestodev/foo/Dockerfile $(extract_parent prestodev/foo/Dockerfile)
-	cd prestodev/foo && docker build -t prestodev/foo .
+testing/foo: testing/foo/Dockerfile $(extract_parent testing/foo/Dockerfile)
+	cd testing/foo && docker build -t testing/foo .
 ```
 
 Using automatic variables we could shorten that to the following:
 
 ```
-prestodev/foo: $@/Dockerfile $(extract_parent $@/Dockerfile)
+testing/foo: $@/Dockerfile $(extract_parent $@/Dockerfile)
 	cd $@ && docker build -t $@ .
 ```
 
@@ -183,8 +183,8 @@ commands to build the target.
 look for a rule to create that file.
 
 ```
-prestodev/foo: prestodev/foo_parent
-prestodev/foo: prestodev/foo/Dockerfile
+testing/foo: testing/foo_parent
+testing/foo: testing/foo/Dockerfile
 	...
 ```
 
@@ -201,7 +201,7 @@ The `bin/depend.sh` script generates a .d file in $(DEPDIR) from the Dockerfile 
 the image:
 
 ```
-$(DEPDIR)/prestodev/foo.d: prestodev/foo/Dockerfile
+$(DEPDIR)/testing/foo.d: testing/foo/Dockerfile
 	...
 ```
 
@@ -210,13 +210,13 @@ The corresponding .d file will take one of two forms:
 1. if foo's parent is built from this repository
 
    ```
-   prestodev/foo: prestodev/foo_parent
+   testing/foo: testing/foo_parent
    ```
 
 2. if foo's parent should be pulled from dockerhub
 
    ```
-   prestodev/foo:
+   testing/foo:
    ```
 
 In the first case, make now knows that foo_parent is a dependency of foo, and

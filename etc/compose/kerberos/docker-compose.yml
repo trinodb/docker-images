@@ -1,6 +1,6 @@
 version: '2.0'
 services:
   kerberos:
-    image: prestodev/kerberos:latest
+    image: testing/kerberos:latest
     environment:
-      - PRESTODEV_POST_BOOTSTRAP_COMMAND=create_principal -p ala -k ala.keytab
+      - TRINODEV_POST_BOOTSTRAP_COMMAND=create_principal -p ala -k ala.keytab

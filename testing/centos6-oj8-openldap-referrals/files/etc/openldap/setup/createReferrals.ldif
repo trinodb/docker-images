@@ -1,0 +1,15 @@
+dn: ou=World,dc=trino,dc=testldap,dc=com
+objectClass: organizationalUnit
+ou: World
+
+dn: ou=West,ou=World,dc=trino,dc=testldap,dc=com
+objectClass: referral
+objectClass: extensibleObject
+ou: West
+ref: ldaps://ldapserver:636/ou=America,dc=trino,dc=testldap,dc=com
+
+dn: ou=East,ou=World,dc=trino,dc=testldap,dc=com
+objectClass: referral
+objectClass: extensibleObject
+ou: East
+ref: ldaps://ldapserver:636/ou=Asia,dc=trino,dc=testldap,dc=com
