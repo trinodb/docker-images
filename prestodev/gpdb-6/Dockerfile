@@ -1,5 +1,4 @@
 FROM ubuntu:18.04
-MAINTAINER Presto community <https://prestosql.io/community.html>
 
 SHELL ["/bin/bash", "-c"]
 

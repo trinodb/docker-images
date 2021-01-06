@@ -1,5 +1,4 @@
 FROM prestodev/centos7-oj8:unlabelled
-MAINTAINER Presto community <https://prestosql.io/community.html>
 
 RUN yum install -y \
     mariadb-server \

@@ -11,7 +11,6 @@
 # limitations under the License.
 
 FROM prestodev/cdh5.15-hive-kerberized:unlabelled
-MAINTAINER Presto community <https://prestosql.io/community.html>
 
 RUN set -xeu \
     && yum install -y \
