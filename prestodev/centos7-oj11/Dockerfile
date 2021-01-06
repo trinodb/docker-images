@@ -11,7 +11,6 @@
 # limitations under the License.
 
 FROM library/centos:7
-MAINTAINER Presto community <https://prestosql.io/community.html>
 
 COPY ./files /
 

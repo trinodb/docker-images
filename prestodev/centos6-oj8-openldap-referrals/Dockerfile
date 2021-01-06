@@ -11,7 +11,6 @@
 # limitations under the License.
 
 FROM prestodev/centos6-oj8-openldap:unlabelled
-MAINTAINER Presto community <https://prestosql.io/community.html>
 
 # COPY CONFIGURATION
 COPY ./files /

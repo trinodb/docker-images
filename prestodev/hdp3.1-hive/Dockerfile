@@ -11,7 +11,6 @@
 # limitations under the License.
 
 FROM prestodev/centos7-oj8:unlabelled
-MAINTAINER Presto community <https://prestosql.io/community.html>
 
 # Change default timezone
 RUN ln -snf "/usr/share/zoneinfo/Asia/Kathmandu" /etc/localtime && echo "Asia/Kathmandu" > /etc/timezone
