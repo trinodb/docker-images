@@ -1,0 +1,43 @@
+name: ci
+
+on: [push, pull_request]
+
+jobs:
+  build-images:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - image: dns
+          - image: centos7-oj11
+          - image: centos6-oj8-openldap-referrals
+          - image: centos6-presto-admin-tests-build
+          - image: spark3.0-iceberg
+          - image: kerberos
+            test: kerberos
+          - image: gpdb-6
+            test: gpdb-6
+          - image: hdp2.6-hive-kerberized-2
+          - image: iop4.2-hive
+            test: iop4.2-hive
+          - image: hive3.1-hive
+            imag: hive3.1-hive
+          - image: hdp2.6-hive-kerberized
+            test: hdp2.6-hive
+          - image: hdp3.1-hive-kerberized
+            test: hdp3.1-hive
+          - image: cdh5.12-hive-kerberized
+            test: cdh5.12-hive
+          - image: cdh5.15-hive-kerberized-kms
+            test: cdh5.15-hive
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0 # checkout tags so version in Manifest is set properly
+    - name: Build ${{ matrix.config.image }}
+      run: make "prestodev/${{ matrix.config.image }}"
+    - name: Test ${{ matrix.config.test }}
+      if: ${{ matrix.config.test  != '' }}
+      shell: 'script -q -e -c "bash {0}"'
+      run: make test IMAGE_TO_TEST="${{ matrix.config.test }}"
