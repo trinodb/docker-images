@@ -57,23 +57,23 @@ RUN /usr/sbin/kadmin.local -q "addprinc -randkey presto-server/presto-master.doc
   && /usr/sbin/kadmin.local -q "addprinc -randkey HTTP/presto-master.docker.cluster@OTHERREALM.COM" \
   && /usr/sbin/kadmin.local -q "addprinc -randkey presto-client/presto-master.docker.cluster@OTHERREALM.COM" \
   && /usr/sbin/kadmin.local -q "addprinc -randkey hive/presto-master.docker.cluster@OTHERREALM.COM" \
-  && mkdir -p /etc/presto/conf \
-  && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/presto/conf/presto-server.keytab presto-server/presto-master.docker.cluster presto-server/presto-worker.docker.cluster presto-server/presto-worker-1.docker.cluster presto-server/presto-worker-2.docker.cluster" \
-  && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/presto/conf/presto-server-HTTP.keytab HTTP/presto-master.docker.cluster" \
-  && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/presto/conf/presto-client.keytab presto-client/presto-master.docker.cluster" \
-  && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/presto/conf/hive-presto-master.keytab hive/presto-master.docker.cluster"
-RUN chmod 644 /etc/presto/conf/*.keytab
+  && mkdir -p /etc/trino/conf \
+  && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/trino/conf/presto-server.keytab presto-server/presto-master.docker.cluster presto-server/presto-worker.docker.cluster presto-server/presto-worker-1.docker.cluster presto-server/presto-worker-2.docker.cluster" \
+  && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/trino/conf/presto-server-HTTP.keytab HTTP/presto-master.docker.cluster" \
+  && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/trino/conf/presto-client.keytab presto-client/presto-master.docker.cluster" \
+  && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/trino/conf/hive-presto-master.keytab hive/presto-master.docker.cluster"
+RUN chmod 644 /etc/trino/conf/*.keytab
 
 # CREATE SSL KEYSTORE
 RUN keytool -genkeypair \
     -alias presto \
     -keyalg RSA \
-    -keystore /etc/presto/conf/keystore.jks \
+    -keystore /etc/trino/conf/keystore.jks \
     -keypass password \
     -storepass password \
     -dname "CN=presto-master, OU=, O=, L=, S=, C=" \
     -validity 100000
-RUN chmod 644 /etc/presto/conf/keystore.jks
+RUN chmod 644 /etc/trino/conf/keystore.jks
 
 # Provide convenience bash history
 RUN set -xeu; \
