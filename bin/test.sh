@@ -68,6 +68,12 @@ function run_gpdb_tests() {
     true
 }
 
+function run_kerberos_tests() {
+    sleep 60
+    environment_compose exec kerberos create_principal -o -p tola -k tola.keytab
+    environment_compose exec kerberos kinit -kt ala.keytab ala@STARBURSTDATA.COM
+}
+
 function stop_all_containers() {
   local ENVIRONMENT
   for ENVIRONMENT in $(getAvailableEnvironments)
@@ -146,7 +152,9 @@ environment_compose logs --no-color -f &
 
 LOGS_PID=$!
 
-if [[ ${ENVIRONMENT} == *"gpdb"* ]]; then
+if [[ ${ENVIRONMENT} == "kerberos" ]]; then
+    run_kerberos_tests
+elif [[ ${ENVIRONMENT} == *"gpdb"* ]]; then
     # wait until gpdb process is started
     retry check_gpdb
 

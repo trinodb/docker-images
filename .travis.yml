@@ -12,7 +12,7 @@ env:
   - IMAGE_TO_BUILD=prestodev/centos6-presto-admin-tests-build
   - IMAGE_TO_BUILD=prestodev/centos7-oj11
   - IMAGE_TO_BUILD=prestodev/dns
-  - IMAGE_TO_BUILD=prestodev/kerberos TEST_COMMAND=bin/test_kerberos.sh
+  - IMAGE_TO_BUILD=prestodev/kerberos IMAGE_TO_TEST=kerberos
   - IMAGE_TO_BUILD=prestodev/gpdb-6 IMAGE_TO_TEST=gpdb-6
   - IMAGE_TO_BUILD=prestodev/hive3.1-hive IMAGE_TO_TEST=hive3.1-hive
 
@@ -25,8 +25,4 @@ script:
   - |
     if [[ -v IMAGE_TO_TEST ]]; then
       make test IMAGE_TO_TEST=${IMAGE_TO_TEST}
-    fi
-  - |
-    if [[ -v TEST_COMMAND ]]; then
-      $TEST_COMMAND
     fi
