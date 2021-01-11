@@ -124,7 +124,7 @@ ENVIRONMENT=$1
 
 # Get the list of valid environments
 if [[ ! -f "$DOCKER_CONF_LOCATION/$ENVIRONMENT/docker-compose.yml" ]]; then
-   echo "Usage: run_on_docker.sh <`getAvailableEnvironments | tr '\n' '|'`>"
+   echo "Usage: run_on_docker.sh <$(getAvailableEnvironments | tr '\n' '|')>"
    exit 1
 fi
 
