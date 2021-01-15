@@ -24,7 +24,6 @@ TEST_SH=bin/test.sh
 BUILDDIR=build
 DEPDIR=$(BUILDDIR)/depends
 FLAGDIR=$(BUILDDIR)/flags
-ORGDIR=prestodev
 
 #
 # In theory, we could just find all of the Dockerfiles and derive IMAGE_DIRS
@@ -39,7 +38,7 @@ ORGDIR=prestodev
 # build up into pieces based on image that have a large number of direct and
 # indirect children.
 #
-IMAGE_DIRS := $(shell find $(ORGDIR) -type f -name Dockerfile -exec dirname {} \;)
+IMAGE_DIRS := $(shell find prestodev -type f -name Dockerfile -exec dirname {} \;)
 UNLABELLED_TAGS := $(addsuffix @unlabelled,$(IMAGE_DIRS))
 PARENT_CHECKS := $(addsuffix -parent-check,$(IMAGE_DIRS))
 LATEST_TAGS := $(addsuffix @latest,$(IMAGE_DIRS))
