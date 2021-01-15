@@ -75,6 +75,12 @@ EXTERNAL_DEPS = \
 docker-tag = $(subst @,:,$(1))
 
 #
+# Resolves the image name by prefixing ghcr.io/trinodb/
+#
+
+resolved-image-name = $(addprefix ghcr.io/trinodb/,$(1))
+
+#
 # Various variables that define targets need to be .PHONY so that Make
 # continues to build them if a file with a matching name somehow comes into
 # existence
@@ -95,12 +101,12 @@ images: $(LATEST_TAGS)
 release: require-clean-repo require-on-master require-release-version push-release
 
 push-release: $(RELEASE_TAGS)
-	$(SHELL) $(PUSH_SH) $(call docker-tag,$^)
+	$(SHELL) $(PUSH_SH) $(call docker-tag,$(call resolved-image-name,$^))
 
 snapshot: require-clean-repo require-snapshot-version push-snapshot
 
 push-snapshot: $(SNAPSHOT_TAGS)
-	$(SHELL) $(PUSH_SH) $(call docker-tag,$^)
+	$(SHELL) $(PUSH_SH) $(call docker-tag,$(call resolved-image-name,$^))
 
 #
 # Create tags without pushing. This is probably only useful for testing.
@@ -183,9 +189,13 @@ $(LATEST_TAGS): %@latest: %/Dockerfile %-parent-check
 
 $(VERSION_TAGS): %@$(VERSION): %@latest
 	docker tag $(call docker-tag,$^) $(call docker-tag,$@)
+	docker tag $(call docker-tag,$^) $(call docker-tag,$(call resolved-image-name,$^))
+	docker tag $(call docker-tag,$@) $(call docker-tag,$(call resolved-image-name,$@))
 
 $(GIT_HASH_TAGS): %@$(GIT_HASH): %@latest
 	docker tag $(call docker-tag,$^) $(call docker-tag,$@)
+	docker tag $(call docker-tag,$^) $(call docker-tag,$(call resolved-image-name,$^))
+	docker tag $(call docker-tag,$@) $(call docker-tag,$(call resolved-image-name,$@))
 
 #
 # Verify that the parent image specified in the Dockerfile is either
