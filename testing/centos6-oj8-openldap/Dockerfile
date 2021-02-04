@@ -30,7 +30,7 @@ RUN service slapd start && \
 
 # Generate a keystore.
 RUN keytool -genkey -alias coordinator -storepass testldap -keystore /etc/openldap/certs/coordinator.jks \
-    -keypass testldap -keyalg RSA -sigalg SHA1withRSA -dname "CN=trino-master, OU=, O=, L=, S=, C=" -validity 100000
+    -keypass testldap -keyalg RSA -sigalg SHA1withRSA -dname "CN=trino-coordinator, OU=, O=, L=, S=, C=" -validity 100000
 
 # Generate a certificate and CSR for the keystore. CN should match the hostname of trino-coordinator
 RUN keytool -export -alias coordinator -storepass testldap -keystore /etc/openldap/certs/coordinator.jks \

@@ -68,18 +68,18 @@ RUN /usr/sbin/kadmin.local -q "addprinc -pw 123456 krbtgt/LABS.TERADATA.COM@OTHE
 RUN /usr/sbin/kadmin.local -r OTHERLABS.TERADATA.COM -d /var/kerberos/krb5kdc/principal-other -q "addprinc -pw 123456 krbtgt/LABS.TERADATA.COM"
 
 # CREATE TRINO PRINCIPAL AND KEYTAB
-RUN /usr/sbin/kadmin.local -q "addprinc -randkey trino-server/trino-master.docker.cluster@LABS.TERADATA.COM" \
+RUN /usr/sbin/kadmin.local -q "addprinc -randkey trino-server/trino-coordinator.docker.cluster@LABS.TERADATA.COM" \
   && /usr/sbin/kadmin.local -q "addprinc -randkey trino-server/trino-worker.docker.cluster@LABS.TERADATA.COM" \
   && /usr/sbin/kadmin.local -q "addprinc -randkey trino-server/trino-worker-1.docker.cluster@LABS.TERADATA.COM" \
   && /usr/sbin/kadmin.local -q "addprinc -randkey trino-server/trino-worker-2.docker.cluster@LABS.TERADATA.COM" \
-  && /usr/sbin/kadmin.local -q "addprinc -randkey HTTP/trino-master.docker.cluster@LABS.TERADATA.COM" \
-  && /usr/sbin/kadmin.local -q "addprinc -randkey trino-client/trino-master.docker.cluster@LABS.TERADATA.COM" \
-  && /usr/sbin/kadmin.local -q "addprinc -randkey hive/trino-master.docker.cluster@LABS.TERADATA.COM" \
+  && /usr/sbin/kadmin.local -q "addprinc -randkey HTTP/trino-coordinator.docker.cluster@LABS.TERADATA.COM" \
+  && /usr/sbin/kadmin.local -q "addprinc -randkey trino-client/trino-coordinator.docker.cluster@LABS.TERADATA.COM" \
+  && /usr/sbin/kadmin.local -q "addprinc -randkey hive/trino-coordinator.docker.cluster@LABS.TERADATA.COM" \
   && mkdir -p /etc/trino/conf \
-  && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/trino/conf/trino-server.keytab trino-server/trino-master.docker.cluster trino-server/trino-worker.docker.cluster trino-server/trino-worker-1.docker.cluster trino-server/trino-worker-2.docker.cluster" \
-  && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/trino/conf/trino-server-HTTP.keytab HTTP/trino-master.docker.cluster" \
-  && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/trino/conf/trino-client.keytab trino-client/trino-master.docker.cluster" \
-  && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/trino/conf/hive-trino-master.keytab hive/trino-master.docker.cluster"
+  && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/trino/conf/trino-server.keytab trino-server/trino-coordinator.docker.cluster trino-server/trino-worker.docker.cluster trino-server/trino-worker-1.docker.cluster trino-server/trino-worker-2.docker.cluster" \
+  && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/trino/conf/trino-server-HTTP.keytab HTTP/trino-coordinator.docker.cluster" \
+  && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/trino/conf/trino-client.keytab trino-client/trino-coordinator.docker.cluster" \
+  && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/trino/conf/hive-trino-coordinator.keytab hive/trino-coordinator.docker.cluster"
 RUN chmod 644 /etc/trino/conf/*.keytab
 
 # CREATE SSL KEYSTORE
@@ -89,7 +89,7 @@ RUN keytool -genkeypair \
     -keystore /etc/trino/conf/keystore.jks \
     -keypass password \
     -storepass password \
-    -dname "CN=trino-master, OU=, O=, L=, S=, C=" \
+    -dname "CN=trino-coordinator, OU=, O=, L=, S=, C=" \
     -validity 100000
 RUN chmod 644 /etc/trino/conf/keystore.jks
 
