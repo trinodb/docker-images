@@ -12,6 +12,7 @@
 # 7) `make snapshot' as needed to push snapshot images to dockerhub
 #
 VERSION := 39-SNAPSHOT
+CACHE_FROM_VERSION := 38
 RELEASE_TYPE := $(if $(filter %-SNAPSHOT, $(VERSION)),snapshot,release)
 
 LABEL := io.trino.git.hash=$(shell git rev-parse HEAD)
@@ -184,7 +185,7 @@ $(LATEST_TAGS): %@latest: %/Dockerfile %-parent-check
 	@echo
 	@echo "Building [$@] image"
 	@echo
-	cd $* && time $(SHELL) -c "( tar -czh . | docker build ${BUILD_ARGS} $(DBFLAGS_$*) -t $(call docker-tag,$@) --label $(LABEL) - )"
+	cd $* && time $(SHELL) -c "( tar -czh . | docker build --cache-from=$(subst @latest,:${CACHE_FROM_VERSION},$(call resolved-image-name,$@)) ${BUILD_ARGS} $(DBFLAGS_$*) -t $(call docker-tag,$@) --label $(LABEL) - )"
 	docker history $(call docker-tag,$@)
 
 $(VERSION_TAGS): %@$(VERSION): %@latest

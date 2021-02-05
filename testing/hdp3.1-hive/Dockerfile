@@ -10,51 +10,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM testing/centos7-oj8:unlabelled
-
-# Change default timezone
-RUN ln -snf "/usr/share/zoneinfo/Asia/Kathmandu" /etc/localtime && echo "Asia/Kathmandu" > /etc/timezone
-
-# Install HDP repo
-RUN set -xeu; \
-    wget -nv http://public-repo-1.hortonworks.com/HDP/centos7/3.x/updates/3.1.0.0/hdp.repo -P /etc/yum.repos.d; \
-    wget -nv http://public-repo-1.hortonworks.com/HDP-GPL/centos7/3.x/updates/3.1.0.0/hdp.gpl.repo -P /etc/yum.repos.d; \
-    echo OK
-
-# Install Hadoop, Hive
-RUN yum install -y \
-    hadoop-hdfs-namenode \
-    hadoop-hdfs-secondarynamenode \
-    hadoop-hdfs-datanode \
-
-    hadoop-yarn-resourcemanager \
-    hadoop-yarn-nodemanager \
-
-    hive \
-    hive-metastore \
-    hive-server2 \
-    tez \
-
-    hadooplzo \
-    hadooplzo-native \
-    lzo \
-    lzo-devel \
-    lzop \
-
-    # Mysql is not present in Centos7 repositories, use mariadb as a replacement
-    mariadb-server \
-    mysql-connector-java \
-
-# Cleanup
-  && yum -y clean all && rm -rf /tmp/* /var/tmp/* \
-  && ln -s /usr/share/java/mysql-connector-java.jar /usr/hdp/current/hive-metastore/lib/mysql-connector-java.jar
-
-# Delete original configuration
-RUN rm -r /etc/hadoop/conf/* \
-  && rm -r /etc/hive/conf/*
+# Use last layer from ghcr.io/trinodb/testing/hdp3.1-hive:38
+FROM f6949adf3207
 
 # Copy configuration files
 COPY ./files /
+
+# Remove old SSH keys
+RUN rm -Rf /root/.ssh/* /etc/ssh/ssh_host_rsa_key /etc/ssh/ssh_host_dsa_key
+
+RUN yum-config-manager --disable HDP-GPL-3.1.0.0
 
 # Setup sock proxy
 RUN yum install -y openssh openssh-clients openssh-server && yum -y clean all
@@ -65,14 +30,11 @@ RUN ssh-keygen -t rsa -b 4096 -C "automation@trino.io" -N "" -f /root/.ssh/id_rs
 RUN chmod 755 /root && chmod 700 /root/.ssh
 RUN passwd --unlock root
 
-# Run setup script
-RUN /root/setup.sh \
-  && rm -rf /tmp/* /var/tmp/*
-
 # Provide convenience bash history
 RUN set -xeu; \
     echo "supervisorctl restart all" >> ~root/.bash_history; \
     for user in root hive hdfs; do \
+        sudo -u "${user}" bash -c ' echo "" > ~/.bash_history '; \
         sudo -u "${user}" bash -c ' echo "netstat -ltnp" >> ~/.bash_history '; \
         sudo -u "${user}" bash -c ' echo "beeline -n hive" >> ~/.bash_history '; \
         sudo -u "${user}" bash -c ' echo "hdfs dfs -ls -R /user/hive/warehouse" >> ~/.bash_history '; \

@@ -5,26 +5,30 @@ usage() {
 }
 
 find_parent() {
-	awk '
+	awk "
 		BEGIN {
 			ec = 1;
 		}
 
-		$1 == "FROM" && parent {
+		\$1 == \"FROM\" && parent {
 			ec = 2;
 			exit;
 		}
 
-		$1 == "FROM" {
-			split($0, a);
-			parent = $2;
+		\$1 == \"FROM\" {
+			split(\$0, a);
+			parent = \$2;
 			ec = 0
-			print parent;
+
+			if (length(parent) == 12 && parent ~ /[[:alpha:]]/)
+        print \"${target_cache_image}\";
+      else
+			  print parent;
 		}
 
 		END {
 			exit ec
-		}' "$1"
+		}" "$2"
 }
 
 contains() {
@@ -141,10 +145,12 @@ fi
 
 target_dockerfile=$1
 target_image=$(dirname "$target_dockerfile")
+target_cache_image="ghcr.io/trinodb/${target_image}:38"
+
 shift
 known_images="$*"
 
-parent_image_tag=$(find_parent "$target_dockerfile")
+parent_image_tag=$(find_parent "$target_cache_image" "$target_dockerfile")
 ec=$?
 case $ec in
 	0) ;;

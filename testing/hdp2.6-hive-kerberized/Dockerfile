@@ -10,11 +10,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM testing/hdp2.6-hive:unlabelled
-
-# INSTALL KERBEROS
-RUN yum install -y krb5-libs krb5-server krb5-workstation \
-  && yum -y clean all && rm -rf /tmp/* /var/tmp/*
+# Use last layer from ghcr.io/trinodb/testing/hdp3.1-hive-kerberized:38
+FROM f387ea8b4011
 
 # COPY CONFIGURATION
 COPY ./files /
@@ -22,7 +19,8 @@ COPY ./files /
 # Apply configuration overrides
 RUN /usr/local/bin/apply-all-site-xml-overrides /overrides
 
-# CREATE KERBEROS DATABASE
+# (RE)CREATE KERBEROS DATABASE
+RUN rm -rf /var/kerberos/krb5kdc/principal*
 RUN /usr/sbin/kdb5_util create -s -P password
 
 # CREATE ANOTHER KERBEROS DATABASE
