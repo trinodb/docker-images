@@ -26,7 +26,7 @@ RUN set -xeu && \
     for username in alice bob charlie; do \
         groupadd "${username}_group" && \
         useradd -g "${username}_group" "${username}" && \
-        /usr/sbin/kadmin.local -q "addprinc -randkey ${username}/hadoop-master@LABS.TERADATA.COM" && \
+        /usr/sbin/kadmin.local -q "addprinc -randkey ${username}/hadoop-master@LABS.TRINO.IO" && \
         /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/hive/conf/${username}.keytab ${username}/hadoop-master"; \
     done && \
     echo OK

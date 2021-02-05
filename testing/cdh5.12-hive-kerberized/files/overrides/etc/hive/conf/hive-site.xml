@@ -30,7 +30,7 @@
 
     <property>
         <name>hive.server2.authentication.kerberos.principal</name>
-        <value>hive/hadoop-master@LABS.TERADATA.COM</value>
+        <value>hive/hadoop-master@LABS.TRINO.IO</value>
     </property>
 
     <property>
@@ -50,7 +50,7 @@
 
     <property>
         <name>hive.metastore.kerberos.principal</name>
-        <value>hive/hadoop-master@LABS.TERADATA.COM</value>
+        <value>hive/hadoop-master@LABS.TRINO.IO</value>
     </property>
 
     <!-- Enable SQL based authorization -->

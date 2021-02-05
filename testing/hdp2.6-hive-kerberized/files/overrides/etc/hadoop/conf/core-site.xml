@@ -42,7 +42,7 @@
     <property>
         <name>hadoop.security.auth_to_local</name>
         <value>
-            RULE:[2:$1@$0](.*@OTHERLABS.TERADATA.COM)s/@.*//
+            RULE:[2:$1@$0](.*@OTHERLABS.TRINO.IO)s/@.*//
             DEFAULT
         </value>
     </property>

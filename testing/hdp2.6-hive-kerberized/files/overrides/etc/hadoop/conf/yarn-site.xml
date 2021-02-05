@@ -26,7 +26,7 @@
 
     <property>
         <name>yarn.resourcemanager.principal</name>
-        <value>yarn/hadoop-master@LABS.TERADATA.COM</value>
+        <value>yarn/hadoop-master@LABS.TRINO.IO</value>
     </property>
 
     <!-- NodeManager security configs -->
@@ -37,7 +37,7 @@
 
     <property>
         <name>yarn.nodemanager.principal</name>
-        <value>yarn/hadoop-master@LABS.TERADATA.COM</value>
+        <value>yarn/hadoop-master@LABS.TRINO.IO</value>
     </property>
 
 </configuration>
