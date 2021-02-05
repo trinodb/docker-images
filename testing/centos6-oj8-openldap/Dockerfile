@@ -30,7 +30,7 @@ RUN service slapd start && \
 
 # Generate a keystore.
 RUN keytool -genkey -alias coordinator -storepass testldap -keystore /etc/openldap/certs/coordinator.jks \
-    -keypass testldap -keyalg RSA -sigalg SHA1withRSA -dname "CN=trino-coordinator, OU=, O=, L=, S=, C=" -validity 100000
+    -keypass testldap -keyalg RSA -sigalg SHA1withRSA -dname "OU=, O=, L=, S=, C=" -validity 100000
 
 # Generate a certificate and CSR for the keystore. CN should match the hostname of trino-coordinator
 RUN keytool -export -alias coordinator -storepass testldap -keystore /etc/openldap/certs/coordinator.jks \
@@ -40,7 +40,7 @@ RUN keytool -export -alias coordinator -storepass testldap -keystore /etc/openld
 
 # create a test CA and generate caroot.cer( root certificate of the CA ).
 RUN openssl req -new -keyout /etc/openldap/certs/cakey.pem -out /etc/openldap/certs/careq.pem -nodes \
-    -subj "/C=US/ST=Massachusetts/L=Boston/O=Teradata/OU=Finance/CN=teradata" && \
+    -subj "/C=US/ST=Massachusetts/L=Boston/O=Teradata/OU=Finance" && \
     openssl x509 -req -in /etc/openldap/certs/careq.pem -out /etc/openldap/certs/caroot.cer -days 100000 \
     -signkey /etc/openldap/certs/cakey.pem
 

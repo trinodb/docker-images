@@ -89,7 +89,7 @@ RUN keytool -genkeypair \
     -keystore /etc/trino/conf/keystore.jks \
     -keypass password \
     -storepass password \
-    -dname "CN=trino-coordinator, OU=, O=, L=, S=, C=" \
+    -dname "OU=, O=, L=, S=, C=" \
     -validity 100000
 RUN chmod 644 /etc/trino/conf/keystore.jks
 
