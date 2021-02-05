@@ -19,7 +19,7 @@
 
     <property>
         <name>fs.defaultFS</name>
-        <value>hdfs://hadoop-master-2:9000</value>
+        <value>hdfs://hadoop-2:9000</value>
     </property>
 
     <!-- Trino impersonation -->

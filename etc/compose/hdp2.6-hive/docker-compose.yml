@@ -1,5 +1,5 @@
 version: '2.0'
 services:
-  hadoop-master:
-    hostname: hadoop-master
+  hadoop:
+    hostname: hadoop
     image: testing/hdp2.6-hive:latest

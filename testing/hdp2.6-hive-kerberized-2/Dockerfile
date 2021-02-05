@@ -26,16 +26,16 @@ RUN /usr/local/bin/apply-all-site-xml-overrides /overrides
 RUN /usr/sbin/kdb5_util create -s -P password
 
 # ADD HADOOP PRINCIPALS
-RUN /usr/sbin/kadmin.local -q "addprinc -randkey hdfs/hadoop-master-2@OTHERREALM.COM" \
-  && /usr/sbin/kadmin.local -q "addprinc -randkey mapred/hadoop-master-2@OTHERREALM.COM" \
-  && /usr/sbin/kadmin.local -q "addprinc -randkey yarn/hadoop-master-2@OTHERREALM.COM" \
-  && /usr/sbin/kadmin.local -q "addprinc -randkey HTTP/hadoop-master-2@OTHERREALM.COM"
+RUN /usr/sbin/kadmin.local -q "addprinc -randkey hdfs/hadoop-2@OTHERREALM.COM" \
+  && /usr/sbin/kadmin.local -q "addprinc -randkey mapred/hadoop-2@OTHERREALM.COM" \
+  && /usr/sbin/kadmin.local -q "addprinc -randkey yarn/hadoop-2@OTHERREALM.COM" \
+  && /usr/sbin/kadmin.local -q "addprinc -randkey HTTP/hadoop-2@OTHERREALM.COM"
 
 # CREATE HADOOP KEYTAB FILES
-RUN /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/hadoop/conf/hdfs.keytab hdfs/hadoop-master-2 HTTP/hadoop-master-2" \
-  && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/hadoop/conf/mapred.keytab mapred/hadoop-master-2 HTTP/hadoop-master-2" \
-  && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/hadoop/conf/yarn.keytab yarn/hadoop-master-2 HTTP/hadoop-master-2" \
-  && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/hadoop/conf/HTTP.keytab HTTP/hadoop-master-2"
+RUN /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/hadoop/conf/hdfs.keytab hdfs/hadoop-2 HTTP/hadoop-2" \
+  && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/hadoop/conf/mapred.keytab mapred/hadoop-2 HTTP/hadoop-2" \
+  && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/hadoop/conf/yarn.keytab yarn/hadoop-2 HTTP/hadoop-2" \
+  && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/hadoop/conf/HTTP.keytab HTTP/hadoop-2"
 RUN chown hdfs:hadoop /etc/hadoop/conf/hdfs.keytab \
   && chown mapred:hadoop /etc/hadoop/conf/mapred.keytab \
   && chown yarn:hadoop /etc/hadoop/conf/yarn.keytab \
@@ -43,8 +43,8 @@ RUN chown hdfs:hadoop /etc/hadoop/conf/hdfs.keytab \
   && chmod 644 /etc/hadoop/conf/*.keytab
 
 # CREATE HIVE PRINCIPAL AND KEYTAB
-RUN /usr/sbin/kadmin.local -q "addprinc -randkey hive/hadoop-master-2@OTHERREALM.COM" \
-  && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/hive/conf/hive.keytab hive/hadoop-master-2"
+RUN /usr/sbin/kadmin.local -q "addprinc -randkey hive/hadoop-2@OTHERREALM.COM" \
+  && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/hive/conf/hive.keytab hive/hadoop-2"
 RUN chown hive:hadoop /etc/hive/conf/hive.keytab \
   && chmod 644 /etc/hive/conf/hive.keytab
 
@@ -78,8 +78,8 @@ RUN chmod 644 /etc/trino/conf/keystore.jks
 RUN set -xeu; \
     for user in root hive hdfs; do \
         sudo -u "${user}" bash -c ' echo "klist -kt /etc/hive/conf/hive.keytab" >> ~/.bash_history '; \
-        sudo -u "${user}" bash -c ' echo "kinit -kt /etc/hive/conf/hive.keytab hive/hadoop-master-2@OTHERREALM.COM" >> ~/.bash_history '; \
-        sudo -u "${user}" bash -c ' echo "beeline -u \"jdbc:hive2://hadoop-master-2:10000/default;principal=hive/hadoop-master-2@OTHERREALM.COM\"" >> ~/.bash_history '; \
+        sudo -u "${user}" bash -c ' echo "kinit -kt /etc/hive/conf/hive.keytab hive/hadoop-2@OTHERREALM.COM" >> ~/.bash_history '; \
+        sudo -u "${user}" bash -c ' echo "beeline -u \"jdbc:hive2://hadoop-2:10000/default;principal=hive/hadoop-2@OTHERREALM.COM\"" >> ~/.bash_history '; \
     done
 
 # EXPOSE KERBEROS PORTS

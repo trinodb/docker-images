@@ -74,7 +74,7 @@
 
     <property>
         <name>yarn.resourcemanager.hostname</name>
-        <value>hadoop-master</value>
+        <value>hadoop</value>
     </property>
 
     <property>
@@ -104,7 +104,7 @@
 
     <property>
         <name>yarn.log.server.url</name>
-        <value>http://hadoop-master:19888/jobhistory/logs</value>
+        <value>http://hadoop:19888/jobhistory/logs</value>
     </property>
 
     <!-- Minimum container memory, default value is 1024 which is too high for the test queries -->

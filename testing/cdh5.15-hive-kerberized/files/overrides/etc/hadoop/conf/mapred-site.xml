@@ -25,13 +25,13 @@
 
     <property>
         <name>mapreduce.jobhistory.principal</name>
-        <value>mapred/hadoop-master@LABS.TRINO.IO</value>
+        <value>mapred/hadoop@LABS.TRINO.IO</value>
     </property>
 
     <!-- JobTracker security configs -->
     <property>
         <name>mapreduce.jobtracker.kerberos.principal</name>
-        <value>mapred/hadoop-master@LABS.TRINO.IO</value>
+        <value>mapred/hadoop@LABS.TRINO.IO</value>
     </property>
 
     <property>
@@ -42,7 +42,7 @@
     <!-- TaskTracker security configs -->
     <property>
         <name>mapreduce.tasktracker.kerberos.principal</name>
-        <value>mapred/hadoop-master@LABS.TRINO.IO</value>
+        <value>mapred/hadoop@LABS.TRINO.IO</value>
     </property>
 
     <property>

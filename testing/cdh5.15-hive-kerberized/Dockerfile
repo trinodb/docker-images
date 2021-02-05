@@ -25,16 +25,16 @@ RUN /usr/local/bin/apply-all-site-xml-overrides /overrides
 RUN /usr/sbin/kdb5_util create -s -P password
 
 # ADD HADOOP PRINCIPALS
-RUN /usr/sbin/kadmin.local -q "addprinc -randkey hdfs/hadoop-master@LABS.TRINO.IO" \
-  && /usr/sbin/kadmin.local -q "addprinc -randkey mapred/hadoop-master@LABS.TRINO.IO" \
-  && /usr/sbin/kadmin.local -q "addprinc -randkey yarn/hadoop-master@LABS.TRINO.IO" \
-  && /usr/sbin/kadmin.local -q "addprinc -randkey HTTP/hadoop-master@LABS.TRINO.IO" 
+RUN /usr/sbin/kadmin.local -q "addprinc -randkey hdfs/hadoop@LABS.TRINO.IO" \
+  && /usr/sbin/kadmin.local -q "addprinc -randkey mapred/hadoop@LABS.TRINO.IO" \
+  && /usr/sbin/kadmin.local -q "addprinc -randkey yarn/hadoop@LABS.TRINO.IO" \
+  && /usr/sbin/kadmin.local -q "addprinc -randkey HTTP/hadoop@LABS.TRINO.IO" 
 
 # CREATE HADOOP KEYTAB FILES
-RUN /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/hadoop/conf/hdfs.keytab hdfs/hadoop-master HTTP/hadoop-master" \
-  && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/hadoop/conf/mapred.keytab mapred/hadoop-master HTTP/hadoop-master" \
-  && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/hadoop/conf/yarn.keytab yarn/hadoop-master HTTP/hadoop-master" \
-  && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/hadoop/conf/HTTP.keytab HTTP/hadoop-master"
+RUN /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/hadoop/conf/hdfs.keytab hdfs/hadoop HTTP/hadoop" \
+  && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/hadoop/conf/mapred.keytab mapred/hadoop HTTP/hadoop" \
+  && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/hadoop/conf/yarn.keytab yarn/hadoop HTTP/hadoop" \
+  && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/hadoop/conf/HTTP.keytab HTTP/hadoop"
 RUN chown hdfs:hadoop /etc/hadoop/conf/hdfs.keytab \
   && chown mapred:hadoop /etc/hadoop/conf/mapred.keytab \
   && chown yarn:hadoop /etc/hadoop/conf/yarn.keytab \
@@ -42,8 +42,8 @@ RUN chown hdfs:hadoop /etc/hadoop/conf/hdfs.keytab \
   && chmod 644 /etc/hadoop/conf/*.keytab
 
 # CREATE HIVE PRINCIPAL AND KEYTAB
-RUN /usr/sbin/kadmin.local -q "addprinc -randkey hive/hadoop-master@LABS.TRINO.IO" \
-  && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/hive/conf/hive.keytab hive/hadoop-master"
+RUN /usr/sbin/kadmin.local -q "addprinc -randkey hive/hadoop@LABS.TRINO.IO" \
+  && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/hive/conf/hive.keytab hive/hadoop"
 RUN chown hive:hadoop /etc/hive/conf/hive.keytab \
   && chmod 644 /etc/hive/conf/hive.keytab
 

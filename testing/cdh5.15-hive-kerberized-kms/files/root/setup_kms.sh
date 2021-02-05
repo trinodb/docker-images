@@ -20,10 +20,10 @@ function retry() {
   return ${EXIT_CODE}
 }
 
-echo 127.0.0.2 `# must be different than localhost IP` hadoop-master >> /etc/hosts
+echo 127.0.0.2 `# must be different than localhost IP` hadoop >> /etc/hosts
 supervisord -c /etc/supervisord.conf &
 
-retry kinit -kt /etc/hadoop/conf/hdfs.keytab hdfs/hadoop-master@LABS.TRINO.IO
+retry kinit -kt /etc/hadoop/conf/hdfs.keytab hdfs/hadoop@LABS.TRINO.IO
 retry hdfs dfsadmin -safemode leave
 
 set -x

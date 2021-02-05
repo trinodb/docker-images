@@ -29,12 +29,12 @@
 
     <property>
         <name>dfs.namenode.kerberos.principal</name>
-        <value>hdfs/hadoop-master@LABS.TRINO.IO</value>
+        <value>hdfs/hadoop@LABS.TRINO.IO</value>
     </property>
 
     <property>
         <name>dfs.namenode.kerberos.internal.spnego.principal</name>
-        <value>HTTP/hadoop-master@LABS.TRINO.IO</value>
+        <value>HTTP/hadoop@LABS.TRINO.IO</value>
     </property>
 
     <!-- Secondary NameNode security config -->
@@ -45,12 +45,12 @@
 
     <property>
         <name>dfs.secondary.namenode.kerberos.principal</name>
-        <value>hdfs/hadoop-master@LABS.TRINO.IO</value>
+        <value>hdfs/hadoop@LABS.TRINO.IO</value>
     </property>
 
     <property>
         <name>dfs.secondary.namenode.kerberos.internal.spnego.principal</name>
-        <value>HTTP/hadoop-master@LABS.TRINO.IO</value>
+        <value>HTTP/hadoop@LABS.TRINO.IO</value>
     </property>
 
     <!-- DataNode security config -->
@@ -61,7 +61,7 @@
 
     <property>
         <name>dfs.datanode.kerberos.principal</name>
-        <value>hdfs/hadoop-master@LABS.TRINO.IO</value>
+        <value>hdfs/hadoop@LABS.TRINO.IO</value>
     </property>
 
     <!-- WebHDFS security config -->
@@ -73,7 +73,7 @@
     <!-- Web Authentication config -->
     <property>
         <name>dfs.web.authentication.kerberos.principal</name>
-        <value>HTTP/hadoop-master@LABS.TRINO.IO</value>
+        <value>HTTP/hadoop@LABS.TRINO.IO</value>
     </property>
 
     <property>

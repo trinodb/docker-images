@@ -18,7 +18,7 @@
 
     <property>
         <name>hadoop.kms.authentication.kerberos.principal</name>
-        <value>HTTP/hadoop-master</value>
+        <value>HTTP/hadoop</value>
     </property>
 
     <property>

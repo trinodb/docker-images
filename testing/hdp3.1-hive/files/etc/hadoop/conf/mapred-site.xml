@@ -19,7 +19,7 @@
 
     <property>
         <name>mapred.job.tracker</name>
-        <value>hadoop-master:8021</value>
+        <value>hadoop:8021</value>
     </property>
 
     <property>
@@ -29,12 +29,12 @@
 
     <property>
         <name>mapreduce.jobhistory.address</name>
-        <value>hadoop-master:10020</value>
+        <value>hadoop:10020</value>
     </property>
 
     <property>
         <name>mapreduce.jobhistory.webapp.address</name>
-        <value>hadoop-master:19888</value>
+        <value>hadoop:19888</value>
     </property>
 
     <property>

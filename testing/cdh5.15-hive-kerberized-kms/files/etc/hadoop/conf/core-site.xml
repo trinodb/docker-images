@@ -3,7 +3,7 @@
 
     <property>
         <name>fs.defaultFS</name>
-        <value>hdfs://hadoop-master:9000</value>
+        <value>hdfs://hadoop:9000</value>
     </property>
 
     <!-- HTTPFS proxy user setting -->
@@ -64,12 +64,12 @@
     <!-- KMS -->
     <property>
         <name>hadoop.security.key.provider.path</name>
-        <value>kms://http@hadoop-master:16000/kms</value>
+        <value>kms://http@hadoop:16000/kms</value>
     </property>
 
     <property>
         <name>dfs.encryption.key.provider.uri</name>
-        <value>kms://http@hadoop-master:16000/kms</value>
+        <value>kms://http@hadoop:16000/kms</value>
     </property>
 
 </configuration>
