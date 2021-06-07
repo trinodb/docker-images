@@ -18,4 +18,10 @@ FROM ghcr.io/trinodb/testing/cdh5.15-hive-kerberized-kms:38
 # COPY CONFIGURATION
 COPY ./files /
 
+RUN \
+    set -xeu && \
+    # Upgrade Zulu JDK to 11.0.11
+    rpm -U -i https://cdn.azul.com/zulu/bin/zulu11.48.21-ca-jdk11.0.11-linux.x86_64.rpm && \
+    echo "Done"
+
 CMD supervisord -c /etc/supervisord.conf

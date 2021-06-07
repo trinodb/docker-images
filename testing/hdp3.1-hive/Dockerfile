@@ -21,6 +21,8 @@ RUN \
     set -xeu && \
     # Remove unaccessible HDP3 repos so yum is still usable
     rm /etc/yum.repos.d/hdp*.repo && \
+    # Upgrade Zulu JDK to 11.0.11
+    rpm -U -i https://cdn.azul.com/zulu/bin/zulu11.48.21-ca-jdk11.0.11-linux.x86_64.rpm && \
     echo "Done"
 
 # HDFS ports
