@@ -12,7 +12,6 @@ jobs:
           - image: dns
           - image: centos7-oj11
           - image: centos6-oj8-openldap-referrals
-          - image: centos6-presto-admin-tests-build
           - image: spark3.0-iceberg
           - image: kerberos
             test: kerberos
