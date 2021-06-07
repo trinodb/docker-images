@@ -26,8 +26,9 @@ jobs:
             test: hdp3.1-hive
           - image: cdh5.12-hive-kerberized
             test: cdh5.12-hive
-          - image: cdh5.15-hive-kerberized-kms
+          - image: cdh5.15-hive-kerberized
             test: cdh5.15-hive
+          - image: cdh5.15-hive-kerberized-kms
     steps:
     - uses: actions/checkout@v2
       with:

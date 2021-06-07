@@ -10,57 +10,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM testing/centos6-oj8:unlabelled
+# Cloudera removed an access to CDH5 repositories in April 2021.
+# In order to build new image version we use last released version as base.
+# Previous Dockerfile version is archived in archived/cdh5.15-hive.
+FROM ghcr.io/trinodb/testing/cdh5.15-hive:38
 
-# Change default timezone
-RUN ln -snf "/usr/share/zoneinfo/Asia/Kathmandu" /etc/localtime && echo "Asia/Kathmandu" > /etc/timezone
-
-# Setup CDH repo, pin the CDH distribution to a concrete version
-RUN wget -nv https://archive.cloudera.com/cdh5/redhat/6/x86_64/cdh/cloudera-cdh5.repo -P /etc/yum.repos.d \
-  && rpm --import https://archive.cloudera.com/cdh5/redhat/6/x86_64/cdh/RPM-GPG-KEY-cloudera \
-  && sed -i '/^baseurl=/c\baseurl=https://archive.cloudera.com/cdh5/redhat/6/x86_64/cdh/5.15.1/' /etc/yum.repos.d/cloudera-cdh5.repo
-
-# Install Hadoop, Hive (w/ MySQL)
-RUN \
-    set -xeu && \
-    yum install -y \
-    hadoop-hdfs-namenode \
-    hadoop-hdfs-secondarynamenode \
-    hadoop-hdfs-datanode \
-    \
-    hadoop-mapreduce \
-    \
-    hadoop-yarn-resourcemanager \
-    hadoop-yarn-nodemanager \
-    \
-    hadoop-client \
-    hadoop-conf-pseudo \
-    \
-    hive \
-    hive-metastore \
-    hive-server2 \
-    \
-    mysql-server mysql-connector-java \
-    \
-  # Cleanup
-  && yum -y clean all && rm -rf /tmp/* /var/tmp/* \
-  && ln -s /usr/share/java/mysql-connector-java.jar /usr/lib/hive/lib/mysql-connector-java.jar
-
-# Copy configuration files
 COPY ./files /
 
-# Run setup script
-RUN /root/setup.sh \
-  && rm -rf /tmp/* /var/tmp/*
-
-# Setup sock proxy
-RUN yum install -y openssh openssh-clients openssh-server && yum -y clean all
-RUN ssh-keygen -t rsa -b 4096 -C "automation@teradata.com" -N "" -f /root/.ssh/id_rsa \
-  && ssh-keygen -t rsa -b 4096 -N "" -f /etc/ssh/ssh_host_rsa_key \
-  && ssh-keygen -t dsa -b 1024 -N "" -f /etc/ssh/ssh_host_dsa_key \
-  && cp /root/.ssh/id_rsa.pub /root/.ssh/authorized_keys
-RUN chmod 755 /root && chmod 700 /root/.ssh
-RUN passwd --unlock root
+RUN \
+    set -xeu && \
+    # Remove unaccessible CDH5 repos so yum is still usable
+    rm /etc/yum.repos.d/cloudera-cdh5.repo && \
+    echo "Done"
 
 # HDFS ports
 EXPOSE 1004 1006 8020 50010 50020 50070 50075 50470
