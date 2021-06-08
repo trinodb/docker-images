@@ -1,11 +1,11 @@
-# This overlay helps in determing which group a given user belongs to
+# This overlay helps in determining which group a given user belongs to
 dn: cn=module,cn=config
 cn: module
 objectClass: olcModuleList
 olcModuleLoad: memberof.la
 olcModulePath: /usr/lib64/openldap
 
-dn: olcOverlay={0}memberof,olcDatabase={2}bdb,cn=config
+dn: olcOverlay={0}memberof,olcDatabase={2}hdb,cn=config
 objectClass: olcConfig
 objectClass: olcMemberOf
 objectClass: olcOverlayConfig
