@@ -10,13 +10,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM testing/centos6-oj8-openldap:unlabelled
+FROM testing/centos7-oj8-openldap:unlabelled
 
 # COPY CONFIGURATION
 COPY ./files /
 
 # CONFIGURE OPENLDAP SERVER
-RUN service slapd start && \
+# Run supervisord in background
+RUN supervisord -c /etc/supervisord.conf && \
+    /usr/bin/wait-for-slapd.sh && \
     ldapadd -f /etc/openldap/setup/createReferrals.ldif -D cn=admin,dc=trino,dc=testldap,dc=com -w admin
 
-CMD supervisord -c /etc/supervisord.conf
+CMD supervisord -n -c /etc/supervisord.conf

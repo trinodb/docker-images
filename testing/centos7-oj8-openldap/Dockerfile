@@ -10,10 +10,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM testing/centos6-oj8:unlabelled
+FROM testing/centos7-oj8:unlabelled
 
 # INSTALL OPENLDAP
-RUN yum -y install openldap openldap-clients openldap-servers \
+RUN yum -y install openssl openldap openldap-clients openldap-servers \
     # Cleanup
     && yum -y clean all && rm -rf /tmp/* /var/tmp/*
 
@@ -21,16 +21,22 @@ RUN yum -y install openldap openldap-clients openldap-servers \
 COPY ./files /
 
 # CONFIGURE OPENLDAP SERVER
-RUN service slapd start && \
+# Run supervisord in background
+RUN supervisord -c /etc/supervisord.conf && \
+    /usr/bin/wait-for-slapd.sh && \
     ldapmodify -Y EXTERNAL -H ldapi:/// -f /etc/openldap/setup/modify_server.ldif && \
     ldapmodify -Y EXTERNAL -H ldapi:/// -f /etc/openldap/setup/ldap_disable_bind_anon.ldif && \
     ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/setup/memberof.ldif && \
+    # Next two ldifs are required in order to have inetOrgPerson object class
+    ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/cosine.ldif && \
+    ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/inetorgperson.ldif && \
     ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/setup/refint.ldif && \
     ldapadd -f /etc/openldap/setup/createOU.ldif -D cn=admin,dc=trino,dc=testldap,dc=com -w admin
 
 # Generate a keystore.
+# TODO: https://github.com/trinodb/trino/issues/8239
 RUN keytool -genkey -alias coordinator -storepass testldap -keystore /etc/openldap/certs/coordinator.jks \
-    -keypass testldap -keyalg RSA -sigalg SHA1withRSA -dname "CN=trino-master, OU=, O=, L=, S=, C=" -validity 100000
+    -keypass testldap -keyalg RSA -sigalg SHA1withRSA -dname "CN=presto-master, OU=, O=, L=, S=, C=" -validity 100000
 
 # Generate a certificate and CSR for the keystore. CN should match the hostname of trino-coordinator
 RUN keytool -export -alias coordinator -storepass testldap -keystore /etc/openldap/certs/coordinator.jks \
@@ -60,4 +66,4 @@ RUN keytool -import -alias TestCA -storepass testldap -keystore /etc/openldap/ce
 RUN keytool -import -alias caroot -storepass testldap -keystore /etc/openldap/certs/cacerts.jks -noprompt \
     -file /etc/openldap/certs/caroot.cer
 
-CMD supervisord -c /etc/supervisord.conf
+CMD supervisord -n -c /etc/supervisord.conf

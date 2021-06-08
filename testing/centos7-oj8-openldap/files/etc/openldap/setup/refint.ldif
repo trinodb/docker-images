@@ -6,7 +6,7 @@ objectclass: olcModuleList
 objectclass: top
 olcmoduleload: refint.la
 
-dn: olcOverlay={1}refint,olcDatabase={2}bdb,cn=config
+dn: olcOverlay={1}refint,olcDatabase={2}hdb,cn=config
 objectClass: olcConfig
 objectClass: olcOverlayConfig
 objectClass: olcRefintConfig
