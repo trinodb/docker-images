@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<configuration>
+
+    <!-- Disable embedded Metastore -->
+    <property>
+        <name>hive.metastore.uris</name>
+        <value>thrift://localhost:9083</value>
+    </property>
+
+    <!-- Enable authentication -->
+    <property>
+        <name>hive.security.authenticator.manager</name>
+        <value>org.apache.hadoop.hive.ql.security.SessionStateUserAuthenticator</value>
+    </property>
+
+</configuration>
