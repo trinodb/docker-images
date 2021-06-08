@@ -1,0 +1,35 @@
+<configuration>
+     <!--
+    org.apache.hadoop.crypto.key.kms.server.KeyAuthorizationKeyProvider.KeyOpType from hadoop-kms-2.6.0-cdh5.13.1-classes.jar
+        ALL,
+        READ,
+        MANAGEMENT,
+        GENERATE_EEK,
+        DECRYPT_EEK;
+        -->
+     <property>
+        <name>default.key.acl.ALL</name> <!-- not sure this is valid for default ACL -->
+        <value>*</value>
+    </property>
+
+    <property>
+        <name>default.key.acl.MANAGEMENT</name>
+        <value>*</value>
+    </property>
+
+    <property>
+        <name>default.key.acl.READ</name>
+        <value>*</value>
+    </property>
+
+    <property>
+        <name>default.key.acl.GENERATE_EEK</name>
+        <value>*</value>
+    </property>
+
+    <property>
+        <name>default.key.acl.DECRYPT_EEK</name>
+        <value>*</value>
+    </property>
+
+</configuration>

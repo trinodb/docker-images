@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<configuration>
+    <property>
+        <name>beeline.hs2.jdbc.url.tcpUrl</name>
+        <value>jdbc:hive2://localhost:10000/default;user=hdfs;password=hive</value>
+    </property>
+
+    <property>
+        <name>beeline.hs2.jdbc.url.httpUrl</name>
+        <value>jdbc:hive2://localhost:10000/default;user=hdfs;password=hive;transportMode=http;httpPath=cliservice</value>
+    </property>
+
+    <property>
+        <name>beeline.hs2.jdbc.url.default</name>
+        <value>tcpUrl</value>
+    </property>
+</configuration>
