@@ -19,12 +19,12 @@
 
     <!-- Trino impersonation -->
     <property>
-        <name>hadoop.proxyuser.trino-server.groups</name>
+        <name>hadoop.proxyuser.presto-server.groups</name>
         <value>*</value>
     </property>
 
     <property>
-        <name>hadoop.proxyuser.trino-server.hosts</name>
+        <name>hadoop.proxyuser.presto-server.hosts</name>
         <value>*</value>
     </property>
 
