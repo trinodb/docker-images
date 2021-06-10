@@ -9,6 +9,7 @@ jobs:
       fail-fast: false
       matrix:
         config:
+          - image: accumulo
           - image: dns
           - image: centos7-oj11
           - image: centos7-oj8-openldap-referrals
