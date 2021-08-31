@@ -15,6 +15,7 @@ FROM testing/centos7-oj11:unlabelled
 ARG SPARK_VERSION=3.0.0
 ARG HADOOP_VERSION=2.7
 ARG ICEBERG_VERSION=0.11.0
+ARG DELTA_VERSION=0.8.0
 
 ARG SPARK_ARTIFACT="spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}"
 
@@ -30,5 +31,8 @@ WORKDIR ${SPARK_HOME}/jars
 
 # install Iceberg
 RUN wget -nv "https://repo1.maven.org/maven2/org/apache/iceberg/iceberg-spark3-runtime/${ICEBERG_VERSION}/iceberg-spark3-runtime-${ICEBERG_VERSION}.jar"
+
+# install Delta
+RUN wget -nv "https://repo1.maven.org/maven2/io/delta/delta-core_2.12/${DELTA_VERSION}/delta-core_2.12-${DELTA_VERSION}.jar"
 
 ENV PATH="${SPARK_HOME}/bin:${PATH}"
