@@ -16,7 +16,6 @@ RELEASE_TYPE := $(if $(filter %-SNAPSHOT, $(VERSION)),snapshot,release)
 
 LABEL := io.trino.git.hash=$(shell git rev-parse HEAD)
 
-LABEL_PARENT_SH=bin/label-parent.sh
 DEPEND_SH=bin/depend.sh
 FLAG_SH=bin/flag.sh
 PUSH_SH=bin/push.sh
@@ -161,19 +160,26 @@ $(FLAGDIR)/%.flags: %/Dockerfile $(FLAG_SH)
 
 #
 # Images in the repo that are built FROM other images in the repo are built
-# from the special tag `unlabelled'. This is because LABEL data creates a new
-# layer in the image. Without building from the `unlabelled' tag, all direct or
-# indirect child images have to be fully rebuilt when the LABEL data changes.
-# Since we include the git hash in the LABEL data, this changes frequently.
+# from the special tag `unlabelled'. This is vestigial from the old approach:
+#     LABEL (from `docker build --label`) data creates a new
+#     layer in the image. Without building from the `unlabelled' tag, all direct or
+#     indirect child images have to be fully rebuilt when the LABEL data changes.
+#     Since we include the git hash in the LABEL data, this changes frequently.
 #
-# We take the approach of building the :latest tag first, then finding the
-# parent of the layer containing the LABEL information, and tagging that as
-# :unlabelled. This works because all of the LABEL information applied via a
-# --label option(s) to `docker build' is put in a single layer at the top of
-# the resulting stack of layers.
+#     We take the approach of building the :latest tag first, then finding the
+#     parent of the layer containing the LABEL information, and tagging that as
+#     :unlabelled. This works because all of the LABEL information applied via a
+#     --label option(s) to `docker build' is put in a single layer at the top of
+#     the resulting stack of layers.
 #
+# However
+# - the above no longer worked, because `docker build --label` does not currently
+#   result with a separate layer that could be used for tagging.
+# - the history is retained above as an explanation what the ":unlabelled" was
+#   supposed to mean.
+# - TODO replace :unlabelled with something more appropriate.
 $(UNLABELLED_TAGS): %@unlabelled: %/Dockerfile %@latest
-	docker tag $(shell $(SHELL) $(LABEL_PARENT_SH) $*:latest) $(call docker-tag,$@)
+	docker tag $*:latest $(call docker-tag,$@)
 
 #
 # We don't need to specify any (real) dependencies other than the Dockerfile
