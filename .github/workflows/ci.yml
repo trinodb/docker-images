@@ -12,6 +12,7 @@ jobs:
           - image: accumulo
           - image: dns
           - image: centos7-oj11
+          - image: centos7-oj11-arm64
           - image: centos7-oj8-openldap-referrals
           - image: spark3.0-iceberg
           - image: kerberos
