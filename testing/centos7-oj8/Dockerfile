@@ -24,7 +24,7 @@ RUN \
         && \
     \
     # install Zulu JDK (will not be the default `java`)
-    rpm -i https://cdn.azul.com/zulu/bin/zulu17.28.13-ca-jdk17.0.0-linux.x86_64.rpm && \
+    rpm -i https://cdn.azul.com/zulu/bin/zulu11.48.21-ca-jdk11.0.11-linux.x86_64.rpm && \
     \
     # install supervisor
     yum --enablerepo=extras install -y setuptools epel-release && \
