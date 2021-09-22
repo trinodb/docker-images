@@ -21,8 +21,13 @@ RUN \
     set -xeu && \
     # Remove unaccessible CDH5 repos so yum is still usable
     rm /etc/yum.repos.d/cloudera-cdh5.repo && \
+    # Install additional Zulu JDK 17.0.0
+    rpm -i https://cdn.azul.com/zulu/bin/zulu17.28.13-ca-jdk17.0.0-linux.x86_64.rpm && \
     # Upgrade Zulu JDK to 11.0.11
-    rpm -U -i https://cdn.azul.com/zulu/bin/zulu11.48.21-ca-jdk11.0.11-linux.x86_64.rpm && \
+    rpm -Ui https://cdn.azul.com/zulu/bin/zulu11.48.21-ca-jdk11.0.11-linux.x86_64.rpm && \
+    # Set JDK 11 as a default one
+    alternatives --set java /usr/lib/jvm/zulu-11/bin/java && \
+    alternatives --set javac /usr/lib/jvm/zulu-11/bin/javac && \
     echo "Done"
 
 # HDFS ports
