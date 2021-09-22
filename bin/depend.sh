@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 usage() {
 	echo "$0 {-d|-g|-p {tag}|-x} {target image Dockerfile} [known image tags]" >&2
