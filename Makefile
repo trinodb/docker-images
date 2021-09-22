@@ -59,7 +59,7 @@ SNAPSHOT_TAGS := $(GIT_HASH_TAGS)
 EXTERNAL_DEPS = \
 	$(sort \
 		$(foreach dockerfile,$(DOCKERFILES),\
-			$(shell $(SHELL) $(DEPEND_SH) -x $(dockerfile) $(call docker-tag,$(UNLABELLED_TAGS)))))
+			$(shell $(DEPEND_SH) -x $(dockerfile) $(call docker-tag,$(UNLABELLED_TAGS)))))
 
 #
 # Image tags in the Makefile use @ instead of : in full image:tag names.  This
@@ -100,14 +100,14 @@ images: $(LATEST_TAGS)
 release: require-clean-repo require-on-master require-release-version push-release
 
 push-release: $(RELEASE_TAGS)
-	$(SHELL) $(PUSH_SH) $(call docker-tag,$(call resolved-image-name,$^))
+	$(PUSH_SH) $(call docker-tag,$(call resolved-image-name,$^))
 
 snapshot: require-clean-repo require-snapshot-version push-snapshot
 
 build-snapshot: $(SNAPSHOT_TAGS)
 
 push-snapshot: $(SNAPSHOT_TAGS)
-	$(SHELL) $(PUSH_SH) $(call docker-tag,$(call resolved-image-name,$^))
+	$(PUSH_SH) $(call docker-tag,$(call resolved-image-name,$^))
 
 #
 # Create tags without pushing. This is probably only useful for testing.
@@ -152,11 +152,11 @@ include $(TEST_RDEPS)
 
 $(DEPDIR)/%.d: %/Dockerfile $(DEPEND_SH)
 	-mkdir -p $(dir $@)
-	$(SHELL) $(DEPEND_SH) -d $< $(call docker-tag,$(UNLABELLED_TAGS)) >$@
+	$(DEPEND_SH) -d $< $(call docker-tag,$(UNLABELLED_TAGS)) >$@
 
 $(FLAGDIR)/%.flags: %/Dockerfile $(FLAG_SH)
 	-mkdir -p $(dir $@)
-	$(SHELL) $(FLAG_SH) $< >$@
+	$(FLAG_SH) $< >$@
 
 #
 # Images in the repo that are built FROM other images in the repo are built
@@ -211,7 +211,7 @@ $(GIT_HASH_TAGS): %@$(GIT_HASH): %@latest
 # 2. Has the tag :unlabelled
 #
 $(PARENT_CHECKS): %-parent-check: %/Dockerfile $(DEPEND_SH)
-	$(SHELL) $(DEPEND_SH) -p unlabelled $< $(call docker-tag,$(UNLABELLED_TAGS))
+	$(DEPEND_SH) -p unlabelled $< $(call docker-tag,$(UNLABELLED_TAGS))
 
 #
 # This makes it possible it possible to type `make testing/image' without
@@ -249,7 +249,7 @@ $(GVWHOLE): $(GVFRAGS) Makefile
 
 $(GVFRAGS): $(GVDIR)/%.gv.frag: %/Dockerfile $(DEPEND_SH)
 	-mkdir -p $(dir $@)
-	$(SHELL) $(DEPEND_SH) -g $< $(call docker-tag,$(UNLABELLED_TAGS)) >$@
+	$(DEPEND_SH) -g $< $(call docker-tag,$(UNLABELLED_TAGS)) >$@
 
 .PHONY: test
 test: 
