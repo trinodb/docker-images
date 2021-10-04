@@ -48,3 +48,4 @@ RUN \
 
 ENV PATH="/usr/local/bin:${PATH}"
 ENV JAVA_HOME=/usr/lib/jvm/zulu-11
+ENV LANG=en_US.UTF-8
