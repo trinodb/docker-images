@@ -10,7 +10,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM testing/centos7-oj8-openldap:unlabelled
+FROM testing/centos7-oj11-openldap:unlabelled
 
 # COPY CONFIGURATION
 COPY ./files /
