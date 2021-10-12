@@ -10,7 +10,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM testing/centos7-oj8:unlabelled
+FROM testing/centos7-oj11:unlabelled
 
 RUN yum install -y \
     mariadb-server \
