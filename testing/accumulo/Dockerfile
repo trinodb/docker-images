@@ -10,7 +10,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM testing/centos7-oj8:unlabelled
+FROM testing/centos7-oj11:unlabelled
 
 ARG ACCUMULO_VERSION=1.7.4
 ARG HADOOP_VERSION=2.6.5
