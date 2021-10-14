@@ -15,6 +15,7 @@ FROM testing/centos7-oj11:unlabelled
 ARG ACCUMULO_VERSION=1.7.4
 ARG HADOOP_VERSION=2.6.5
 ARG ZOOKEEPER_VERSION=3.4.14
+ARG JAVA8_ZULU_VERSION=8.56.0.21-ca-jdk8.0.302
 ARG IMAGE_ROOT_INSTALL=/usr/local/lib
 
 ENV HADOOP_HOME=$IMAGE_ROOT_INSTALL/hadoop
@@ -32,6 +33,14 @@ ARG ZOOKEEPER_BINARY_PATH=$BASE_URL/zookeeper/zookeeper-$ZOOKEEPER_VERSION/zooke
 
 RUN yum update -y && \
     yum install -y gettext && \
+    # Install Zulu JDK
+    echo "Downloading zulu${JAVA8_ZULU_VERSION}-linux.x86_64.rpm..." && \
+    curl -o /tmp/jdk8.rpm --url https://cdn.azul.com/zulu/bin/zulu${JAVA8_ZULU_VERSION}-linux.x86_64.rpm && \
+    yum -y localinstall /tmp/jdk8.rpm && \
+    rm /tmp/jdk8.rpm && \
+    # Set JDK 8 as a default one
+    alternatives --set java /usr/lib/jvm/zulu-8/jre/bin/java && \
+    alternatives --set javac /usr/lib/jvm/zulu-8/bin/javac && \
     yum clean all -y
 
 RUN mkdir -p $IMAGE_ROOT_INSTALL
