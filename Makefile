@@ -192,7 +192,7 @@ $(LATEST_TAGS): %@latest: %/Dockerfile %-parent-check
 	@echo
 	@echo "Building [$@] image"
 	@echo
-	cd $* && time $(SHELL) -c "( tar -czh . | docker build ${BUILD_ARGS} $(DBFLAGS_$*) -t $(call docker-tag,$@) --label $(LABEL) - )"
+	cd $* && time $(SHELL) -c "( tar -czh . | DOCKER_BUILDKIT=0 docker build ${BUILD_ARGS} $(DBFLAGS_$*) -t $(call docker-tag,$@) --label $(LABEL) - )"
 	docker history $(call docker-tag,$@)
 
 $(VERSION_TAGS): %@$(VERSION): %@latest
