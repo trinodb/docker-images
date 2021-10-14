@@ -12,13 +12,23 @@
 
 FROM testing/centos7-oj11:unlabelled
 
+ARG JAVA8_ZULU_VERSION=8.56.0.21-ca-jdk8.0.302
+
 RUN yum install -y \
     mariadb-server \
     openssh \
     openssh-clients \
     openssh-server \
     psmisc \
-    which \
+    which && \
+    # Install Zulu JDK
+    echo "Downloading zulu${JAVA8_ZULU_VERSION}-linux.x86_64.rpm..." && \
+    curl -o /tmp/jdk8.rpm --url https://cdn.azul.com/zulu/bin/zulu${JAVA8_ZULU_VERSION}-linux.x86_64.rpm && \
+    yum -y localinstall /tmp/jdk8.rpm && \
+    rm /tmp/jdk8.rpm && \
+    # Set JDK 8 as a default one
+    alternatives --set java /usr/lib/jvm/zulu-8/jre/bin/java && \
+    alternatives --set javac /usr/lib/jvm/zulu-8/bin/javac \
     && yum -q clean all && rm -rf /var/cache/yum
 
 ARG HADOOP_VERSION=3.1.2
