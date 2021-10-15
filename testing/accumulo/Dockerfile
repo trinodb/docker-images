@@ -43,6 +43,9 @@ RUN yum update -y && \
     alternatives --set javac /usr/lib/jvm/zulu-8/bin/javac && \
     yum clean all -y
 
+# Override JAVA_HOME inherited from testing/centos7-oj11
+ENV JAVA_HOME=/usr/lib/jvm/zulu-8
+
 RUN mkdir -p $IMAGE_ROOT_INSTALL
 
 # Download Hadoop
