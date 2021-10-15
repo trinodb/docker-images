@@ -31,6 +31,9 @@ RUN yum install -y \
     alternatives --set javac /usr/lib/jvm/zulu-8/bin/javac \
     && yum -q clean all && rm -rf /var/cache/yum
 
+# Override JAVA_HOME inherited from testing/centos7-oj11
+ENV JAVA_HOME=/usr/lib/jvm/zulu-8
+
 ARG HADOOP_VERSION=3.1.2
 ARG HIVE_VERSION=3.1.2
 
