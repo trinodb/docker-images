@@ -31,6 +31,7 @@ jobs:
             test: cdh5.15-hive
           - image: cdh5.15-hive-kerberized-kms
           - image: phoenix4
+          - image: phoenix5
     steps:
     - uses: actions/checkout@v2
       with:
