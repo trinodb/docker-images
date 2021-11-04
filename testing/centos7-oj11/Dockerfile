@@ -42,6 +42,7 @@ RUN \
         sudo \
         telnet `# helpful when troubleshooting product tests` \
         vim `# helpful when troubleshooting product tests` \
+        jq `# helpful json processing tool` \
         && \
     # cleanup
     yum -y clean all && rm -rf /tmp/* /var/tmp/*
