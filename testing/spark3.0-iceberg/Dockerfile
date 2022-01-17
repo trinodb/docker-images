@@ -32,3 +32,6 @@ WORKDIR ${SPARK_HOME}/jars
 RUN wget -nv "https://repo1.maven.org/maven2/org/apache/iceberg/iceberg-spark3-runtime/${ICEBERG_VERSION}/iceberg-spark3-runtime-${ICEBERG_VERSION}.jar"
 
 ENV PATH="${SPARK_HOME}/bin:${PATH}"
+
+# add hive user needed in interactions with the Apache Hive environment
+RUN useradd -ms /bin/bash hive
