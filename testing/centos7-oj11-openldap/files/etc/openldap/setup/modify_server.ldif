@@ -30,3 +30,6 @@ olcTLSCertificateFile: /etc/openldap/certs/openldap-certificate.pem
 -
 replace: olcTLSCertificateKeyFile
 olcTLSCertificateKeyFile: /etc/openldap/certs/private.pem
+-
+replace: olcTLSVerifyClient
+olcTLSVerifyClient: demand
