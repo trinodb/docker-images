@@ -14,6 +14,7 @@ jobs:
           - image: centos7-oj11
           - image: centos7-oj11-openldap-referrals
           - image: spark3.0-iceberg
+          - image: spark3-delta
           - image: kerberos
             test: kerberos
           - image: gpdb-6
