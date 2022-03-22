@@ -12,9 +12,11 @@
 
 FROM testing/centos7-oj11:unlabelled
 
-ARG SPARK_VERSION=3.1.2
+ARG SPARK_VERSION=3.2.1
 ARG HADOOP_VERSION=3.2
-ARG ICEBERG_VERSION=0.12.1
+ARG ICEBERG_VERSION=0.13.1
+# ICEBERG_JAR_VERSION is derived from: <spark-version>_<scala-version>
+ARG ICEBERG_JAR_VERSION=3.2_2.12
 
 ARG SPARK_ARTIFACT="spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}"
 
@@ -29,7 +31,7 @@ RUN set -xeu; \
 WORKDIR ${SPARK_HOME}/jars
 
 # install Iceberg
-RUN wget -nv "https://repo1.maven.org/maven2/org/apache/iceberg/iceberg-spark3-runtime/${ICEBERG_VERSION}/iceberg-spark3-runtime-${ICEBERG_VERSION}.jar"
+RUN wget -nv "https://repo1.maven.org/maven2/org/apache/iceberg/iceberg-spark-runtime-${ICEBERG_JAR_VERSION}/${ICEBERG_VERSION}/iceberg-spark-runtime-${ICEBERG_JAR_VERSION}-${ICEBERG_VERSION}.jar"
 
 ENV PATH="${SPARK_HOME}/bin:${PATH}"
 
