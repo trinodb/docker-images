@@ -17,6 +17,7 @@ ARG HADOOP_VERSION=3.2
 ARG ICEBERG_VERSION=0.13.1
 # ICEBERG_JAR_VERSION is derived from: <spark-version>_<scala-version>
 ARG ICEBERG_JAR_VERSION=3.2_2.12
+ARG POSTGRESQL_JAR_VERSION=42.3.5
 
 ARG SPARK_ARTIFACT="spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}"
 
@@ -32,6 +33,9 @@ WORKDIR ${SPARK_HOME}/jars
 
 # install Iceberg
 RUN wget -nv "https://repo1.maven.org/maven2/org/apache/iceberg/iceberg-spark-runtime-${ICEBERG_JAR_VERSION}/${ICEBERG_VERSION}/iceberg-spark-runtime-${ICEBERG_JAR_VERSION}-${ICEBERG_VERSION}.jar"
+
+# install PostgreSQL driver for JDBC catalog
+RUN wget -nv "https://repo1.maven.org/maven2/org/postgresql/postgresql/${POSTGRESQL_JAR_VERSION}/postgresql-${POSTGRESQL_JAR_VERSION}.jar"
 
 ENV PATH="${SPARK_HOME}/bin:${PATH}"
 
