@@ -11,22 +11,46 @@
 # limitations under the License.
 
 # Cloudera removed an access to CDH5 repositories in April 2021.
-# In order to build new image version we use last released version as base.
+# In order to build new image version we use last released version to extract files from it.
 # Previous Dockerfile version is archived in archived/cdh5.15-hive.
-FROM ghcr.io/trinodb/testing/cdh5.15-hive-kerberized-kms:38
+FROM ghcr.io/trinodb/testing/cdh5.15-hive-kerberized-kms:38 AS builder
+COPY ./files /
+RUN /usr/bin/extract_rpms.sh hadoop-kms
+
+FROM testing/cdh5.15-hive-kerberized:unlabelled
+COPY --from=builder /rpms/ /rpms/
+
+RUN set -xeu \
+    && rpm -i -U /rpms/*.rpm \
+    # Cleanup
+    && yum -y clean all && rm -rf /tmp/* /var/tmp/*
 
 # COPY CONFIGURATION
 COPY ./files /
 
-RUN \
-    set -xeu && \
-    # Install additional Zulu JDK 17.0.0
-    rpm -i https://cdn.azul.com/zulu/bin/zulu17.28.13-ca-jdk17.0.0-linux.x86_64.rpm && \
-    # Upgrade Zulu JDK to 11.0.15
-    rpm -Ui https://cdn.azul.com/zulu/bin/zulu11.56.19-ca-jdk11.0.15-linux.x86_64.rpm && \
-    # Set JDK 11 as a default one
-    alternatives --set java /usr/lib/jvm/zulu-11/bin/java && \
-    alternatives --set javac /usr/lib/jvm/zulu-11/bin/javac && \
-    echo "Done"
+# add users and group for testing purposes
+RUN set -xeu && \
+    for username in alice bob charlie; do \
+        groupadd "${username}_group" && \
+        useradd -g "${username}_group" "${username}" && \
+        /usr/sbin/kadmin.local -q "addprinc -randkey ${username}/hadoop-master@LABS.TERADATA.COM" && \
+        /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/hive/conf/${username}.keytab ${username}/hadoop-master"; \
+    done && \
+    echo OK
+
+RUN set -x && \
+    install --directory --owner=kms --group=kms /var/run/hadoop-kms && \
+    # $JAVA_HOME/jre/lib/security/java.security is used by default and in our Java it prevents KMS code from accessing its own keystore
+    sed -e 's@-Dcatalina.base="$CATALINA_BASE"@\0 -Djceks.key.serialFilter="**"@' -i /usr/lib/bigtop-tomcat/bin/catalina.sh && \
+    /root/setup_kms.sh && \
+    # Purge Kerberos credential cache of root user
+    kdestroy && \
+    echo OK
+
+RUN set -x && \
+    find /var/log -type f -name \*.log -printf "truncate %p\n" -exec truncate --size 0 {} \; && \
+    # Purge /tmp, this includes credential caches of other users
+    find /tmp -mindepth 1 -maxdepth 1 -exec rm -rf {} + && \
+    echo OK
 
 CMD supervisord -c /etc/supervisord.conf

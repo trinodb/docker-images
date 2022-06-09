@@ -15,7 +15,7 @@ find_parent() {
 			exit;
 		}
 
-		$1 == "FROM" {
+		$1 == "FROM" && $3 != "AS" {
 			split($0, a);
 			parent = $2;
 			ec = 0
