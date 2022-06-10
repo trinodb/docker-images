@@ -190,9 +190,9 @@ $(UNLABELLED_TAGS): %@unlabelled: %/Dockerfile %@latest
 #
 $(LATEST_TAGS): %@latest: %/Dockerfile %-parent-check
 	@echo
-	@echo "Building [$@] image"
+	@echo "Building [$@] image using buildkit"
 	@echo
-	cd $* && time $(SHELL) -c "( tar -czh . | DOCKER_BUILDKIT=0 docker build ${BUILD_ARGS} $(DBFLAGS_$*) -t $(call docker-tag,$@) --label $(LABEL) - )"
+	cd $* && time $(SHELL) -c "( docker buildx build --compress --add-host hadoop-master:127.0.0.2 ${BUILD_ARGS} $(DBFLAGS_$*) -t $(call docker-tag,$@) --label $(LABEL) . )"
 	docker history $(call docker-tag,$@)
 
 $(VERSION_TAGS): %@$(VERSION): %@latest
