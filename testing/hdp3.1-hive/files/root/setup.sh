@@ -1,8 +1,5 @@
 #!/bin/bash -ex
 
-# make file system hostname resolvable
-echo "127.0.0.1 hadoop-master" >> /etc/hosts
-
 # format namenode
 chown hdfs:hdfs /var/lib/hadoop-hdfs/cache/
 

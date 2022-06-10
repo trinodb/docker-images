@@ -20,7 +20,6 @@ function retry() {
   return ${EXIT_CODE}
 }
 
-echo 127.0.0.2 `# must be different than localhost IP` hadoop-master >> /etc/hosts
 supervisord -c /etc/supervisord.conf &
 
 retry kinit -kt /etc/hadoop/conf/hdfs.keytab hdfs/hadoop-master@LABS.TERADATA.COM
