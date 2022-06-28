@@ -50,20 +50,24 @@ RUN chown hive:hadoop /etc/hive/conf/hive.keytab \
 # YARN SECURITY SETTINGS
 RUN chmod 6050 /etc/hadoop/conf/container-executor.cfg
 
-# CREATE PRESTO PRINCIPAL AND KEYTAB
-RUN /usr/sbin/kadmin.local -q "addprinc -randkey presto-server/presto-master.docker.cluster@LABS.TERADATA.COM" \
-  && /usr/sbin/kadmin.local -q "addprinc -randkey presto-server/presto-worker.docker.cluster@LABS.TERADATA.COM" \
-  && /usr/sbin/kadmin.local -q "addprinc -randkey presto-server/presto-worker-1.docker.cluster@LABS.TERADATA.COM" \
-  && /usr/sbin/kadmin.local -q "addprinc -randkey presto-server/presto-worker-2.docker.cluster@LABS.TERADATA.COM" \
-  && /usr/sbin/kadmin.local -q "addprinc -randkey HTTP/presto-master.docker.cluster@LABS.TERADATA.COM" \
-  && /usr/sbin/kadmin.local -q "addprinc -randkey presto-client/presto-master.docker.cluster@LABS.TERADATA.COM" \
-  && /usr/sbin/kadmin.local -q "addprinc -randkey hive/presto-master.docker.cluster@LABS.TERADATA.COM" \
-  && mkdir -p /etc/trino/conf \
-  && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/trino/conf/presto-server.keytab presto-server/presto-master.docker.cluster presto-server/presto-worker.docker.cluster presto-server/presto-worker-1.docker.cluster presto-server/presto-worker-2.docker.cluster" \
-  && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/trino/conf/presto-server-HTTP.keytab HTTP/presto-master.docker.cluster" \
-  && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/trino/conf/presto-client.keytab presto-client/presto-master.docker.cluster" \
-  && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/trino/conf/hive-presto-master.keytab hive/presto-master.docker.cluster"
-RUN chmod 644 /etc/trino/conf/*.keytab
+# Create legacy Presto and updated Trino principals and add them to keytabs
+RUN set -xeu && \
+  for hostname in presto-master trino-coordinator presto-worker trino-worker presto-worker-1 trino-worker-1 presto-worker-2 trino-worker-2; do \
+      /usr/sbin/kadmin.local -q "addprinc -randkey presto-server/${hostname}.docker.cluster@LABS.TERADATA.COM" \
+      /usr/sbin/kadmin.local -q "addprinc -randkey trino-server/${hostname}.docker.cluster@LABS.TERADATA.COM" \
+      && /usr/sbin/kadmin.local -q "addprinc -randkey HTTP/${hostname}.docker.cluster@LABS.TERADATA.COM" \
+      && /usr/sbin/kadmin.local -q "addprinc -randkey presto-client/${hostname}.docker.cluster@LABS.TERADATA.COM" \
+      && /usr/sbin/kadmin.local -q "addprinc -randkey trino-client/${hostname}.docker.cluster@LABS.TERADATA.COM" \
+      && /usr/sbin/kadmin.local -q "addprinc -randkey hive/${hostname}.docker.cluster@LABS.TERADATA.COM" \
+      && mkdir -p /etc/trino/conf \
+      && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/trino/conf/presto-server.keytab presto-server/${hostname}.docker.cluster" \
+      && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/trino/conf/trino-server.keytab trino-server/${hostname}.docker.cluster" \
+      && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/trino/conf/presto-server-HTTP.keytab HTTP/${hostname}.docker.cluster" \
+      && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/trino/conf/trino-client.keytab trino-client/${hostname}.docker.cluster" \
+      && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/trino/conf/presto-client.keytab presto-client/${hostname}.docker.cluster" \
+      && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/trino/conf/hive-presto-master.keytab hive/${hostname}.docker.cluster"; \
+  done && echo "OK" && \
+  chmod 644 /etc/trino/conf/*.keytab
 
 # CREATE SSL KEYSTORE
 RUN keytool -genkeypair \
@@ -73,6 +77,14 @@ RUN keytool -genkeypair \
     -keypass password \
     -storepass password \
     -dname "CN=presto-master, OU=, O=, L=, S=, C=" \
+    -validity 100000 && \
+    keytool -genkeypair \
+    -alias trino \
+    -keyalg RSA \
+    -keystore /etc/trino/conf/keystore.jks \
+    -keypass password \
+    -storepass password \
+    -dname "CN=trino-coordinator, OU=, O=, L=, S=, C=" \
     -validity 100000
 RUN chmod 644 /etc/trino/conf/keystore.jks
 
