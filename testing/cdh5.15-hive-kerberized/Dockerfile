@@ -54,7 +54,7 @@ RUN chmod 6050 /etc/hadoop/conf/container-executor.cfg
 RUN set -xeu && \
   for hostname in presto-master trino-coordinator presto-worker trino-worker presto-worker-1 trino-worker-1 presto-worker-2 trino-worker-2; do \
       /usr/sbin/kadmin.local -q "addprinc -randkey presto-server/${hostname}.docker.cluster@LABS.TERADATA.COM" \
-      /usr/sbin/kadmin.local -q "addprinc -randkey trino-server/${hostname}.docker.cluster@LABS.TERADATA.COM" \
+      && /usr/sbin/kadmin.local -q "addprinc -randkey trino-server/${hostname}.docker.cluster@LABS.TERADATA.COM" \
       && /usr/sbin/kadmin.local -q "addprinc -randkey HTTP/${hostname}.docker.cluster@LABS.TERADATA.COM" \
       && /usr/sbin/kadmin.local -q "addprinc -randkey presto-client/${hostname}.docker.cluster@LABS.TERADATA.COM" \
       && /usr/sbin/kadmin.local -q "addprinc -randkey trino-client/${hostname}.docker.cluster@LABS.TERADATA.COM" \
