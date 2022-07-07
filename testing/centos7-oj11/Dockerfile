@@ -24,8 +24,8 @@ RUN \
     \
     # install Zulu JDK
     rpm -i https://cdn.azul.com/zulu/bin/zulu11.56.19-ca-jdk11.0.15-linux.x86_64.rpm && \
-    # Install additional Zulu JDK 17.0.0
-    rpm -i https://cdn.azul.com/zulu/bin/zulu17.28.13-ca-jdk17.0.0-linux.x86_64.rpm && \
+    # Install additional Zulu JDK 17.0.3
+    rpm -i https://cdn.azul.com/zulu/bin/zulu17.34.19-ca-jdk17.0.3-linux.x86_64.rpm && \
     # Set JDK 11 as a default one
     alternatives --set java /usr/lib/jvm/zulu-11/bin/java && \
     alternatives --set javac /usr/lib/jvm/zulu-11/bin/javac && \
