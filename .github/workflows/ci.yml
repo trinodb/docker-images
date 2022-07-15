@@ -20,6 +20,8 @@ jobs:
             test: spark3-iceberg
           - image: spark3-delta
             test: spark3-delta
+          - image: spark3-hudi
+            test: spark3-hudi
           - image: kerberos
             test: kerberos
           - image: gpdb-6
