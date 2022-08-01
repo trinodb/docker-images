@@ -51,6 +51,8 @@ FLAGS := $(foreach dockerfile,$(DOCKERFILES),$(FLAGDIR)/$(dockerfile:/Dockerfile
 RELEASE_TAGS := $(VERSION_TAGS) $(LATEST_TAGS)
 SNAPSHOT_TAGS := $(GIT_HASH_TAGS)
 
+TARGET_PLATFORMS := $(if $(PLATFORMS),--platform $(PLATFORMS),)
+
 #
 # Make a list of the Docker images we depend on, but aren't built from
 # Dockerfiles in this repository. Order doesn't matter, but sort() has the
@@ -192,7 +194,7 @@ $(LATEST_TAGS): %@latest: %/Dockerfile %-parent-check
 	@echo
 	@echo "Building [$@] image using buildkit"
 	@echo
-	cd $* && time $(SHELL) -c "( docker buildx build --compress --add-host hadoop-master:127.0.0.2 ${BUILD_ARGS} $(DBFLAGS_$*) -t $(call docker-tag,$@) --label $(LABEL) . )"
+	cd $* && time $(SHELL) -c "( docker buildx build ${TARGET_PLATFORMS} --compress --add-host hadoop-master:127.0.0.2 ${BUILD_ARGS} $(DBFLAGS_$*) -t $(call docker-tag,$@) --label $(LABEL) --load . )"
 	docker history $(call docker-tag,$@)
 
 $(VERSION_TAGS): %@$(VERSION): %@latest

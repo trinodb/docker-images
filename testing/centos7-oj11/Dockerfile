@@ -14,6 +14,8 @@ FROM library/centos:7
 
 COPY ./files /
 
+ARG TARGETPLATFORM
+
 # Install Java and presto-admin dependences
 RUN \
     set -xeu && \
@@ -23,9 +25,11 @@ RUN \
         && \
     \
     # install Zulu JDK
-    rpm -i https://cdn.azul.com/zulu/bin/zulu11.56.19-ca-jdk11.0.15-linux.x86_64.rpm && \
+    if [ "$TARGETPLATFORM" = "linux/arm64" ]; then JDK11="https://cdn.azul.com/zulu-embedded/bin/zulu11.58.15-ca-jdk11.0.16-linux.aarch64.rpm"; else JDK11="https://cdn.azul.com/zulu/bin/zulu11.56.19-ca-jdk11.0.15-linux.x86_64.rpm"; fi && \
+    rpm -i $JDK11 && \
     # Install additional Zulu JDK 17.0.3
-    rpm -i https://cdn.azul.com/zulu/bin/zulu17.34.19-ca-jdk17.0.3-linux.x86_64.rpm && \
+    if [ "$TARGETPLATFORM" = "linux/arm64" ]; then JDK17="https://cdn.azul.com/zulu/bin/zulu17.36.13-ca-jdk17.0.4-linux.aarch64.rpm"; else JDK17="https://cdn.azul.com/zulu/bin/zulu17.34.19-ca-jdk17.0.3-linux.x86_64.rpm"; fi && \
+    rpm -i $JDK17 && \
     # Set JDK 11 as a default one
     alternatives --set java /usr/lib/jvm/zulu-11/bin/java && \
     alternatives --set javac /usr/lib/jvm/zulu-11/bin/javac && \
