@@ -192,7 +192,7 @@ $(LATEST_TAGS): %@latest: %/Dockerfile %-parent-check
 	@echo
 	@echo "Building [$@] image using buildkit"
 	@echo
-	cd $* && time $(SHELL) -c "( docker buildx build --compress --add-host hadoop-master:127.0.0.2 ${BUILD_ARGS} $(DBFLAGS_$*) -t $(call docker-tag,$@) --label $(LABEL) . )"
+	cd $* && time $(SHELL) -c "( docker buildx build --compress --progress=plain --add-host hadoop-master:127.0.0.2 ${BUILD_ARGS} $(DBFLAGS_$*) -t $(call docker-tag,$@) --label $(LABEL) . )"
 	docker history $(call docker-tag,$@)
 
 $(VERSION_TAGS): %@$(VERSION): %@latest
