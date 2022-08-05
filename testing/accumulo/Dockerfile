@@ -10,7 +10,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM testing/centos7-oj11:unlabelled
+FROM testing/centos7-oj17:unlabelled
 
 ARG ACCUMULO_VERSION=1.7.4
 ARG HADOOP_VERSION=2.6.5
@@ -43,7 +43,7 @@ RUN yum update -y && \
     alternatives --set javac /usr/lib/jvm/zulu-8/bin/javac && \
     yum clean all -y
 
-# Override JAVA_HOME inherited from testing/centos7-oj11
+# Override JAVA_HOME inherited from testing/centos7-oj17
 ENV JAVA_HOME=/usr/lib/jvm/zulu-8
 
 RUN mkdir -p $IMAGE_ROOT_INSTALL
