@@ -25,6 +25,11 @@ RUN set -xeu \
     # Cleanup
     && yum -y clean all && rm -rf /tmp/* /var/tmp/*
 
+# buildx doesn't allow to copy files into linked directories so we need to squash those first
+RUN unlink /etc/hadoop-kms/conf && \
+    unlink /etc/hadoop-kms/tomcat-conf && \
+    mv /etc/hadoop-kms/tomcat-conf.http /etc/hadoop-kms/tomcat-conf
+
 # COPY CONFIGURATION
 COPY ./files /
 
