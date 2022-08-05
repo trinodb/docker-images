@@ -21,13 +21,11 @@ RUN \
     set -xeu && \
     # Remove unaccessible HDP3 repos so yum is still usable
     rm /etc/yum.repos.d/hdp*.repo && \
-    # Install additional Zulu JDK 17.0.3
-    rpm -i https://cdn.azul.com/zulu/bin/zulu17.34.19-ca-jdk17.0.3-linux.x86_64.rpm && \
-    # Upgrade Zulu JDK to 11.0.15
-    rpm -Ui https://cdn.azul.com/zulu/bin/zulu11.56.19-ca-jdk11.0.15-linux.x86_64.rpm && \
-    # Set JDK 11 as default one
-    alternatives --set java /usr/lib/jvm/zulu-11/bin/java && \
-    alternatives --set javac /usr/lib/jvm/zulu-11/bin/javac && \
+    # Install Zulu JDK 17.0.4
+    rpm -i https://cdn.azul.com/zulu/bin/zulu17.36.13-ca-jdk17.0.4-linux.x86_64.rpm && \
+    # Set JDK 17 as a default one
+    alternatives --set java /usr/lib/jvm/zulu-17/bin/java && \
+    alternatives --set javac /usr/lib/jvm/zulu-17/bin/javac && \
     echo "Done"
 
 # HDFS ports

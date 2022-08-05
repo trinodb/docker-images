@@ -10,7 +10,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM testing/centos7-oj11:unlabelled
+FROM testing/centos7-oj17:unlabelled
 
 ARG JAVA8_ZULU_VERSION=8.56.0.21-ca-jdk8.0.302
 
@@ -31,7 +31,7 @@ RUN yum install -y \
     alternatives --set javac /usr/lib/jvm/zulu-8/bin/javac \
     && yum -q clean all && rm -rf /var/cache/yum
 
-# Override JAVA_HOME inherited from testing/centos7-oj11
+# Override JAVA_HOME inherited from testing/centos7-oj17
 ENV JAVA_HOME=/usr/lib/jvm/zulu-8
 
 ARG HADOOP_VERSION=3.1.2

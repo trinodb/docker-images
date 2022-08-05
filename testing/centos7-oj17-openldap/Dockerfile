@@ -10,7 +10,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM testing/centos7-oj11:unlabelled
+FROM testing/centos7-oj17:unlabelled
 
 # INSTALL OPENLDAP
 RUN yum -y install openssl openldap openldap-clients openldap-servers \

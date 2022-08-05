@@ -22,13 +22,11 @@ RUN \
         wget \
         && \
     \
-    # install Zulu JDK
-    rpm -i https://cdn.azul.com/zulu/bin/zulu11.56.19-ca-jdk11.0.15-linux.x86_64.rpm && \
-    # Install additional Zulu JDK 17.0.3
-    rpm -i https://cdn.azul.com/zulu/bin/zulu17.34.19-ca-jdk17.0.3-linux.x86_64.rpm && \
-    # Set JDK 11 as a default one
-    alternatives --set java /usr/lib/jvm/zulu-11/bin/java && \
-    alternatives --set javac /usr/lib/jvm/zulu-11/bin/javac && \
+    # Install Zulu JDK 17.0.4 \
+    rpm -i https://cdn.azul.com/zulu/bin/zulu17.36.13-ca-jdk17.0.4-linux.x86_64.rpm && \
+    # Set JDK 17 as a default one
+    alternatives --set java /usr/lib/jvm/zulu-17/bin/java && \
+    alternatives --set javac /usr/lib/jvm/zulu-17/bin/javac && \
     \
     # install supervisor
     yum --enablerepo=extras install -y setuptools epel-release && \
@@ -48,5 +46,5 @@ RUN \
     yum -y clean all && rm -rf /tmp/* /var/tmp/*
 
 ENV PATH="/usr/local/bin:${PATH}"
-ENV JAVA_HOME=/usr/lib/jvm/zulu-11
+ENV JAVA_HOME=/usr/lib/jvm/zulu-17
 ENV LANG=en_US.UTF-8
