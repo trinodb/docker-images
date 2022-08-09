@@ -33,7 +33,7 @@ jobs:
           - image: cdh5.15-hive-kerberized-kms
           - image: phoenix5
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         fetch-depth: 0 # checkout tags so version in Manifest is set properly
     - name: Build ${{ matrix.config.image }}
