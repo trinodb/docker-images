@@ -1,0 +1,61 @@
+name: release
+
+on:
+  workflow_dispatch: {}
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0 # checkout tags so version in Manifest is set properly
+
+    - name: Configure Git user
+      run: |
+        git config user.email "releases@trinodb.io"
+        git config user.name "Trino release automation"
+
+    - name: Log in to the Container registry
+      # locked to 2 commits after https://github.com/docker/login-action/releases/tag/v2.0.0
+      uses: docker/login-action@d398f07826957cd0a18ea1b059cf1207835e60bc
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Set release version
+      run: |
+        # if there's a SNAPSHOT suffix, remove it and commit changes
+        DO_RELEASE=false
+        if grep -q '^[0-9]\+-SNAPSHOT$' version; then
+          sed -i 's/^\([0-9]\+\)-SNAPSHOT$/\1/' version
+          git diff
+          git commit -a -m "Release: $VERSION"
+          git tag -m "" "$VERSION"
+          git log
+          DO_RELEASE=true
+        fi
+        VERSION=$(sed -n 's/^\([0-9]\+\).*$/\1/p' version | head -n 1)
+        echo "VERSION=${VERSION}" >> $GITHUB_ENV
+        echo "DO_RELEASE=${DO_RELEASE}" >> $GITHUB_ENV
+
+    - name: Make release
+      run: |
+        if [ "$DO_RELEASE" != "true" ]; then
+          echo "Skipping the release step because not starting from a snapshot version"
+        else
+          make release
+        fi
+
+    - name: Set next development version
+      run: |
+        ((VERSION++))
+        echo "$VERSION-SNAPSHOT" > version
+        git diff
+        git commit -a -m "Prepare for next development iteration"
+        git log
+        git push --tags origin master

@@ -27,6 +27,13 @@ will build the `hdp2.6-base` and all the images depending on it (transitively).
 
 ## Releasing (pushing) docker image
 
+To release a new version of the images, run the `release` GitHub Actions (GHA) Workflow.
+It will:
+1. Remove the `-SNAPSHOT` suffix from the `version` file.
+2. Run `make release` that builds and pushes all Docker images.
+3. Increment the version number and save it with the `-SNAPSHOT` suffix in the `version` file.
+4. Commit and push all changes to the git repository.
+
 All of the docker images in the repository share the same version number. This
 is because most of the images depend on a parent image that is also in the
 repository (e.g. testing/hdp2.6-hive is FROM testing/hdp2.6-base),
@@ -40,7 +47,9 @@ they are in a consistent state.
 This means that we treat the repository as a single codebase that creates
 multiple artifacts (Docker images) that all need to be released together.
 
-Best practice for publishing a snapshot or release version is to use the Jenkins job.  Login to Jenkins and search for `docker-images`.  If you must publish a new version manually, follow these steps:
+> Note: manual releases are not recommended. Use the GHA Workflow instead.
+
+If you must publish a new version manually, follow these steps:
 
 To release a snapshot version of the repository do the following
 
