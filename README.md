@@ -45,13 +45,13 @@ Best practice for publishing a snapshot or release version is to use the Jenkins
 To release a snapshot version of the repository do the following
 
 1. `docker login`
-2. Verify in the Makefile that `VERSION` is set to something ending in -SNAPSHOT.
+2. Verify in the `version` file that the value is set to something ending in -SNAPSHOT.
 3. `make snapshot`
 
 To release a release (final) version of the repository do the following
 
 1. `docker login`
-2. Verify in the Makefile that `VERSION` is set to something *not* ending in -SNAPSHOT.
+2. Verify in the `version` file that the value is set to something *not* ending in -SNAPSHOT.
 3. `make release`
 
 To release a snapshot or final version, you must log in to docker using the
@@ -60,7 +60,7 @@ docker `login` command.
 ### Typical workflow
 
 Normally developers are working on a snapshot version of the next release, and
-the `VERSION` macro in the Makefile should be set to a snapshot version such as
+the value in the `version` file should be set to a snapshot version such as
 35-SNAPSHOT. A typical workflow is as follows:
 
 1. Develop changes
@@ -86,7 +86,7 @@ the following:
 
 * Updates the 'latest' tag for the image on dockerhub
 * Creates a tag for the image on dockerhub with the git hash of the git repository
-* Creates a tag for the image on dockerhub with the $(VERSION) specified in the Makefile
+* Creates a tag for the image on dockerhub with the $(VERSION) specified in the `version` file
 * Creates a tag in the git repository with the name release-$(VERSION)
 
 Several rules are enforced about the state of the repository when pushing to dockerhub:
