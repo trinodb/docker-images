@@ -39,7 +39,7 @@ jobs:
           git log
           DO_RELEASE=true
         fi
-        VERSION=$(sed -n 's/^\([0-9]\+\).*$/\1/p' version | head -n 1)
+        VERSION=$(cat version)
         echo "VERSION=${VERSION}" >> $GITHUB_ENV
         echo "DO_RELEASE=${DO_RELEASE}" >> $GITHUB_ENV
 
