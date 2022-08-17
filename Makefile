@@ -18,6 +18,8 @@ LABEL := io.trino.git.hash=$(shell git rev-parse HEAD)
 
 DEPEND_SH=bin/depend.sh
 FLAG_SH=bin/flag.sh
+BUILD_SH=$(realpath bin/build.sh)
+TAG_SH=$(realpath bin/tag.sh)
 PUSH_SH=bin/push.sh
 TEST_SH=bin/test.sh
 BUILDDIR=build
@@ -179,7 +181,7 @@ $(FLAGDIR)/%.flags: %/Dockerfile $(FLAG_SH)
 #   supposed to mean.
 # - TODO replace :unlabelled with something more appropriate.
 $(UNLABELLED_TAGS): %@unlabelled: %/Dockerfile %@latest
-	docker tag $*:latest $(call docker-tag,$@)
+	$(TAG_SH) $*:latest $(call docker-tag,$@)
 
 #
 # We don't need to specify any (real) dependencies other than the Dockerfile
@@ -192,18 +194,17 @@ $(LATEST_TAGS): %@latest: %/Dockerfile %-parent-check
 	@echo
 	@echo "Building [$@] image using buildkit"
 	@echo
-	cd $* && time $(SHELL) -c "( docker buildx build --compress --progress=plain --add-host hadoop-master:127.0.0.2 ${BUILD_ARGS} $(DBFLAGS_$*) -t $(call docker-tag,$@) --label $(LABEL) . )"
-	docker history $(call docker-tag,$@)
+	cd $* && time $(BUILD_SH) $(call docker-tag,$@) ${BUILD_ARGS} $(DBFLAGS_$*) --label $(LABEL)
 
 $(VERSION_TAGS): %@$(VERSION): %@latest
-	docker tag $(call docker-tag,$^) $(call docker-tag,$@)
-	docker tag $(call docker-tag,$^) $(call docker-tag,$(call resolved-image-name,$^))
-	docker tag $(call docker-tag,$@) $(call docker-tag,$(call resolved-image-name,$@))
+	$(TAG_SH) $(call docker-tag,$^) $(call docker-tag,$@)
+	$(TAG_SH) $(call docker-tag,$^) $(call docker-tag,$(call resolved-image-name,$^))
+	$(TAG_SH) $(call docker-tag,$@) $(call docker-tag,$(call resolved-image-name,$@))
 
 $(GIT_HASH_TAGS): %@$(GIT_HASH): %@latest
-	docker tag $(call docker-tag,$^) $(call docker-tag,$@)
-	docker tag $(call docker-tag,$^) $(call docker-tag,$(call resolved-image-name,$^))
-	docker tag $(call docker-tag,$@) $(call docker-tag,$(call resolved-image-name,$@))
+	$(TAG_SH) $(call docker-tag,$^) $(call docker-tag,$@)
+	$(TAG_SH) $(call docker-tag,$^) $(call docker-tag,$(call resolved-image-name,$^))
+	$(TAG_SH) $(call docker-tag,$@) $(call docker-tag,$(call resolved-image-name,$@))
 
 #
 # Verify that the parent image specified in the Dockerfile is either

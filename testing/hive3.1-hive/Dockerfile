@@ -10,7 +10,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM testing/centos7-oj17:unlabelled
+ARG ARCH
+FROM testing/centos7-oj17:unlabelled$ARCH
 
 ARG JAVA8_ZULU_VERSION=8.56.0.21-ca-jdk8.0.302
 
