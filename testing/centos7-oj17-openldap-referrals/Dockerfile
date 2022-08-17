@@ -10,7 +10,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM testing/centos7-oj17-openldap:unlabelled
+ARG ARCH
+FROM testing/centos7-oj17-openldap:unlabelled$ARCH
 
 # COPY CONFIGURATION
 COPY ./files /

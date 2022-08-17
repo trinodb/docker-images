@@ -145,6 +145,8 @@ shift
 known_images="$*"
 
 parent_image_tag=$(find_parent "$target_dockerfile")
+# remove the $ARCH arg since it should be resolved to an empty string anyway
+parent_image_tag=${parent_image_tag//\$ARCH/}
 ec=$?
 case $ec in
     0) ;;
