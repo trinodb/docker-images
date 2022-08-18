@@ -44,6 +44,7 @@ jobs:
           - image: cdh5.15-hive-kerberized-kms
           # TODO add test https://github.com/trinodb/trino/issues/14543
           - image: phoenix5
+            platforms: linux/amd64,linux/arm64
     steps:
     - uses: actions/checkout@v3
       with:
