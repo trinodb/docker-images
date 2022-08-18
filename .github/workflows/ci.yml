@@ -12,6 +12,7 @@ jobs:
           - image: accumulo
             test: accumulo
           - image: dns
+            platforms: linux/amd64,linux/arm64
             test: dns
           - image: centos7-oj17
             platforms: linux/amd64,linux/arm64
