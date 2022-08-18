@@ -19,6 +19,7 @@ RUN \
     set -xeu && \
     yum install -y \
         nc \
+        unzip \
         wget \
         && \
     \
