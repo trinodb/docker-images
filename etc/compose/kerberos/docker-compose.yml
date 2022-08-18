@@ -1,6 +1,6 @@
 version: '2.0'
 services:
   kerberos:
-    image: testing/kerberos:latest
+    image: testing/kerberos:latest$ARCH
     environment:
       - TRINODEV_POST_BOOTSTRAP_COMMAND=create_principal -p ala -k ala.keytab
