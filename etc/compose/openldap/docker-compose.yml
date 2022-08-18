@@ -1,4 +1,4 @@
 version: '2.0'
 services:
   openldap:
-    image: testing/centos7-oj17-openldap:latest
+    image: testing/centos7-oj17-openldap:latest$ARCH

@@ -130,7 +130,9 @@ function getAvailableEnvironments() {
         grep -v files | grep -v common | xargs -n1 basename
 }
 
-SCRIPT_DIR=${BASH_SOURCE%/*}
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+# shellcheck source=bin/lib.sh
+source "$SCRIPT_DIR/lib.sh"
 PROJECT_ROOT="${SCRIPT_DIR}/.."
 DOCKER_CONF_LOCATION="${PROJECT_ROOT}/etc/compose"
 
@@ -153,55 +155,68 @@ stop_all_containers
 # catch terminate signals
 trap terminate INT TERM EXIT
 
-environment_compose up -d
-
-# start docker logs for the external services
-environment_compose logs --no-color -f &
-
-LOGS_PID=$!
-
-if [[ ${ENVIRONMENT} == *"accumulo"* ]]; then
-    retry check_health accumulo
-elif [[ ${ENVIRONMENT} == *"dns"* ]]; then
-    retry check_health dns
-elif [[ ${ENVIRONMENT} == "kerberos" ]]; then
-    run_kerberos_tests
-elif [[ ${ENVIRONMENT} == *"gpdb"* ]]; then
-    # wait until gpdb process is started
-    retry check_gpdb
-
-    # run tests
-    set -x
-    set +e
-    sleep 10
-    run_gpdb_tests
-elif [[ ${ENVIRONMENT} == *"hive"* ]]; then
-    # wait until hadoop processes is started
-    retry check_hadoop
-
-    # run tests
-    set -x
-    set +e
-    sleep 10
-    run_hadoop_tests
-    if [[ ${ENVIRONMENT} == *"3.1-hive" ]]; then
-        run_hive_transactional_tests
-    fi
-elif [[ ${ENVIRONMENT} == *"openldap"* ]]; then
-    retry check_openldap
-elif [[ ${ENVIRONMENT} == *"spark"* ]]; then
-    retry check_health spark
+if [ -n "${PLATFORMS:-}" ]; then
+    IFS=, read -ra platforms <<<"$PLATFORMS"
+    platforms=("${platforms[@]//\//-}")
+    platforms=("${platforms[@]/#/-}")
 else
-    echo >&2 "ERROR: no test defined for ${ENVIRONMENT}"
-    exit 2
+    platforms=("")
 fi
+export ARCH
+for ARCH in "${platforms[@]}"; do
 
-EXIT_CODE=$?
-set -e
+    environment_compose up -d
+
+    # start docker logs for the external services
+    environment_compose logs --no-color -f &
+
+    LOGS_PID=$!
+
+    if [[ ${ENVIRONMENT} == *"accumulo"* ]]; then
+        retry check_health accumulo
+    elif [[ ${ENVIRONMENT} == *"dns"* ]]; then
+        retry check_health dns
+    elif [[ ${ENVIRONMENT} == "kerberos" ]]; then
+        run_kerberos_tests
+    elif [[ ${ENVIRONMENT} == *"gpdb"* ]]; then
+        # wait until gpdb process is started
+        retry check_gpdb
+
+        # run tests
+        set -x
+        set +e
+        sleep 10
+        run_gpdb_tests
+    elif [[ ${ENVIRONMENT} == *"hive"* ]]; then
+        # wait until hadoop processes is started
+        retry check_hadoop
+
+        # run tests
+        set -x
+        set +e
+        sleep 10
+        run_hadoop_tests
+        if [[ ${ENVIRONMENT} == *"3.1-hive" ]]; then
+            run_hive_transactional_tests
+        fi
+    elif [[ ${ENVIRONMENT} == *"openldap"* ]]; then
+        retry check_openldap
+    elif [[ ${ENVIRONMENT} == *"spark"* ]]; then
+        retry check_health spark
+    else
+        echo >&2 "ERROR: no test defined for ${ENVIRONMENT}"
+        cleanup
+        exit 2
+    fi
+
+    EXIT_CODE=$?
+    set -e
+
+    cleanup
+done
 
 # execution finished successfully
-# disable trap, run cleanup manually
+# disable trap
 trap - INT TERM EXIT
-cleanup
 
 exit ${EXIT_CODE}
