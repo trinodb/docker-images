@@ -37,7 +37,8 @@ jobs:
           git diff
           git commit -a -m "Release: $VERSION"
           git tag -m "" "$VERSION"
-          git log
+          # Verify tag was created and points to the release commit
+          git show tags/"$VERSION"
           DO_RELEASE=true
         fi
         VERSION=$(cat version)
@@ -58,5 +59,6 @@ jobs:
         echo "$VERSION-SNAPSHOT" > version
         git diff
         git commit -a -m "Prepare for next development iteration"
-        git log
+        # Show the contents of the commit
+        git show HEAD
         git push --tags origin master
