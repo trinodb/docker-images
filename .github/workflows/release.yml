@@ -49,9 +49,55 @@ jobs:
       run: |
         if [ "$DO_RELEASE" != "true" ]; then
           echo "Skipping the release step because not starting from a snapshot version"
-        else
-          make release
+          exit 0
         fi
+        single_arch=(
+          testing/accumulo
+          testing/cdh5.12-hive
+          testing/cdh5.12-hive-kerberized
+          testing/cdh5.15-hive
+          testing/cdh5.15-hive-kerberized
+          testing/cdh5.15-hive-kerberized-kms
+          testing/gpdb-6
+          testing/hdp2.6-hive
+          testing/hdp2.6-hive-kerberized
+          testing/hdp2.6-hive-kerberized-2
+          testing/hdp3.1-hive
+          testing/hdp3.1-hive-kerberized
+        )
+        multi_arch=(
+          testing/centos7-oj11
+          testing/centos7-oj17
+          testing/centos7-oj17-openldap
+          testing/centos7-oj17-openldap-referrals
+          testing/dns
+          testing/hive3.1-hive
+          testing/kerberos
+          testing/phoenix5
+          testing/spark3-delta
+          testing/spark3-iceberg
+          testing/spark3-hudi
+        )
+        to_release=("${single_arch[@]}" "${multi_arch[@]}")
+        make meta
+        read -a images < <(make list)
+        export LC_ALL=C
+        mapfile -t ignored < <( \
+            comm -23 \
+                <(printf '%s\n' "${images[@]}" | sort) \
+                <(printf '%s\n' "${to_release[@]}" | sort) \
+        )
+        if [ "${#ignored[@]}" -ne 0 ]; then
+          echo "Images that would not get released: ${ignored[*]}"
+          echo "Must be explicitly added to either single_arch or multi_arch list"
+          exit 2
+        fi
+        make prepare-release
+        make "${single_arch[@]/%/@$VERSION}"
+        make "${multi_arch[@]/%/@$VERSION}" PLATFORM="linux/amd64,linux/arm64"
+        remote=("${to_release[@]/#/ghcr.io/trinodb/}")
+        remote=("${remote[@]/%/:$VERSION}")
+        ./bin/push.sh "${remote[@]}"
 
     - name: Set next development version
       run: |
