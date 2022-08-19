@@ -260,3 +260,7 @@ test:
 .PHONY: clean
 clean:
 	-rm -r $(BUILDDIR)
+
+.PHONY: list
+list:
+	@echo $(IMAGE_DIRS)
