@@ -13,7 +13,7 @@
 ARG ARCH
 FROM testing/centos7-oj17:unlabelled$ARCH
 
-ARG JAVA8_ZULU_VERSION=8.56.0.21-ca-jdk8.0.302
+ARG JAVA8_ZULU_VERSION=8.64.0.19-ca-jdk8.0.345
 
 RUN yum install -y \
     mariadb-server \
@@ -23,8 +23,8 @@ RUN yum install -y \
     psmisc \
     which && \
     # Install Zulu JDK
-    echo "Downloading zulu${JAVA8_ZULU_VERSION}-linux.x86_64.rpm..." && \
-    curl -o /tmp/jdk8.rpm --url https://cdn.azul.com/zulu/bin/zulu${JAVA8_ZULU_VERSION}-linux.x86_64.rpm && \
+    echo "Downloading zulu${JAVA8_ZULU_VERSION}-linux.$(uname -m).rpm..." && \
+    curl -fLsS -o /tmp/jdk8.rpm --url https://cdn.azul.com/zulu$(test "$(uname -m)" != "aarch64" || echo "-embedded")/bin/zulu${JAVA8_ZULU_VERSION}-linux.$(uname -m).rpm && \
     yum -y localinstall /tmp/jdk8.rpm && \
     rm /tmp/jdk8.rpm && \
     # Set JDK 8 as a default one
@@ -42,18 +42,18 @@ ARG HIVE_VERSION=3.1.2
 ARG HADOOP_BINARY_PATH=https://archive.apache.org/dist/hadoop/common/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz
 ARG HIVE_BINARY_PATH=https://apache.mivzakim.net/hive/hive-$HIVE_VERSION/apache-hive-$HIVE_VERSION-bin.tar.gz
 
-RUN curl -o /tmp/hadoop.tar.gz --url $HADOOP_BINARY_PATH && \
+RUN curl -fLsS -o /tmp/hadoop.tar.gz --url $HADOOP_BINARY_PATH && \
     tar xzf /tmp/hadoop.tar.gz --directory /opt && mv /opt/hadoop-$HADOOP_VERSION /opt/hadoop
 
-RUN curl -o /tmp/hive.tar.gz --url $HIVE_BINARY_PATH && \
+RUN curl -fLsS -o /tmp/hive.tar.gz --url $HIVE_BINARY_PATH && \
     tar xzf /tmp/hive.tar.gz --directory /opt && mv /opt/apache-hive-${HIVE_VERSION}-bin /opt/hive
 
 ARG MYSQL_CONNECTOR_VERSION=8.0.13
 ARG AWS_SDK_VERSION=1.11.906
 RUN mkdir /opt/hive/auxlib && \
-    curl -o /opt/hive/auxlib/mysql-connector-java-$MYSQL_CONNECTOR_VERSION.jar https://repo1.maven.org/maven2/mysql/mysql-connector-java/$MYSQL_CONNECTOR_VERSION/mysql-connector-java-$MYSQL_CONNECTOR_VERSION.jar && \
-    curl -o /opt/hive/auxlib/aws-java-sdk-core-$AWS_SDK_VERSION.jar https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-core/$AWS_SDK_VERSION/aws-java-sdk-core-$AWS_SDK_VERSION.jar && \
-    curl -o /opt/hive/auxlib/aws-java-sdk-s3-$AWS_SDK_VERSION.jar https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-s3/$AWS_SDK_VERSION/aws-java-sdk-s3-$AWS_SDK_VERSION.jar
+    curl -fLsS -o /opt/hive/auxlib/mysql-connector-java-$MYSQL_CONNECTOR_VERSION.jar https://repo1.maven.org/maven2/mysql/mysql-connector-java/$MYSQL_CONNECTOR_VERSION/mysql-connector-java-$MYSQL_CONNECTOR_VERSION.jar && \
+    curl -fLsS -o /opt/hive/auxlib/aws-java-sdk-core-$AWS_SDK_VERSION.jar https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-core/$AWS_SDK_VERSION/aws-java-sdk-core-$AWS_SDK_VERSION.jar && \
+    curl -fLsS -o /opt/hive/auxlib/aws-java-sdk-s3-$AWS_SDK_VERSION.jar https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-s3/$AWS_SDK_VERSION/aws-java-sdk-s3-$AWS_SDK_VERSION.jar
 
 ENV HADOOP_HOME=/opt/hadoop
 ENV HIVE_HOME=/opt/hive
