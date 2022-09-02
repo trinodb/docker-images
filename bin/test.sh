@@ -74,6 +74,10 @@ function run_kerberos_tests() {
     environment_compose exec kerberos kinit -kt ala.keytab ala@STARBURSTDATA.COM
 }
 
+function check_openldap() {
+    environment_compose exec openldap /usr/bin/wait-for-slapd.sh
+}
+
 function stop_all_containers() {
     local ENVIRONMENT
     for ENVIRONMENT in $(getAvailableEnvironments); do
@@ -162,7 +166,7 @@ elif [[ ${ENVIRONMENT} == *"gpdb"* ]]; then
     set +e
     sleep 10
     run_gpdb_tests
-else
+elif [[ ${ENVIRONMENT} == *"hive"* ]]; then
     # wait until hadoop processes is started
     retry check_hadoop
 
@@ -174,6 +178,11 @@ else
     if [[ ${ENVIRONMENT} == *"3.1-hive" ]]; then
         run_hive_transactional_tests
     fi
+elif [[ ${ENVIRONMENT} == *"openldap"* ]]; then
+    retry check_openldap
+else
+    echo >&2 "ERROR: no test defined for ${ENVIRONMENT}"
+    exit 2
 fi
 
 EXIT_CODE=$?
