@@ -1,12 +1,12 @@
 #!/bin/sh
 
 usage() {
-	echo "$0 {target image}" >&2
+    echo "$0 {target image}" >&2
 }
 
 find_args() {
-	local target_image=$(dirname "$target_dockerfile")
-	awk -v image="$target_image" '
+    local target_image=$(dirname "$target_dockerfile")
+    awk -v image="$target_image" '
 		BEGIN {
 			ARG_PATTERN = "^\\s*ARG";
 			print "DBFLAGS_" image " :=";
@@ -25,8 +25,8 @@ find_args() {
 }
 
 if [ $# -lt 1 ]; then
-	usage
-	exit 1
+    usage
+    exit 1
 fi
 
 target_dockerfile=$1
