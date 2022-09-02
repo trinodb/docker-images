@@ -3,12 +3,12 @@
 set -xeuo pipefail
 
 usage() {
-	echo "$0 {image} [args]" >&2
+    echo "$0 {image} [args]" >&2
 }
 
 if [ $# -lt 1 ]; then
-	usage
-	exit 1
+    usage
+    exit 1
 fi
 
 image=$1
