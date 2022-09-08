@@ -10,6 +10,7 @@ jobs:
       matrix:
         config:
           - image: accumulo
+            test: accumulo
           - image: dns
           - image: centos7-oj17
           - image: centos7-oj17-openldap-referrals
