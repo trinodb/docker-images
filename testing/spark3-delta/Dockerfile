@@ -44,6 +44,8 @@ ENV PATH="${SPARK_HOME}/bin:${PATH}"
 
 EXPOSE 10213
 
+HEALTHCHECK --interval=10s --timeout=5s --start-period=10s \
+    CMD curl -f http://localhost:10213/
 CMD spark-submit \
    --master "local[*]" \
    --class org.apache.spark.sql.hive.thriftserver.HiveThriftServer2 \

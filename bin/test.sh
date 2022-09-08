@@ -61,6 +61,11 @@ function check_gpdb() {
     environment_compose exec gpdb su gpadmin -l -c "pg_isready"
 }
 
+function check_health() {
+    local service=$1
+    test "$(environment_compose ps --format json | jq -er --arg name "$service" '.[] | select(.Service == $name) | .Health')" == "healthy"
+}
+
 function run_gpdb_tests() {
     environment_compose exec gpdb su gpadmin -l -c "psql -c 'CREATE TABLE foo (a INT) DISTRIBUTED RANDOMLY'" &&
         environment_compose exec gpdb su gpadmin -l -c "psql -c 'INSERT INTO foo VALUES (54)'" &&
@@ -180,6 +185,8 @@ elif [[ ${ENVIRONMENT} == *"hive"* ]]; then
     fi
 elif [[ ${ENVIRONMENT} == *"openldap"* ]]; then
     retry check_openldap
+elif [[ ${ENVIRONMENT} == *"spark"* ]]; then
+    retry check_health spark
 else
     echo >&2 "ERROR: no test defined for ${ENVIRONMENT}"
     exit 2
