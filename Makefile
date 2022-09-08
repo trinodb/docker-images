@@ -97,9 +97,10 @@ images: $(LATEST_TAGS)
 #
 # Release images to Dockerhub
 #
-.PHONY: release push-release snapshot build-snapshot push-snapshot
+.PHONY: prepare-release release push-release snapshot build-snapshot push-snapshot
 
-release: require-clean-repo require-on-master require-release-version push-release
+prepare-release: require-clean-repo require-on-master require-release-version
+release: prepare-release push-release
 
 push-release: $(RELEASE_TAGS)
 	$(PUSH_SH) $(call docker-tag,$(call resolved-image-name,$^))
