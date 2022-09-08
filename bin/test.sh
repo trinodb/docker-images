@@ -162,6 +162,8 @@ LOGS_PID=$!
 
 if [[ ${ENVIRONMENT} == *"accumulo"* ]]; then
     retry check_health accumulo
+elif [[ ${ENVIRONMENT} == *"dns"* ]]; then
+    retry check_health dns
 elif [[ ${ENVIRONMENT} == "kerberos" ]]; then
     run_kerberos_tests
 elif [[ ${ENVIRONMENT} == *"gpdb"* ]]; then
