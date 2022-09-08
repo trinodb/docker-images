@@ -24,7 +24,7 @@ jobs:
             test: gpdb-6
           - image: hdp2.6-hive-kerberized-2
           - image: hive3.1-hive
-            imag: hive3.1-hive
+            test: hive3.1-hive
           - image: hdp2.6-hive-kerberized
             test: hdp2.6-hive
           - image: hdp3.1-hive-kerberized
