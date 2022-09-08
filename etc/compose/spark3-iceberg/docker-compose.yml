@@ -1,0 +1,4 @@
+version: '2.0'
+services:
+  spark:
+    image: testing/spark3-iceberg:latest

@@ -41,3 +41,12 @@ ENV PATH="${SPARK_HOME}/bin:${PATH}"
 
 # add hive user needed in interactions with the Apache Hive environment
 RUN useradd -ms /bin/bash hive
+
+HEALTHCHECK --interval=10s --timeout=5s --start-period=10s \
+    CMD curl -f http://localhost:10213/
+CMD spark-submit \
+   --master "local[*]" \
+   --class org.apache.spark.sql.hive.thriftserver.HiveThriftServer2 \
+   --name "Thrift JDBC/ODBC Server" \
+   --conf spark.hive.server2.thrift.port=10213 \
+   spark-internal
