@@ -13,4 +13,6 @@
 FROM alpine:3.16
 RUN apk --no-cache add dnsmasq
 EXPOSE 53 53/udp
+HEALTHCHECK --interval=10s --timeout=5s --start-period=1s \
+    CMD netstat -nltu | grep -q \:53
 ENTRYPOINT ["dnsmasq", "-k"]

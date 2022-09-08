@@ -12,6 +12,7 @@ jobs:
           - image: accumulo
             test: accumulo
           - image: dns
+            test: dns
           - image: centos7-oj17
           - image: centos7-oj17-openldap-referrals
             test: openldap
