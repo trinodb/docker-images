@@ -160,7 +160,9 @@ environment_compose logs --no-color -f &
 
 LOGS_PID=$!
 
-if [[ ${ENVIRONMENT} == "kerberos" ]]; then
+if [[ ${ENVIRONMENT} == *"accumulo"* ]]; then
+    retry check_health accumulo
+elif [[ ${ENVIRONMENT} == "kerberos" ]]; then
     run_kerberos_tests
 elif [[ ${ENVIRONMENT} == *"gpdb"* ]]; then
     # wait until gpdb process is started
