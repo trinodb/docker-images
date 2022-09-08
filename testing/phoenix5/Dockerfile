@@ -10,7 +10,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM testing/centos7-oj17:unlabelled
+FROM testing/centos7-oj11:unlabelled
 
 ARG HBASE_VERSION=2.4.7
 ARG ZOOKEEPER_VERSION=3.5.7
