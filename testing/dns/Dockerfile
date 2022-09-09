@@ -10,7 +10,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM alpine:3.3
+FROM alpine:3.16
 RUN apk --no-cache add dnsmasq
 EXPOSE 53 53/udp
 ENTRYPOINT ["dnsmasq", "-k"]
