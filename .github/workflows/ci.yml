@@ -13,7 +13,7 @@ jobs:
           - image: dns
           - image: centos7-oj17
           - image: centos7-oj17-openldap-referrals
-          - image: spark3.0-iceberg
+          - image: spark3-iceberg
           - image: spark3-delta
           - image: kerberos
             test: kerberos
