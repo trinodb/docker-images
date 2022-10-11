@@ -12,9 +12,9 @@
 
 FROM testing/centos7-oj17:unlabelled
 
-ARG SPARK_VERSION=3.2.1
-ARG HADOOP_VERSION=3.2
-ARG DELTA_VERSION=1.2.1
+ARG SPARK_VERSION=3.3.0
+ARG HADOOP_VERSION=3
+ARG DELTA_VERSION=2.1.0
 ARG SCALA_VERSION=2.12
 
 ARG SPARK_ARTIFACT="spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}"
@@ -30,8 +30,8 @@ RUN set -xeu; \
 WORKDIR ${SPARK_HOME}/jars
 
 # install AWS SDK so we can access S3; the version must match the hadoop-* jars which are part of SPARK distribution
-RUN wget -nv "https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/3.3.1/hadoop-aws-3.3.1.jar"
-RUN wget -nv "https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-bundle/1.12.230/aws-java-sdk-bundle-1.12.230.jar"
+RUN wget -nv "https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/3.3.4/hadoop-aws-3.3.4.jar"
+RUN wget -nv "https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-bundle/1.12.319/aws-java-sdk-bundle-1.12.319.jar"
 
 # install Delta
 RUN wget -nv "https://repo1.maven.org/maven2/io/delta/delta-core_${SCALA_VERSION}/${DELTA_VERSION}/delta-core_${SCALA_VERSION}-${DELTA_VERSION}.jar"
