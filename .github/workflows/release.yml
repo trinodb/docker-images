@@ -20,8 +20,8 @@ jobs:
         git config user.name "Trino release automation"
 
     - name: Log in to the Container registry
-      # locked to 2 commits after https://github.com/docker/login-action/releases/tag/v2.0.0
-      uses: docker/login-action@d398f07826957cd0a18ea1b059cf1207835e60bc
+      # locked to https://github.com/docker/login-action/releases/tag/v2.1.0
+      uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
       with:
         registry: ghcr.io
         username: ${{ github.actor }}
