@@ -26,6 +26,7 @@ jobs:
           - image: spark3-hudi
             test: spark3-hudi
           - image: kerberos
+            platforms: linux/amd64,linux/arm64
             test: kerberos
           - image: gpdb-6
             test: gpdb-6
