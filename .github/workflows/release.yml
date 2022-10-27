@@ -19,6 +19,9 @@ jobs:
         git config user.email "releases@trinodb.io"
         git config user.name "Trino release automation"
 
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v2
+
     - name: Log in to the Container registry
       # locked to https://github.com/docker/login-action/releases/tag/v2.1.0
       uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
