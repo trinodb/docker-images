@@ -22,8 +22,8 @@ RUN \
         wget \
         && \
     \
-    # Install Zulu JDK 17.0.4 \
-    rpm -i "https://cdn.azul.com/zulu/bin/zulu17.36.13-ca-jdk17.0.4-linux.$(arch).rpm" && \
+    # Install Zulu JDK 17.0.5 \
+    rpm -i "https://cdn.azul.com/zulu/bin/zulu17.38.21-ca-jdk17.0.5-linux.$(arch).rpm" && \
     # Set JDK 17 as a default one
     alternatives --set java /usr/lib/jvm/zulu-17/bin/java && \
     alternatives --set javac /usr/lib/jvm/zulu-17/bin/javac && \
