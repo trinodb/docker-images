@@ -22,8 +22,8 @@ RUN \
         wget \
         && \
     \
-    # Install Zulu JDK 11.0.16.1 \
-    rpm -i https://cdn.azul.com/zulu$([ "$(arch)" != "aarch64" ] || echo "-embedded")/bin/zulu11.58.23-ca-jdk11.0.16.1-linux."$(arch)".rpm && \
+    # Install Zulu JDK 11.0.17 \
+    rpm -i https://cdn.azul.com/zulu$([ "$(arch)" != "aarch64" ] || echo "-embedded")/bin/zulu11.60.19-ca-jdk11.0.17-linux."$(arch)".rpm && \
     # Set JDK 11 as a default one
     alternatives --set java /usr/lib/jvm/zulu-11/bin/java && \
     alternatives --set javac /usr/lib/jvm/zulu-11/bin/javac && \
