@@ -11,7 +11,7 @@ function push_retry() {
     done
 }
 
-if [ -z "$PLATFORMS" ]; then
+if [ -z "${PLATFORMS:-}" ]; then
     for image in "$@"; do
         push_retry "$image"
     done
