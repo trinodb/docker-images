@@ -61,6 +61,16 @@ function check_gpdb() {
     environment_compose exec gpdb su gpadmin -l -c "pg_isready"
 }
 
+function check_spark() {
+    environment_compose exec spark curl -f http://localhost:10213
+}
+
+function run_spark_tests() {
+    environment_compose exec spark beeline -u jdbc:hive2://localhost:10213 -e 'SELECT 1;' &&
+        environment_compose exec spark beeline -u jdbc:hive2://localhost:10213 -e 'SHOW DATABASES;' &&
+        true
+}
+
 function check_health() {
     local service=$1
     test "$(environment_compose ps --format json | jq -er --arg name "$service" '.[] | select(.Service == $name) | .Health')" == "healthy"
@@ -200,7 +210,14 @@ for ARCH in "${platforms[@]}"; do
     elif [[ ${ENVIRONMENT} == *"openldap"* ]]; then
         retry check_openldap
     elif [[ ${ENVIRONMENT} == *"spark"* ]]; then
-        retry check_health spark
+        # wait until Spark is started
+        retry check_spark
+
+        # run tests
+        set -x
+        set +e
+        sleep 10
+        run_spark_tests
     else
         echo >&2 "ERROR: no test defined for ${ENVIRONMENT}"
         cleanup
