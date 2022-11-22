@@ -20,6 +20,7 @@ RUN yum install -y \
     openssh \
     openssh-clients \
     openssh-server \
+    libxslt \
     psmisc \
     which && \
     # Install Zulu JDK
