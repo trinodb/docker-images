@@ -28,6 +28,13 @@ RUN \
     alternatives --set javac /usr/lib/jvm/zulu-17/bin/javac && \
     echo "Done"
 
+# Provide convenience bash history
+RUN set -xeu; \
+    for user in root hive hdfs; do \
+        # ~hive might be owned by root
+        chown -R "${user}:" "$(eval echo ~"${user}")"; \
+        sudo -u "${user}" bash -c ' echo "mysql -u root -proot -D metastore" >> ~/.bash_history '; \
+    done
 # HDFS ports
 EXPOSE 1004 1006 8020 50010 50020 50070 50075 50470
 
