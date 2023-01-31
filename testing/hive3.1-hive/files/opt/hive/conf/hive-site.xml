@@ -78,4 +78,9 @@
         <value>"Use AWS_SECRET_ACCESS_KEY environment variable to set this value"</value>
     </property>
 
+    <property>
+        <name>hive.metastore.disallow.incompatible.col.type.changes</name>
+        <value>false</value>
+    </property>
+
 </configuration>
