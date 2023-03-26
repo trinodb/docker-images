@@ -13,6 +13,8 @@
 ARG ARCH
 FROM testing/centos7-oj17:unlabelled$ARCH
 
+ARG ADDPRINC_ARGS="-maxrenewlife \"10 days\" +allow_renewable"
+
 # INSTALL KERBEROS
 RUN yum install -y krb5-libs krb5-server krb5-workstation \
   && yum -y clean all && rm -rf /tmp/* /var/tmp/*
@@ -27,8 +29,8 @@ RUN /usr/sbin/kdb5_util create -s -P password
 RUN /usr/sbin/kdb5_util create -d /var/kerberos/krb5kdc/principal-other -r OTHER.STARBURSTDATA.COM -s -P password
 
 # MAKE '.STARBURSTDATA.COM' TRUST 'OTHER.STARBURSTDATA.COM'
-RUN /usr/sbin/kadmin.local -q "addprinc -pw 123456 krbtgt/.STARBURSTDATA.COM@OTHER.STARBURSTDATA.COM"
-RUN /usr/sbin/kadmin.local -r OTHER.STARBURSTDATA.COM -d /var/kerberos/krb5kdc/principal-other -q "addprinc -pw 123456 krbtgt/STARBURSTDATA.COM"
+RUN /usr/sbin/kadmin.local -q "addprinc ${ADDPRINC_ARGS} -pw 123456 krbtgt/.STARBURSTDATA.COM@OTHER.STARBURSTDATA.COM"
+RUN /usr/sbin/kadmin.local -r OTHER.STARBURSTDATA.COM -d /var/kerberos/krb5kdc/principal-other -q "addprinc ${ADDPRINC_ARGS} -pw 123456 krbtgt/STARBURSTDATA.COM"
 
 # EXPOSE KERBEROS PORTS
 EXPOSE	88

@@ -12,6 +12,8 @@
 
 FROM testing/hdp2.6-hive:unlabelled
 
+ARG ADDPRINC_ARGS="-maxrenewlife \"10 days\" +allow_renewable"
+
 # INSTALL KERBEROS
 RUN yum install -y krb5-libs krb5-server krb5-workstation \
   && yum -y clean all && rm -rf /tmp/* /var/tmp/*
@@ -29,10 +31,10 @@ RUN /usr/sbin/kdb5_util create -s -P password
 RUN /usr/sbin/kdb5_util create -d /var/kerberos/krb5kdc/principal-other -r OTHERLABS.TERADATA.COM -s -P password
 
 # ADD HADOOP PRINCIPALS
-RUN /usr/sbin/kadmin.local -q "addprinc -randkey hdfs/hadoop-master@LABS.TERADATA.COM" \
-  && /usr/sbin/kadmin.local -q "addprinc -randkey mapred/hadoop-master@LABS.TERADATA.COM" \
-  && /usr/sbin/kadmin.local -q "addprinc -randkey yarn/hadoop-master@LABS.TERADATA.COM" \
-  && /usr/sbin/kadmin.local -q "addprinc -randkey HTTP/hadoop-master@LABS.TERADATA.COM"
+RUN /usr/sbin/kadmin.local -q "addprinc ${ADDPRINC_ARGS} -randkey hdfs/hadoop-master@LABS.TERADATA.COM" \
+  && /usr/sbin/kadmin.local -q "addprinc ${ADDPRINC_ARGS} -randkey mapred/hadoop-master@LABS.TERADATA.COM" \
+  && /usr/sbin/kadmin.local -q "addprinc ${ADDPRINC_ARGS} -randkey yarn/hadoop-master@LABS.TERADATA.COM" \
+  && /usr/sbin/kadmin.local -q "addprinc ${ADDPRINC_ARGS} -randkey HTTP/hadoop-master@LABS.TERADATA.COM"
 
 # CREATE HADOOP KEYTAB FILES
 RUN /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/hadoop/conf/hdfs.keytab hdfs/hadoop-master HTTP/hadoop-master" \
@@ -46,36 +48,36 @@ RUN chown hdfs:hadoop /etc/hadoop/conf/hdfs.keytab \
   && chmod 644 /etc/hadoop/conf/*.keytab
 
 # CREATE HIVE PRINCIPAL AND KEYTAB
-RUN /usr/sbin/kadmin.local -q "addprinc -randkey hive/hadoop-master@LABS.TERADATA.COM" \
+RUN /usr/sbin/kadmin.local -q "addprinc ${ADDPRINC_ARGS} -randkey hive/hadoop-master@LABS.TERADATA.COM" \
   && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/hive/conf/hive.keytab hive/hadoop-master"
 RUN chown hive:hadoop /etc/hive/conf/hive.keytab \
   && chmod 644 /etc/hive/conf/hive.keytab
 
 # CREATE HIVE PRINCIPAL IN THE OTHER REALM
-RUN /usr/sbin/kadmin.local -r OTHERLABS.TERADATA.COM -d /var/kerberos/krb5kdc/principal-other -q "addprinc -randkey hive/hadoop-master@OTHERLABS.TERADATA.COM" \
+RUN /usr/sbin/kadmin.local -r OTHERLABS.TERADATA.COM -d /var/kerberos/krb5kdc/principal-other -q "addprinc ${ADDPRINC_ARGS} -randkey hive/hadoop-master@OTHERLABS.TERADATA.COM" \
   && /usr/sbin/kadmin.local -r OTHERLABS.TERADATA.COM -d /var/kerberos/krb5kdc/principal-other -q "xst -norandkey -k /etc/hive/conf/hive-other.keytab hive/hadoop-master"
 RUN chown hive:hadoop /etc/hive/conf/hive-other.keytab \
   && chmod 644 /etc/hive/conf/hive-other.keytab
 
 # CREATE HDFS PRINCIPAL IN OTHER REALM
-RUN /usr/sbin/kadmin.local -r OTHERLABS.TERADATA.COM -d /var/kerberos/krb5kdc/principal-other -q "addprinc -randkey hdfs/hadoop-master@OTHERLABS.TERADATA.COM" \
+RUN /usr/sbin/kadmin.local -r OTHERLABS.TERADATA.COM -d /var/kerberos/krb5kdc/principal-other -q "addprinc ${ADDPRINC_ARGS} -randkey hdfs/hadoop-master@OTHERLABS.TERADATA.COM" \
   && /usr/sbin/kadmin.local -r OTHERLABS.TERADATA.COM -d /var/kerberos/krb5kdc/principal-other -q "xst -norandkey -k /etc/hadoop/conf/hdfs-other.keytab hdfs/hadoop-master"
 RUN chown hdfs:hadoop /etc/hadoop/conf/hdfs-other.keytab \
   && chmod 644 /etc/hadoop/conf/hdfs-other.keytab
 
 # MAKE 'LABS.TERADATA.COM' TRUST 'OTHERLABS.TERADATA.COM'
-RUN /usr/sbin/kadmin.local -q "addprinc -pw 123456 krbtgt/LABS.TERADATA.COM@OTHERLABS.TERADATA.COM"
-RUN /usr/sbin/kadmin.local -r OTHERLABS.TERADATA.COM -d /var/kerberos/krb5kdc/principal-other -q "addprinc -pw 123456 krbtgt/LABS.TERADATA.COM"
+RUN /usr/sbin/kadmin.local -q "addprinc ${ADDPRINC_ARGS} -pw 123456 krbtgt/LABS.TERADATA.COM@OTHERLABS.TERADATA.COM"
+RUN /usr/sbin/kadmin.local -r OTHERLABS.TERADATA.COM -d /var/kerberos/krb5kdc/principal-other -q "addprinc ${ADDPRINC_ARGS} -pw 123456 krbtgt/LABS.TERADATA.COM"
 
 # Create legacy Presto and Trino principals and add them to keytabs
 RUN set -xeu && \
   for hostname in presto-master trino-coordinator presto-worker trino-worker presto-worker-1 trino-worker-1 presto-worker-2 trino-worker-2; do \
-      /usr/sbin/kadmin.local -q "addprinc -randkey presto-server/${hostname}.docker.cluster@LABS.TERADATA.COM" \
-      && /usr/sbin/kadmin.local -q "addprinc -randkey trino-server/${hostname}.docker.cluster@LABS.TERADATA.COM" \
-      && /usr/sbin/kadmin.local -q "addprinc -randkey HTTP/${hostname}.docker.cluster@LABS.TERADATA.COM" \
-      && /usr/sbin/kadmin.local -q "addprinc -randkey presto-client/${hostname}.docker.cluster@LABS.TERADATA.COM" \
-      && /usr/sbin/kadmin.local -q "addprinc -randkey trino-client/${hostname}.docker.cluster@LABS.TERADATA.COM" \
-      && /usr/sbin/kadmin.local -q "addprinc -randkey hive/${hostname}.docker.cluster@LABS.TERADATA.COM" \
+      /usr/sbin/kadmin.local -q "addprinc ${ADDPRINC_ARGS} -randkey presto-server/${hostname}.docker.cluster@LABS.TERADATA.COM" \
+      && /usr/sbin/kadmin.local -q "addprinc ${ADDPRINC_ARGS} -randkey trino-server/${hostname}.docker.cluster@LABS.TERADATA.COM" \
+      && /usr/sbin/kadmin.local -q "addprinc ${ADDPRINC_ARGS} -randkey HTTP/${hostname}.docker.cluster@LABS.TERADATA.COM" \
+      && /usr/sbin/kadmin.local -q "addprinc ${ADDPRINC_ARGS} -randkey presto-client/${hostname}.docker.cluster@LABS.TERADATA.COM" \
+      && /usr/sbin/kadmin.local -q "addprinc ${ADDPRINC_ARGS} -randkey trino-client/${hostname}.docker.cluster@LABS.TERADATA.COM" \
+      && /usr/sbin/kadmin.local -q "addprinc ${ADDPRINC_ARGS} -randkey hive/${hostname}.docker.cluster@LABS.TERADATA.COM" \
       && mkdir -p /etc/trino/conf \
       && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/trino/conf/presto-server.keytab presto-server/${hostname}.docker.cluster" \
       && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/trino/conf/trino-server.keytab trino-server/${hostname}.docker.cluster" \
