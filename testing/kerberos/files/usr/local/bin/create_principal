@@ -42,5 +42,5 @@ if [[ ! -v keytab ]]; then
     usage
 fi
 
-/usr/sbin/kadmin.local $kadmin_opts -q "addprinc -randkey $principal@$realm"
+/usr/sbin/kadmin.local $kadmin_opts -q "addprinc -maxrenewlife \"10 days\" +allow_renewable -randkey $principal@$realm"
 /usr/sbin/kadmin.local $kadmin_opts -q "xst -norandkey -k $keytab $principal"

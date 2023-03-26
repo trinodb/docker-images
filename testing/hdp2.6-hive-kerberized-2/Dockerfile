@@ -12,6 +12,8 @@
 
 FROM testing/hdp2.6-hive:unlabelled
 
+ARG ADDPRINC_ARGS="-maxrenewlife \"10 days\" +allow_renewable"
+
 # INSTALL KERBEROS
 RUN yum install -y krb5-libs krb5-server krb5-workstation \
   && yum -y clean all && rm -rf /tmp/* /var/tmp/*
@@ -26,10 +28,10 @@ RUN /usr/local/bin/apply-all-site-xml-overrides /overrides && rm -Rf /overrides
 RUN /usr/sbin/kdb5_util create -s -P password
 
 # ADD HADOOP PRINCIPALS
-RUN /usr/sbin/kadmin.local -q "addprinc -randkey hdfs/hadoop-master-2@OTHERREALM.COM" \
-  && /usr/sbin/kadmin.local -q "addprinc -randkey mapred/hadoop-master-2@OTHERREALM.COM" \
-  && /usr/sbin/kadmin.local -q "addprinc -randkey yarn/hadoop-master-2@OTHERREALM.COM" \
-  && /usr/sbin/kadmin.local -q "addprinc -randkey HTTP/hadoop-master-2@OTHERREALM.COM"
+RUN /usr/sbin/kadmin.local -q "addprinc ${ADDPRINC_ARGS} -randkey hdfs/hadoop-master-2@OTHERREALM.COM" \
+  && /usr/sbin/kadmin.local -q "addprinc ${ADDPRINC_ARGS} -randkey mapred/hadoop-master-2@OTHERREALM.COM" \
+  && /usr/sbin/kadmin.local -q "addprinc ${ADDPRINC_ARGS} -randkey yarn/hadoop-master-2@OTHERREALM.COM" \
+  && /usr/sbin/kadmin.local -q "addprinc ${ADDPRINC_ARGS} -randkey HTTP/hadoop-master-2@OTHERREALM.COM"
 
 # CREATE HADOOP KEYTAB FILES
 RUN /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/hadoop/conf/hdfs.keytab hdfs/hadoop-master-2 HTTP/hadoop-master-2" \
@@ -43,7 +45,7 @@ RUN chown hdfs:hadoop /etc/hadoop/conf/hdfs.keytab \
   && chmod 644 /etc/hadoop/conf/*.keytab
 
 # CREATE HIVE PRINCIPAL AND KEYTAB
-RUN /usr/sbin/kadmin.local -q "addprinc -randkey hive/hadoop-master-2@OTHERREALM.COM" \
+RUN /usr/sbin/kadmin.local -q "addprinc ${ADDPRINC_ARGS} -randkey hive/hadoop-master-2@OTHERREALM.COM" \
   && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/hive/conf/hive.keytab hive/hadoop-master-2"
 RUN chown hive:hadoop /etc/hive/conf/hive.keytab \
   && chmod 644 /etc/hive/conf/hive.keytab
@@ -51,12 +53,12 @@ RUN chown hive:hadoop /etc/hive/conf/hive.keytab \
 # Create legacy Presto and updated Trino principals and add them to keytabs
 RUN set -xeu && \
   for hostname in presto-master trino-coordinator presto-worker trino-worker presto-worker-1 trino-worker-1 presto-worker-2 trino-worker-2; do \
-      /usr/sbin/kadmin.local -q "addprinc -randkey presto-server/${hostname}.docker.cluster@OTHERREALM.COM" \
-      && /usr/sbin/kadmin.local -q "addprinc -randkey trino-server/${hostname}.docker.cluster@OTHERREALM.COM" \
-      && /usr/sbin/kadmin.local -q "addprinc -randkey HTTP/${hostname}.docker.cluster@OTHERREALM.COM" \
-      && /usr/sbin/kadmin.local -q "addprinc -randkey presto-client/${hostname}.docker.cluster@OTHERREALM.COM" \
-      && /usr/sbin/kadmin.local -q "addprinc -randkey trino-client/${hostname}.docker.cluster@OTHERREALM.COM" \
-      && /usr/sbin/kadmin.local -q "addprinc -randkey hive/${hostname}.docker.cluster@OTHERREALM.COM" \
+      /usr/sbin/kadmin.local -q "addprinc ${ADDPRINC_ARGS} -randkey presto-server/${hostname}.docker.cluster@OTHERREALM.COM" \
+      && /usr/sbin/kadmin.local -q "addprinc ${ADDPRINC_ARGS} -randkey trino-server/${hostname}.docker.cluster@OTHERREALM.COM" \
+      && /usr/sbin/kadmin.local -q "addprinc ${ADDPRINC_ARGS} -randkey HTTP/${hostname}.docker.cluster@OTHERREALM.COM" \
+      && /usr/sbin/kadmin.local -q "addprinc ${ADDPRINC_ARGS} -randkey presto-client/${hostname}.docker.cluster@OTHERREALM.COM" \
+      && /usr/sbin/kadmin.local -q "addprinc ${ADDPRINC_ARGS} -randkey trino-client/${hostname}.docker.cluster@OTHERREALM.COM" \
+      && /usr/sbin/kadmin.local -q "addprinc ${ADDPRINC_ARGS} -randkey hive/${hostname}.docker.cluster@OTHERREALM.COM" \
       && mkdir -p /etc/trino/conf \
       && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/trino/conf/presto-server.keytab presto-server/${hostname}.docker.cluster" \
       && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/trino/conf/trino-server.keytab trino-server/${hostname}.docker.cluster" \
