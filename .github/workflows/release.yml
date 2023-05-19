@@ -73,6 +73,7 @@ jobs:
           testing/centos7-oj17
           testing/centos7-oj17-openldap
           testing/centos7-oj17-openldap-referrals
+          testing/centos7-oj17-openldap-active-directory
           testing/hive3.1-hive
           testing/kerberos
           testing/phoenix5

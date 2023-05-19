@@ -16,6 +16,9 @@ jobs:
           - image: centos7-oj17-openldap-referrals
             platforms: linux/amd64,linux/arm64
             test: openldap
+          - image: centos7-oj17-openldap-active-directory
+            platforms: linux/amd64,linux/arm64
+            test: openldap-active-directory
           - image: spark3-iceberg
             platforms: linux/amd64,linux/arm64
             test: spark3-iceberg
