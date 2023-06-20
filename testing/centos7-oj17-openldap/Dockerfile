@@ -11,15 +11,7 @@
 # limitations under the License.
 
 ARG ARCH
-FROM testing/centos7-oj17:unlabelled$ARCH
-
-# INSTALL OPENLDAP
-RUN yum -y install openssl openldap openldap-clients openldap-servers \
-    # Cleanup
-    && yum -y clean all && rm -rf /tmp/* /var/tmp/*
-
-# COPY CONFIGURATION
-COPY ./files /
+FROM testing/centos7-oj17-openldap-base:unlabelled$ARCH
 
 # CONFIGURE OPENLDAP SERVER
 # Run supervisord in background
@@ -33,38 +25,5 @@ RUN supervisord -c /etc/supervisord.conf && \
     ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/inetorgperson.ldif && \
     ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/setup/refint.ldif && \
     ldapadd -f /etc/openldap/setup/createOU.ldif -D cn=admin,dc=trino,dc=testldap,dc=com -w admin
-
-# Generate a keystore.
-# TODO: https://github.com/trinodb/trino/issues/8239
-RUN keytool -genkey -alias coordinator -storepass testldap -keystore /etc/openldap/certs/coordinator.jks \
-    -keypass testldap -keyalg RSA -sigalg SHA1withRSA -dname "CN=presto-master, OU=, O=, L=, S=, C=" -validity 100000
-
-# Generate a certificate and CSR for the keystore. CN should match the hostname of trino-coordinator
-RUN keytool -export -alias coordinator -storepass testldap -keystore /etc/openldap/certs/coordinator.jks \
-    -file /etc/openldap/certs/coordinator.cer && \
-    keytool -certreq -alias coordinator -storepass testldap -keystore /etc/openldap/certs/coordinator.jks \
-    -file /etc/openldap/certs/coordinator.csr
-
-# create a test CA and generate caroot.cer( root certificate of the CA ).
-RUN openssl req -new -keyout /etc/openldap/certs/cakey.pem -out /etc/openldap/certs/careq.pem -nodes \
-    -subj "/C=US/ST=Massachusetts/L=Boston/O=Teradata/OU=Finance/CN=teradata" && \
-    openssl x509 -req -in /etc/openldap/certs/careq.pem -out /etc/openldap/certs/caroot.cer -days 100000 \
-    -signkey /etc/openldap/certs/cakey.pem
-
-# sign the server certificate using the testCA
-RUN openssl x509 -req -in /etc/openldap/certs/coordinator.csr -out /etc/openldap/certs/TestCA.cer -days 100000 \
-    -CA /etc/openldap/certs/caroot.cer -CAkey /etc/openldap/certs/cakey.pem -CAserial /etc/openldap/certs/serial.txt
-
-# Import the caroot.cer to the keystore and replace the previously generated self-signed cert with the new CA signed one in the keystore
-# Note: The -alias name (coordinator) should be the same as the alias used when coordinator.cer was generated
-RUN keytool -import -alias TestCA -storepass testldap -keystore /etc/openldap/certs/coordinator.jks \
-    -noprompt -file /etc/openldap/certs/caroot.cer && \
-    keytool -import -alias coordinator -storepass testldap -keystore /etc/openldap/certs/coordinator.jks \
-    -file /etc/openldap/certs/TestCA.cer
-
-# Import the root certificate of the issuer of the trino-coordinator certificate.
-# This would be used by clients ( cli, jdbc ) to run tests
-RUN keytool -import -alias caroot -storepass testldap -keystore /etc/openldap/certs/cacerts.jks -noprompt \
-    -file /etc/openldap/certs/caroot.cer
 
 CMD supervisord -n -c /etc/supervisord.conf
