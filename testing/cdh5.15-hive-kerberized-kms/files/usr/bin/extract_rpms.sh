@@ -16,7 +16,7 @@ do
     rpm -i -U https://vault.centos.org/6.10/os/x86_64/Packages/${dependency}
 done
 
-rpm -i https://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/r/rpmrebuild-2.11-3.el7.noarch.rpm
+rpm -i https://kojipkgs.fedoraproject.org/packages/rpmrebuild/2.11/3.el7/noarch/rpmrebuild-2.11-3.el7.noarch.rpm
 
 mkdir /rpms/
 
