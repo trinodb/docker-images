@@ -13,6 +13,9 @@
 ARG ARCH
 FROM testing/centos7-oj17-openldap-base:unlabelled$ARCH
 
+# COPY CONFIGURATION
+COPY ./files /
+
 # CONFIGURE OPENLDAP SERVER
 # Run supervisord in background
 RUN supervisord -c /etc/supervisord.conf && \
