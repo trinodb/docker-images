@@ -17,15 +17,9 @@ FROM testing/centos7-oj17-openldap-base:unlabelled$ARCH
 COPY ./files /
 
 # CONFIGURE OPENLDAP SERVER
-# Run supervisord in background
 RUN supervisord -c /etc/supervisord.conf && \
     /usr/bin/wait-for-slapd.sh && \
-    ldapmodify -Y EXTERNAL -H ldapi:/// -f /etc/openldap/setup/modify_server.ldif && \
-    ldapmodify -Y EXTERNAL -H ldapi:/// -f /etc/openldap/setup/ldap_disable_bind_anon.ldif && \
     ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/setup/memberof.ldif && \
-    # Next two ldifs are required in order to have inetOrgPerson object class
-    ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/cosine.ldif && \
-    ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/inetorgperson.ldif && \
     ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/setup/refint.ldif && \
     ldapadd -f /etc/openldap/setup/createOU.ldif -D cn=admin,dc=trino,dc=testldap,dc=com -w admin
 

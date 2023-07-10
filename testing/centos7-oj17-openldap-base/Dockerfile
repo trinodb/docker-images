@@ -21,6 +21,15 @@ RUN yum -y install openssl openldap openldap-clients openldap-servers \
 # COPY CONFIGURATION
 COPY ./files /
 
+# Run supervisord in background
+RUN supervisord -c /etc/supervisord.conf && \
+    /usr/bin/wait-for-slapd.sh && \
+    ldapmodify -Y EXTERNAL -H ldapi:/// -f /etc/openldap/setup/modify_server.ldif && \
+    ldapmodify -Y EXTERNAL -H ldapi:/// -f /etc/openldap/setup/ldap_disable_bind_anon.ldif && \
+    # ldif are required in order to have inetOrgPerson object class
+    ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/cosine.ldif && \
+    ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/inetorgperson.ldif
+
 # Generate a keystore.
 # TODO: https://github.com/trinodb/trino/issues/8239
 RUN keytool -genkey -alias coordinator -storepass testldap -keystore /etc/openldap/certs/coordinator.jks \
