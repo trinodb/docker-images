@@ -54,6 +54,9 @@ jobs:
           echo "Skipping the release step because not starting from a snapshot version"
           exit 0
         fi
+        skipped_images=(
+          testing/centos7-oj17-openldap-base
+        )
         single_arch=(
           testing/accumulo
           testing/cdh5.12-hive
@@ -81,18 +84,18 @@ jobs:
           testing/spark3-iceberg
           testing/spark3-hudi
         )
-        to_release=("${single_arch[@]}" "${multi_arch[@]}")
+        referenced_images=("${skipped_images[@]}" "${single_arch[@]}" "${multi_arch[@]}")
         make meta
         read -a images < <(make list)
         export LC_ALL=C
         mapfile -t ignored < <( \
             comm -23 \
                 <(printf '%s\n' "${images[@]}" | sort) \
-                <(printf '%s\n' "${to_release[@]}" | sort) \
+                <(printf '%s\n' "${referenced_images[@]}" | sort) \
         )
         if [ "${#ignored[@]}" -ne 0 ]; then
           echo "Images that would not get released: ${ignored[*]}"
-          echo "Must be explicitly added to either single_arch or multi_arch list"
+          echo "Must be explicitly added to either single_arch or multi_arch list or should be added to skipped list"
           exit 2
         fi
         make prepare-release
