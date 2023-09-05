@@ -12,62 +12,62 @@
 
 FROM testing/hdp3.1-hive:unlabelled
 
-# INSTALL KERBEROS
+# Install Kerberos
 RUN yum install -y krb5-libs krb5-server krb5-workstation \
-  && yum -y clean all && rm -rf /tmp/* /var/tmp/*
+  && yum -y clean all \
+  && rm -rf /tmp/* /var/tmp/*
 
-# COPY CONFIGURATION
+# Copy configuration
 COPY ./files /
 
 # Apply configuration overrides and remove them so they don't get reapplied
-RUN /usr/local/bin/apply-all-site-xml-overrides /overrides && rm -Rf /overrides
+RUN /usr/local/bin/apply-all-site-xml-overrides /overrides \
+  && rm -Rf /overrides
 
-# CREATE KERBEROS DATABASE
+# Create Kerberos database
 RUN /usr/sbin/kdb5_util create -s -P password
 
-# ADD HADOOP PRINCIPALS
-RUN /usr/sbin/kadmin.local -q "addprinc -randkey hdfs/hadoop-master-2@OTHERREALM.COM" \
-  && /usr/sbin/kadmin.local -q "addprinc -randkey mapred/hadoop-master-2@OTHERREALM.COM" \
-  && /usr/sbin/kadmin.local -q "addprinc -randkey yarn/hadoop-master-2@OTHERREALM.COM" \
-  && /usr/sbin/kadmin.local -q "addprinc -randkey HTTP/hadoop-master-2@OTHERREALM.COM"
+# Add Hadoop principals
+RUN for name in hdfs mapred yarn HTTP; do \
+    /usr/sbin/kadmin.local -q "addprinc -randkey $name/hadoop-master-2@OTHERREALM.COM"; \
+  done
 
-# CREATE HADOOP KEYTAB FILES
-RUN /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/hadoop/conf/hdfs.keytab hdfs/hadoop-master-2 HTTP/hadoop-master-2" \
-  && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/hadoop/conf/mapred.keytab mapred/hadoop-master-2 HTTP/hadoop-master-2" \
-  && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/hadoop/conf/yarn.keytab yarn/hadoop-master-2 HTTP/hadoop-master-2" \
-  && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/hadoop/conf/HTTP.keytab HTTP/hadoop-master-2"
-RUN chown hdfs:hadoop /etc/hadoop/conf/hdfs.keytab \
-  && chown mapred:hadoop /etc/hadoop/conf/mapred.keytab \
-  && chown yarn:hadoop /etc/hadoop/conf/yarn.keytab \
+# Create Hadoop keytab files
+RUN for name in hdfs mapred yarn; do \
+    /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/hadoop/conf/$name.keytab $name/hadoop-master-2 HTTP/hadoop-master-2"; \
+    chown $name:hadoop /etc/hadoop/conf/$name.keytab; \
+  done \
+  && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/hadoop/conf/HTTP.keytab HTTP/hadoop-master-2" \
   && chown hdfs:hadoop /etc/hadoop/conf/HTTP.keytab \
   && chmod 644 /etc/hadoop/conf/*.keytab
 
-# CREATE HIVE PRINCIPAL AND KEYTAB
+# Create Hive principal and keytab
 RUN /usr/sbin/kadmin.local -q "addprinc -randkey hive/hadoop-master-2@OTHERREALM.COM" \
-  && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/hive/conf/hive.keytab hive/hadoop-master-2"
-RUN chown hive:hadoop /etc/hive/conf/hive.keytab \
+  && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/hive/conf/hive.keytab hive/hadoop-master-2" \
+  && chown hive:hadoop /etc/hive/conf/hive.keytab \
   && chmod 644 /etc/hive/conf/hive.keytab
 
 # Create legacy Presto and updated Trino principals and add them to keytabs
-RUN set -xeu && \
-  for hostname in presto-master trino-coordinator presto-worker trino-worker presto-worker-1 trino-worker-1 presto-worker-2 trino-worker-2; do \
-      /usr/sbin/kadmin.local -q "addprinc -randkey presto-server/${hostname}.docker.cluster@OTHERREALM.COM" \
-      && /usr/sbin/kadmin.local -q "addprinc -randkey trino-server/${hostname}.docker.cluster@OTHERREALM.COM" \
-      && /usr/sbin/kadmin.local -q "addprinc -randkey HTTP/${hostname}.docker.cluster@OTHERREALM.COM" \
-      && /usr/sbin/kadmin.local -q "addprinc -randkey presto-client/${hostname}.docker.cluster@OTHERREALM.COM" \
-      && /usr/sbin/kadmin.local -q "addprinc -randkey trino-client/${hostname}.docker.cluster@OTHERREALM.COM" \
-      && /usr/sbin/kadmin.local -q "addprinc -randkey hive/${hostname}.docker.cluster@OTHERREALM.COM" \
-      && mkdir -p /etc/trino/conf \
-      && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/trino/conf/presto-server.keytab presto-server/${hostname}.docker.cluster" \
-      && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/trino/conf/trino-server.keytab trino-server/${hostname}.docker.cluster" \
-      && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/trino/conf/presto-server-HTTP.keytab HTTP/${hostname}.docker.cluster" \
-      && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/trino/conf/trino-client.keytab trino-client/${hostname}.docker.cluster" \
-      && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/trino/conf/presto-client.keytab presto-client/${hostname}.docker.cluster" \
-      && /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/trino/conf/hive-presto-master.keytab hive/${hostname}.docker.cluster"; \
-  done && echo "OK" && \
-  chmod 644 /etc/trino/conf/*.keytab
+RUN set -xeu \
+  && mkdir -p /etc/trino/conf \
+  && for hostname in presto-master trino-coordinator presto-worker trino-worker presto-worker-1 trino-worker-1 presto-worker-2 trino-worker-2; do \
+      /usr/sbin/kadmin.local -q "addprinc -randkey presto-server/${hostname}.docker.cluster@OTHERREALM.COM"; \
+      /usr/sbin/kadmin.local -q "addprinc -randkey trino-server/${hostname}.docker.cluster@OTHERREALM.COM"; \
+      /usr/sbin/kadmin.local -q "addprinc -randkey HTTP/${hostname}.docker.cluster@OTHERREALM.COM"; \
+      /usr/sbin/kadmin.local -q "addprinc -randkey presto-client/${hostname}.docker.cluster@OTHERREALM.COM"; \
+      /usr/sbin/kadmin.local -q "addprinc -randkey trino-client/${hostname}.docker.cluster@OTHERREALM.COM"; \
+      /usr/sbin/kadmin.local -q "addprinc -randkey hive/${hostname}.docker.cluster@OTHERREALM.COM"; \
+      /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/trino/conf/presto-server.keytab presto-server/${hostname}.docker.cluster"; \
+      /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/trino/conf/trino-server.keytab trino-server/${hostname}.docker.cluster"; \
+      /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/trino/conf/presto-server-HTTP.keytab HTTP/${hostname}.docker.cluster"; \
+      /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/trino/conf/trino-client.keytab trino-client/${hostname}.docker.cluster"; \
+      /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/trino/conf/presto-client.keytab presto-client/${hostname}.docker.cluster"; \
+      /usr/sbin/kadmin.local -q "xst -norandkey -k /etc/trino/conf/hive-presto-master.keytab hive/${hostname}.docker.cluster"; \
+  done \
+  && echo "OK" \
+  && chmod 644 /etc/trino/conf/*.keytab
 
-# CREATE SSL KEYSTORE
+# Create SSL keystore
 RUN keytool -genkeypair \
     -alias presto \
     -keyalg RSA \
@@ -75,8 +75,8 @@ RUN keytool -genkeypair \
     -keypass password \
     -storepass password \
     -dname "CN=presto-master, OU=, O=, L=, S=, C=" \
-    -validity 100000 && \
-    keytool -genkeypair \
+    -validity 100000 \
+    && keytool -genkeypair \
     -alias trino \
     -keyalg RSA \
     -keystore /etc/trino/conf/keystore.jks \
@@ -94,9 +94,7 @@ RUN set -xeu; \
         sudo -u "${user}" bash -c ' echo "beeline -u \"jdbc:hive2://hadoop-master-2:10000/default;principal=hive/hadoop-master-2@OTHERREALM.COM\"" >> ~/.bash_history '; \
     done
 
-# EXPOSE KERBEROS PORTS
-EXPOSE	88
-EXPOSE	89
-EXPOSE	749
+# Expose Kerberos ports
+EXPOSE 88 89 749
 
 CMD supervisord -c /etc/supervisord.conf
