@@ -70,6 +70,7 @@ jobs:
           testing/hdp2.6-hive-kerberized-2
           testing/hdp3.1-hive
           testing/hdp3.1-hive-kerberized
+          testing/hdp3.1-hive-kerberized-2
         )
         multi_arch=(
           testing/centos7-oj11
