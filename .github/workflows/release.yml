@@ -106,6 +106,10 @@ jobs:
 
         single_remote=("${single_arch[@]/#/ghcr.io/trinodb/}")
         ./bin/push.sh "${single_remote[@]/%/:$VERSION}"
+
+        # free up disk space
+        docker system prune --all --force --volumes
+
         export PLATFORMS="linux/amd64,linux/arm64"
         multi_remote=("${multi_arch[@]/#/ghcr.io/trinodb/}")
         ./bin/push.sh "${multi_remote[@]/%/:$VERSION}"
