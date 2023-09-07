@@ -12,7 +12,7 @@
 
 # Cloudera removed an access to CDH5 repositories in April 2021.
 # In order to build new image version we use last released version as base.
-# Previous Dockerfile version is archived in archived/cdh5.12-hive.
+# Previous Dockerfile version is archived in archived/cdh5.12-hive-jdk8.
 FROM ghcr.io/trinodb/testing/cdh5.12-hive:38
 
 COPY ./files /
