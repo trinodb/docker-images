@@ -41,8 +41,6 @@ jobs:
             test: hdp2.6-hive
           - image: hdp3.1-hive-kerberized
             test: hdp3.1-hive
-          - image: cdh5.12-hive-kerberized
-            test: cdh5.12-hive
           - image: cdh5.15-hive-kerberized
             test: cdh5.15-hive
           - image: cdh5.15-hive-kerberized-kms
