@@ -59,8 +59,6 @@ jobs:
         )
         single_arch=(
           testing/accumulo
-          testing/cdh5.12-hive
-          testing/cdh5.12-hive-kerberized
           testing/cdh5.15-hive
           testing/cdh5.15-hive-kerberized
           testing/cdh5.15-hive-kerberized-kms
