@@ -10,6 +10,20 @@ jobs:
       contents: write
       packages: write
     steps:
+    - name: Free up disk space
+      run: |
+        sudo rm -rf \
+          /usr/share/dotnet \
+          /opt/ghc \
+          /usr/local/share/boost \
+          "$AGENT_TOOLSDIRECTORY" || true
+        docker rmi $(docker image ls -aq) >/dev/null 2>&1 || true
+    - name: Report disk space usage
+      run: |
+        sudo dpkg-query -Wf '${Installed-Size}\t${Package}\n' | sort -nr | head
+        df -h .
+        sudo du -hx -d 4 --threshold=1G /usr/ | sort -hr | head
+
     - uses: actions/checkout@v3
       with:
         fetch-depth: 0 # checkout tags so version in Manifest is set properly
