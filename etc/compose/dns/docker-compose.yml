@@ -1,4 +1,0 @@
-version: '2.0'
-services:
-  dns:
-    image: testing/dns:latest$ARCH
