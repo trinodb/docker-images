@@ -72,12 +72,11 @@ function run_spark_tests() {
 }
 
 function check_health() {
-    local service=$1
     if ! list=$(environment_compose ps --format json); then
         echo >&2 "Error getting Docker containers status: $list"
         return 1
     fi
-    if ! status=$(jq -er --arg name "$service" '.[] | select(.Service == $name) | .Health' <<<"$list"); then
+    if ! status=$(jq -er '.Health' <<<"$list"); then
         echo >&2 "Error getting health for $service: $status"
         return 1
     fi
@@ -191,7 +190,7 @@ for ARCH in "${platforms[@]}"; do
     LOGS_PID=$!
 
     if [[ ${ENVIRONMENT} == *"accumulo"* ]]; then
-        retry check_health accumulo
+        retry check_health
     elif [[ ${ENVIRONMENT} == "kerberos" ]]; then
         run_kerberos_tests
     elif [[ ${ENVIRONMENT} == *"gpdb"* ]]; then
