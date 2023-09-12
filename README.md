@@ -3,9 +3,9 @@
 ## Docker Image Names
 
 The docker images in this repository are expected to be given names of the form
-testing/hdp2.6-hive. The Dockerfile and other files needed to build the
-testing/hdp2.6-hive image are located in the directory
-testing/hdp2.6-hive.
+testing/hdp3.1-hive. The Dockerfile and other files needed to build the
+testing/hdp3.1-hive image are located in the directory
+testing/hdp3.1-hive.
 
 Generally speaking, the images should *not* be built manually with docker
 build.
@@ -13,17 +13,17 @@ build.
 ## Building docker images
 
 The docker images should be built using `make`. To build the docker image named
-`testing/hdp2.6-hive`, run `make testing/hdp2.6-hive`. Make will build
+`testing/hdp3.1-hive`, run `make testing/hdp3.1-hive`. Make will build
 the image and its dependencies in the correct order.
 
 If you want to build a base image and all the images depending on it,
 you can use the `*.dependants` targets. E.g.
 
 ```
-make testing/hdp2.6-base.dependants
+make testing/hdp3.1-base.dependants
 ```
 
-will build the `hdp2.6-base` and all the images depending on it (transitively).
+will build the `hdp3.1-base` and all the images depending on it (transitively).
 
 ## Releasing (pushing) docker image
 
@@ -36,9 +36,9 @@ It will:
 
 All of the docker images in the repository share the same version number. This
 is because most of the images depend on a parent image that is also in the
-repository (e.g. testing/hdp2.6-hive is FROM testing/hdp2.6-base),
-or are meant to be used together in testing (testing/hdp2.6-hive and
-testing/hdp2.6-hive-kerberized).
+repository (e.g. testing/hdp3.1-hive is FROM testing/hdp3.1-base),
+or are meant to be used together in testing (testing/hdp3.1-hive and
+testing/hdp3.1-hive-kerberized).
 
 Having all of the images on the same version number make troubleshooting easy:
 If all of the docker images you are using have the same version number then

@@ -34,7 +34,7 @@ FLAGDIR=$(BUILDDIR)/flags
 # Also, find on Mac doesn't support -exec {} +
 #
 # Note that the generated .d files also include reverse dependencies so that
-# you can e.g. `make hdp2.6-base.dependants' and hdp2.6-hive, and all of its
+# you can e.g. `make hdp3.1-base.dependants' and hdp3.1-hive, and all of its
 # dependent images will be rebuilt. This is used in .travis.yml to break the
 # build up into pieces based on image that have a large number of direct and
 # indirect children.
