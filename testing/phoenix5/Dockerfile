@@ -32,7 +32,7 @@ ARG PHOENIX_BINARY_PATH=$BASE_URL/phoenix/phoenix-$PHOENIX_VERSION/phoenix-hbase
 RUN mkdir -p $IMAGE_ROOT_INSTALL
 
 # Download ZooKeeper
-RUN wget --quiet $ZOOKEEPER_BINARY_PATH && \
+RUN wget --no-check-certificate -nv $ZOOKEEPER_BINARY_PATH && \
     tar -xf apache-zookeeper-$ZOOKEEPER_VERSION-bin.tar.gz -C $IMAGE_ROOT_INSTALL && \
     rm apache-zookeeper-$ZOOKEEPER_VERSION-bin.tar.gz && \
     ln -s $IMAGE_ROOT_INSTALL/apache-zookeeper-$ZOOKEEPER_VERSION-bin $ZOOKEEPER_HOME && \
@@ -45,7 +45,7 @@ RUN wget --quiet $HBASE_BINARY_PATH && \
     ln -s $IMAGE_ROOT_INSTALL/hbase-$HBASE_VERSION $HBASE_HOME
 
 # Download Phoenix
-RUN wget --quiet $PHOENIX_BINARY_PATH && \
+RUN wget --quiet --no-check-certificate $PHOENIX_BINARY_PATH && \
     tar -xf phoenix-hbase-$PHOENIX_HBASE_VERSION-bin.tar.gz -C $IMAGE_ROOT_INSTALL && \
     rm phoenix-hbase-$PHOENIX_HBASE_VERSION-bin.tar.gz && \
     ln -s $IMAGE_ROOT_INSTALL/phoenix-hbase-$PHOENIX_HBASE_VERSION-bin $PHOENIX_HOME
