@@ -17,6 +17,7 @@ COPY ./files /
 # Install Java and presto-admin dependences
 RUN \
     set -xeu && \
+    yum update -y && \
     yum install -y \
         nc \
         wget \
