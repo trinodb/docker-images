@@ -31,8 +31,6 @@ jobs:
           - image: kerberos
             platforms: linux/amd64,linux/arm64
             test: kerberos
-          - image: gpdb-6
-            test: gpdb-6
           - image: hive3.1-hive
             platforms: linux/amd64,linux/arm64
             test: hive3.1-hive
