@@ -73,7 +73,6 @@ jobs:
         )
         single_arch=(
           testing/accumulo
-          testing/gpdb-6
           testing/hdp3.1-hive
           testing/hdp3.1-hive-kerberized
           testing/hdp3.1-hive-kerberized-2
