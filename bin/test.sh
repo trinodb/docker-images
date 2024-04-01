@@ -57,10 +57,6 @@ function run_hive_transactional_tests() {
         true
 }
 
-function check_gpdb() {
-    environment_compose exec gpdb su gpadmin -l -c "pg_isready"
-}
-
 function check_spark() {
     environment_compose exec spark curl -f http://localhost:10213
 }
@@ -81,13 +77,6 @@ function check_health() {
         return 1
     fi
     test "$status" == "healthy"
-}
-
-function run_gpdb_tests() {
-    environment_compose exec gpdb su gpadmin -l -c "psql -c 'CREATE TABLE foo (a INT) DISTRIBUTED RANDOMLY'" &&
-        environment_compose exec gpdb su gpadmin -l -c "psql -c 'INSERT INTO foo VALUES (54)'" &&
-        environment_compose exec gpdb su gpadmin -l -c "psql -c 'SELECT a FROM foo'" &&
-        true
 }
 
 function run_kerberos_tests() {
@@ -193,15 +182,6 @@ for ARCH in "${platforms[@]}"; do
         retry check_health
     elif [[ ${ENVIRONMENT} == "kerberos" ]]; then
         run_kerberos_tests
-    elif [[ ${ENVIRONMENT} == *"gpdb"* ]]; then
-        # wait until gpdb process is started
-        retry check_gpdb
-
-        # run tests
-        set -x
-        set +e
-        sleep 10
-        run_gpdb_tests
     elif [[ ${ENVIRONMENT} == *"hive"* ]]; then
         # wait until hadoop processes is started
         retry check_hadoop
