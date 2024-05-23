@@ -31,8 +31,7 @@ RUN \
     \
     # install supervisor
     yum --enablerepo=extras install -y setuptools epel-release && \
-    yum install -y python-pip && \
-    pip install supervisor && \
+    yum install -y supervisor && \
     \
     # install commonly needed packages
     yum install -y \
