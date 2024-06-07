@@ -11,12 +11,12 @@
 # limitations under the License.
 
 ARG ARCH
-FROM testing/centos7-oj11:unlabelled$ARCH
+FROM testing/centos7-oj17:unlabelled$ARCH
 
-ARG SPARK_VERSION=3.5.0
+ARG SPARK_VERSION=4.0.0-preview1
 ARG HADOOP_VERSION=3
-ARG DELTA_VERSION=3.2.0
-ARG SCALA_VERSION=2.12
+ARG DELTA_VERSION=4.0.0rc1
+ARG SCALA_VERSION=2.13
 
 ARG SPARK_ARTIFACT="spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}"
 
@@ -35,8 +35,8 @@ RUN wget -nv "https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/3.3.4/
 RUN wget -nv "https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-bundle/1.12.319/aws-java-sdk-bundle-1.12.319.jar"
 
 # install Delta
-RUN wget -nv "https://repo1.maven.org/maven2/io/delta/delta-spark_${SCALA_VERSION}/${DELTA_VERSION}/delta-spark_${SCALA_VERSION}-${DELTA_VERSION}.jar"
-RUN wget -nv "https://repo1.maven.org/maven2/io/delta/delta-storage/${DELTA_VERSION}/delta-storage-${DELTA_VERSION}.jar"
+RUN wget -nv "https://oss.sonatype.org/content/repositories/iodelta-1147/io/delta/delta-spark_${SCALA_VERSION}/${DELTA_VERSION}/delta-spark_${SCALA_VERSION}-${DELTA_VERSION}.jar"
+RUN wget -nv "https://oss.sonatype.org/content/repositories/iodelta-1147/io/delta/delta-storage/${DELTA_VERSION}/delta-storage-${DELTA_VERSION}.jar"
 
 # Create hive user to match Hive container
 RUN adduser hive

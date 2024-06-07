@@ -23,9 +23,9 @@ jobs:
           - image: spark3-iceberg
             platforms: linux/amd64,linux/arm64
             test: spark3-iceberg
-          - image: spark3-delta
+          - image: spark4-delta
             platforms: linux/amd64,linux/arm64
-            test: spark3-delta
+            test: spark4-delta
           - image: spark3-hudi
             platforms: linux/amd64,linux/arm64
             test: spark3-hudi
