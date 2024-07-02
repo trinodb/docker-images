@@ -11,7 +11,7 @@
 # limitations under the License.
 
 ARG ARCH
-FROM testing/centos7-oj17:unlabelled$ARCH
+FROM testing/almalinux9-oj17:unlabelled$ARCH
 
 ARG ADDPRINC_ARGS="-maxrenewlife \"10 days\" +allow_renewable"
 

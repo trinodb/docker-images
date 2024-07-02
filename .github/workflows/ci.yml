@@ -12,12 +12,12 @@ jobs:
         include:
           - image: accumulo
             test: accumulo
-          - image: centos7-oj17
+          - image: almalinux9-oj17
             platforms: linux/amd64,linux/arm64
-          - image: centos7-oj17-openldap-referrals
+          - image: almalinux9-oj17-openldap-referrals
             platforms: linux/amd64,linux/arm64
             test: openldap
-          - image: centos7-oj17-openldap-active-directory
+          - image: almalinux9-oj17-openldap-active-directory
             platforms: linux/amd64,linux/arm64
             test: openldap-active-directory
           - image: spark3-iceberg
