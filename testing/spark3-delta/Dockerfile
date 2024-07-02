@@ -11,7 +11,7 @@
 # limitations under the License.
 
 ARG ARCH
-FROM testing/centos7-oj11:unlabelled$ARCH
+FROM testing/almalinux9-oj11:unlabelled$ARCH
 
 ARG SPARK_VERSION=3.5.0
 ARG HADOOP_VERSION=3

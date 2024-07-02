@@ -10,7 +10,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM library/centos:7
+FROM library/almalinux:9
 
 COPY ./files /
 
@@ -19,6 +19,7 @@ RUN \
     set -xeu && \
     yum update -y && \
     yum install -y \
+        python \
         nc \
         wget \
         && \
@@ -30,7 +31,7 @@ RUN \
     alternatives --set javac /usr/lib/jvm/zulu-17/bin/javac && \
     \
     # install supervisor
-    yum --enablerepo=extras install -y setuptools epel-release && \
+    yum --enablerepo=extras install -y epel-release && \
     yum install -y supervisor && \
     \
     # install commonly needed packages
@@ -41,6 +42,7 @@ RUN \
         telnet `# helpful when troubleshooting product tests` \
         vim `# helpful when troubleshooting product tests` \
         jq `# helpful json processing tool` \
+        procps \
         && \
     # cleanup
     yum -y clean all && rm -rf /tmp/* /var/tmp/*

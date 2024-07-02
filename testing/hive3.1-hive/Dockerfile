@@ -11,7 +11,7 @@
 # limitations under the License.
 
 ARG ARCH
-FROM testing/centos7-oj17:unlabelled$ARCH
+FROM testing/almalinux9-oj17:unlabelled$ARCH
 
 ARG JAVA8_ZULU_VERSION=8.64.0.19-ca-jdk8.0.345
 
@@ -21,6 +21,7 @@ RUN yum install -y \
     openssh-clients \
     openssh-server \
     psmisc \
+    passwd \
     which && \
     # Install Zulu JDK
     echo "Downloading zulu${JAVA8_ZULU_VERSION}-linux.$(uname -m).rpm..." && \
@@ -32,7 +33,7 @@ RUN yum install -y \
     alternatives --set javac /usr/lib/jvm/zulu-8/bin/javac \
     && yum -q clean all && rm -rf /var/cache/yum
 
-# Override JAVA_HOME inherited from testing/centos7-oj17
+# Override JAVA_HOME inherited from testing/almalinux9-oj17
 ENV JAVA_HOME=/usr/lib/jvm/zulu-8
 
 ARG HADOOP_VERSION=3.1.2

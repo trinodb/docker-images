@@ -11,16 +11,15 @@
 # limitations under the License.
 
 ARG ARCH
-FROM testing/centos7-oj17-openldap-base:unlabelled$ARCH
+FROM testing/almalinux9-oj17-openldap:unlabelled$ARCH
 
 # COPY CONFIGURATION
 COPY ./files /
 
 # CONFIGURE OPENLDAP SERVER
+# Run supervisord in background
 RUN supervisord -c /etc/supervisord.conf && \
     /usr/bin/wait-for-slapd.sh && \
-    # active dictory schema from https://git.openldap.org/openldap/openldap/-/raw/master/servers/slapd/schema/msuser.ldif
-    ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/setup/msuser.ldif && \
-    ldapadd -f /etc/openldap/setup/createOU.ldif -D cn=admin,dc=trino,dc=testldap,dc=com -w admin
+    ldapadd -f /etc/openldap/setup/createReferrals.ldif -D cn=admin,dc=trino,dc=testldap,dc=com -w admin
 
 CMD supervisord -n -c /etc/supervisord.conf

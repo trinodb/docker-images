@@ -69,7 +69,7 @@ jobs:
           exit 0
         fi
         skipped_images=(
-          testing/centos7-oj17-openldap-base
+          testing/almalinux9-oj17-openldap-base
         )
         single_arch=(
           testing/accumulo
@@ -79,11 +79,11 @@ jobs:
           testing/hdp3.1-hive-kerberized-kms
         )
         multi_arch=(
-          testing/centos7-oj11
-          testing/centos7-oj17
-          testing/centos7-oj17-openldap
-          testing/centos7-oj17-openldap-referrals
-          testing/centos7-oj17-openldap-active-directory
+          testing/almalinux9-oj11
+          testing/almalinux9-oj17
+          testing/almalinux9-oj17-openldap
+          testing/almalinux9-oj17-openldap-referrals
+          testing/almalinux9-oj17-openldap-active-directory
           testing/hive3.1-hive
           testing/kerberos
           testing/phoenix5

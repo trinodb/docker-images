@@ -17,6 +17,10 @@ FROM ghcr.io/trinodb/testing/hdp3.1-hive:38
 
 COPY ./files /
 
+# replace mirrorlist.centos.org and mirror.centos.org with vault.centos.org
+RUN sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-* && \
+    sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
+
 RUN \
     set -xeu && \
     # Remove unaccessible HDP3 repos so yum is still usable
