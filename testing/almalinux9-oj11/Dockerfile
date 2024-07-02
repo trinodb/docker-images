@@ -10,7 +10,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM library/centos:7
+FROM library/almalinux:9
 
 COPY ./files /
 
@@ -23,14 +23,14 @@ RUN \
         wget \
         && \
     \
-    # Install Zulu JDK 17.0.5 \
-    rpm -i "https://cdn.azul.com/zulu/bin/zulu17.38.21-ca-jdk17.0.5-linux.$(arch).rpm" && \
-    # Set JDK 17 as a default one
-    alternatives --set java /usr/lib/jvm/zulu-17/bin/java && \
-    alternatives --set javac /usr/lib/jvm/zulu-17/bin/javac && \
+    # Install Zulu JDK 11.0.17 \
+    rpm -i https://cdn.azul.com/zulu$([ "$(arch)" != "aarch64" ] || echo "-embedded")/bin/zulu11.60.19-ca-jdk11.0.17-linux."$(arch)".rpm && \
+    # Set JDK 11 as a default one
+    alternatives --set java /usr/lib/jvm/zulu-11/bin/java && \
+    alternatives --set javac /usr/lib/jvm/zulu-11/bin/javac && \
     \
     # install supervisor
-    yum --enablerepo=extras install -y setuptools epel-release && \
+    yum --enablerepo=extras install -y epel-release && \
     yum install -y supervisor && \
     \
     # install commonly needed packages
@@ -46,5 +46,5 @@ RUN \
     yum -y clean all && rm -rf /tmp/* /var/tmp/*
 
 ENV PATH="/usr/local/bin:${PATH}"
-ENV JAVA_HOME=/usr/lib/jvm/zulu-17
+ENV JAVA_HOME=/usr/lib/jvm/zulu-11
 ENV LANG=en_US.UTF-8
