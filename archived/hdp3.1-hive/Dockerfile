@@ -41,7 +41,7 @@ RUN yum install -y \
     lzo-devel \
     lzop \
 
-    # Mysql is not present in Centos7 repositories, use mariadb as a replacement
+    # Mysql is not present in Alma Linux 9 repositories, use mariadb as a replacement
     mariadb-server \
     mysql-connector-java \
 

@@ -11,7 +11,7 @@
 # limitations under the License.
 
 ARG ARCH
-FROM testing/centos7-oj11:unlabelled$ARCH
+FROM testing/almalinux9-oj11:unlabelled$ARCH
 
 ARG HBASE_VERSION=2.5.8
 ARG ZOOKEEPER_VERSION=3.9.2

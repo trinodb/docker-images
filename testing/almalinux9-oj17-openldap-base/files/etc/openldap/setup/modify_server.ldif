@@ -1,4 +1,4 @@
-dn: olcDatabase={2}hdb,cn=config
+dn: olcDatabase={2}mdb,cn=config
 changetype: modify
 replace: olcRootDN
 olcRootDN: cn=admin,dc=trino,dc=testldap,dc=com

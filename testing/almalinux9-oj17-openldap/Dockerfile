@@ -11,7 +11,7 @@
 # limitations under the License.
 
 ARG ARCH
-FROM testing/centos7-oj17-openldap-base:unlabelled$ARCH
+FROM testing/almalinux9-oj17-openldap-base:unlabelled$ARCH
 
 # COPY CONFIGURATION
 COPY ./files /
