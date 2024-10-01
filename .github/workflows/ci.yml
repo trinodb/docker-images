@@ -42,6 +42,8 @@ jobs:
           # TODO add test https://github.com/trinodb/trino/issues/14543
           - image: phoenix5
             platforms: linux/amd64,linux/arm64
+          - image: unity-catalog
+            test: unity-catalog
     steps:
     - uses: actions/checkout@v3
       with:

@@ -183,6 +183,9 @@ for ARCH in "${platforms[@]}"; do
     elif [[ ${ENVIRONMENT} == *"polaris"* ]]; then
         # TODO Add test for Polaris
         test true
+    elif [[ ${ENVIRONMENT} == *"unity"* ]]; then
+        # TODO Add test for Unity
+        test true
     elif [[ ${ENVIRONMENT} == "kerberos" ]]; then
         run_kerberos_tests
     elif [[ ${ENVIRONMENT} == *"hive"* ]]; then
