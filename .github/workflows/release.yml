@@ -77,7 +77,6 @@ jobs:
           testing/hdp3.1-hive-kerberized
           testing/hdp3.1-hive-kerberized-2
           testing/hdp3.1-hive-kerberized-kms
-          testing/polaris-catalog
         )
         multi_arch=(
           testing/almalinux9-oj11
@@ -91,6 +90,7 @@ jobs:
           testing/spark3-delta
           testing/spark3-iceberg
           testing/spark3-hudi
+          testing/polaris-catalog
         )
         referenced_images=("${skipped_images[@]}" "${single_arch[@]}" "${multi_arch[@]}")
         make meta
