@@ -178,9 +178,7 @@ for ARCH in "${platforms[@]}"; do
 
     LOGS_PID=$!
 
-    if [[ ${ENVIRONMENT} == *"accumulo"* ]]; then
-        retry check_health
-    elif [[ ${ENVIRONMENT} == *"polaris"* ]]; then
+    if [[ ${ENVIRONMENT} == *"polaris"* ]]; then
         # TODO Add test for Polaris
         test true
     elif [[ ${ENVIRONMENT} == *"unity"* ]]; then

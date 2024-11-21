@@ -10,8 +10,6 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - image: accumulo
-            test: accumulo
           - image: almalinux9-oj17
             platforms: linux/amd64,linux/arm64
           - image: almalinux9-oj17-openldap-referrals
