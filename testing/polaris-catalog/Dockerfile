@@ -10,14 +10,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM gradle:8.9-jdk21
+FROM gradle:8.11-jdk21 AS builder
 
-RUN git clone https://github.com/polaris-catalog/polaris.git polaris
+RUN git clone --depth=1 https://github.com/polaris-catalog/polaris.git /polaris
 
-WORKDIR polaris
+WORKDIR /polaris
 
 RUN gradle --no-daemon --info shadowJar
 
+FROM eclipse-temurin:21-jre-alpine
+
+COPY --from=builder /polaris/polaris-service/build/libs/polaris-service-1.0.0-incubating-SNAPSHOT.jar /polaris-service.jar
+COPY --from=builder /polaris/polaris-server.yml /polaris-server.yml
+
 EXPOSE 8181
 
-CMD ["java", "-jar", "polaris-service/build/libs/polaris-service-1.0.0-all.jar", "server", "polaris-server.yml"]
+CMD ["java", "-jar", "polaris-service.jar", "server", "polaris-server.yml"]
