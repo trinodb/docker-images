@@ -72,7 +72,6 @@ jobs:
           testing/almalinux9-oj17-openldap-base
         )
         single_arch=(
-          testing/accumulo
           testing/hdp3.1-hive
           testing/hdp3.1-hive-kerberized
           testing/hdp3.1-hive-kerberized-2
