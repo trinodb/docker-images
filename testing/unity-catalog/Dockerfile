@@ -11,22 +11,17 @@
 # limitations under the License.
 
 ARG ARCH
-FROM testing/almalinux9-oj17:unlabelled$ARCH AS builder
+FROM testing/almalinux9-oj17:unlabelled$ARCH
 
 RUN yum update -y && \
     yum install -y git && \
     yum clean all -y
 
-RUN git clone --depth=1 https://github.com/unitycatalog/unitycatalog.git unity
+RUN git clone https://github.com/unitycatalog/unitycatalog.git unity
 
-WORKDIR /unity
+WORKDIR unity
 
 RUN build/sbt package
-
-FROM testing/almalinux9-oj17:unlabelled$ARCH
-
-WORKDIR /unity
-COPY --from=builder /unity /unity
 
 EXPOSE 8080
 
