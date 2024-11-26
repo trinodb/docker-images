@@ -42,10 +42,11 @@ RUN keytool -export -alias coordinator -storepass testldap -keystore /etc/openld
     -file /etc/openldap/certs/coordinator.csr
 
 # create a test CA and generate caroot.cer( root certificate of the CA ).
-RUN openssl req -new -keyout /etc/openldap/certs/cakey.pem -out /etc/openldap/certs/careq.pem -nodes \
-    -subj "/C=US/ST=Massachusetts/L=Boston/O=Teradata/OU=Finance/CN=teradata" && \
-    openssl x509 -req -in /etc/openldap/certs/careq.pem -out /etc/openldap/certs/caroot.cer -days 100000 \
-    -signkey /etc/openldap/certs/cakey.pem
+RUN openssl genrsa -out /etc/openldap/certs/cakey.pem 2048 && \
+    openssl req -x509 -new -nodes -key /etc/openldap/certs/cakey.pem -sha256 -days 3650 -out /etc/openldap/certs/caroot.cer \
+    -subj "/C=US/ST=Massachusetts/L=Boston/O=Teradata/OU=Finance/CN=teradata" \
+    -addext "basicConstraints=CA:TRUE" \
+    -addext "keyUsage=keyCertSign,cRLSign"
 
 # sign the server certificate using the testCA
 RUN openssl x509 -req -in /etc/openldap/certs/coordinator.csr -out /etc/openldap/certs/TestCA.cer -days 100000 \
