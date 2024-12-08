@@ -57,6 +57,15 @@ function run_hive_transactional_tests() {
         true
 }
 
+function check_hive4() {
+    environment_compose exec hiveserver2 beeline -u jdbc:hive2://localhost:10000 -e 'SELECT 1;' >/dev/null 2>&1
+}
+
+function run_hive4_tests() {
+    environment_compose exec hiveserver2 beeline -u jdbc:hive2://localhost:10000 -e 'SHOW DATABASES;' &&
+    true
+}
+
 function check_spark() {
     environment_compose exec spark curl --http0.9 -f http://localhost:10213 -o /dev/null
 }
@@ -186,6 +195,16 @@ for ARCH in "${platforms[@]}"; do
         test true
     elif [[ ${ENVIRONMENT} == "kerberos" ]]; then
         run_kerberos_tests
+    elif [[ ${ENVIRONMENT} == *"hive4"* ]]; then
+        # wait until hiveserver is started
+        retry check_hive4
+
+        # run tests
+        set -x
+        set +e
+        sleep 10
+        run_hive4_tests
+        # TODO add transactional hive tests
     elif [[ ${ENVIRONMENT} == *"hive"* ]]; then
         # wait until hadoop processes is started
         retry check_hadoop

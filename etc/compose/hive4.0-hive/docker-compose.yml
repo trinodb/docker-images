@@ -1,0 +1,7 @@
+version: '2.0'
+services:
+  hiveserver2:
+    hostname: hiveserver2
+    image: testing/hive4.0-hive:latest$ARCH
+    environment:
+      - SERVICE_NAME=hiveserver2
