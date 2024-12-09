@@ -91,6 +91,7 @@ jobs:
           testing/spark3-hudi
           testing/polaris-catalog
           testing/unity-catalog
+          testing/hive4.0-hive
         )
         referenced_images=("${skipped_images[@]}" "${single_arch[@]}" "${multi_arch[@]}")
         make meta
