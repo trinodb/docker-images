@@ -20,7 +20,7 @@ RUN gradle --no-daemon --info shadowJar
 
 FROM eclipse-temurin:21-jre-alpine
 
-COPY --from=builder /polaris/polaris-service/build/libs/polaris-service-1.0.0-incubating-SNAPSHOT.jar /polaris-service.jar
+COPY --from=builder /polaris/dropwizard/service/build/libs/polaris-dropwizard-service-1.0.0-incubating-SNAPSHOT.jar /polaris-service.jar
 COPY --from=builder /polaris/polaris-server.yml /polaris-server.yml
 
 EXPOSE 8181
