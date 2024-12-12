@@ -12,7 +12,7 @@
 
 FROM gradle:8.11-jdk21 AS builder
 
-RUN git clone --depth=1 https://github.com/polaris-catalog/polaris.git /polaris
+RUN git clone --depth=1 https://github.com/apache/polaris.git /polaris
 
 WORKDIR /polaris
 
