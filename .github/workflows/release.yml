@@ -70,6 +70,8 @@ jobs:
         fi
         skipped_images=(
           testing/almalinux9-oj17-openldap-base
+          testing/polaris-catalog
+          testing/unity-catalog
         )
         single_arch=(
           testing/hdp3.1-hive
@@ -89,7 +91,6 @@ jobs:
           testing/spark3-delta
           testing/spark3-iceberg
           testing/spark3-hudi
-          testing/polaris-catalog
         )
         referenced_images=("${skipped_images[@]}" "${single_arch[@]}" "${multi_arch[@]}")
         make meta
