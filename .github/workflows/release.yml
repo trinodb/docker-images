@@ -35,6 +35,9 @@ jobs:
 
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v2
+      with:
+        ## Temporary due to bug in qemu:  https://github.com/docker/setup-qemu-action/issues/198
+        image: tonistiigi/binfmt:qemu-v7.0.0-28
 
     - name: Log in to the Container registry
       # locked to https://github.com/docker/login-action/releases/tag/v2.1.0
