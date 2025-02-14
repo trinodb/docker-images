@@ -54,6 +54,9 @@ jobs:
         fetch-depth: 0 # checkout tags so version in Manifest is set properly
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v2
+      with:
+        ## Temporary due to bug in qemu:  https://github.com/docker/setup-qemu-action/issues/198
+        image: tonistiigi/binfmt:qemu-v7.0.0-28
     - name: Build ${{ matrix.image }}
       env:
         PLATFORMS: ${{ matrix.platforms }}
