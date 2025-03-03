@@ -16,13 +16,15 @@ RUN git clone --depth=1 https://github.com/apache/polaris.git /polaris
 
 WORKDIR /polaris
 
-RUN gradle --no-daemon --info shadowJar
+RUN gradle :polaris-quarkus-server:build
 
 FROM eclipse-temurin:21-jre-alpine
 
-COPY --from=builder /polaris/dropwizard/service/build/libs/polaris-dropwizard-service-1.0.0-incubating-SNAPSHOT.jar /polaris-service.jar
-COPY --from=builder /polaris/polaris-server.yml /polaris-server.yml
+ARG POLARIS_VERSION=1.0.0-incubating-SNAPSHOT
+
+COPY --from=builder /polaris/quarkus/server/build/distributions/polaris-quarkus-server-1.0.0-incubating-SNAPSHOT.zip /polaris-quarkus-server-${POLARIS_VERSION}.zip
+RUN unzip polaris-quarkus-server-${POLARIS_VERSION}.zip
 
 EXPOSE 8181
 
-CMD ["java", "-jar", "polaris-service.jar", "server", "polaris-server.yml"]
+CMD ["java", "-jar", "polaris-quarkus-server-${POLARIS_VERSION}/quarkus-run.jar"]
