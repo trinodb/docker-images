@@ -18,9 +18,8 @@ jobs:
           - image: almalinux9-oj17-openldap-active-directory
             platforms: linux/amd64,linux/arm64
             test: openldap-active-directory
-          # TODO https://github.com/trinodb/trino/issues/24945 Reenable Polaris tests in Iceberg
-          # - image: polaris-catalog
-          #  test: polaris-catalog
+          - image: polaris-catalog
+            test: polaris-catalog
           - image: spark3-iceberg
             platforms: linux/amd64,linux/arm64
             test: spark3-iceberg
@@ -45,9 +44,8 @@ jobs:
           # TODO add test https://github.com/trinodb/trino/issues/14543
           - image: phoenix5
             platforms: linux/amd64,linux/arm64
-          # TODO https://github.com/trinodb/trino/issues/24945 Reenable Unity tests in Iceberg
-          # - image: unity-catalog
-          #   test: unity-catalog
+          - image: unity-catalog
+            test: unity-catalog
     steps:
     - uses: actions/checkout@v3
       with:
