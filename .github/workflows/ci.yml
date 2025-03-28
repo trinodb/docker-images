@@ -41,9 +41,6 @@ jobs:
             test: hive4.0-hive
           - image: hdp3.1-hive-kerberized
             test: hdp3.1-hive
-          # TODO add test https://github.com/trinodb/trino/issues/14543
-          - image: phoenix5
-            platforms: linux/amd64,linux/arm64
           - image: unity-catalog
             test: unity-catalog
     steps:
