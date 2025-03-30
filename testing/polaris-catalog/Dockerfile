@@ -10,15 +10,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM gradle:8.11-jdk21 AS builder
+FROM gradle:8.11-jdk23 AS builder
 
 RUN git clone --depth=1 https://github.com/apache/polaris.git /polaris
 
 WORKDIR /polaris
 
-RUN gradle :polaris-quarkus-server:build
+RUN gradle build -x test
 
-FROM eclipse-temurin:21-jre-alpine
+FROM eclipse-temurin:23-jre-alpine
 
 ARG POLARIS_VERSION=1.0.0-incubating-SNAPSHOT
 
