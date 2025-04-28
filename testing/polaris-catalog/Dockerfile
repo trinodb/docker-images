@@ -10,7 +10,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM gradle:8.11-jdk21 AS builder
+FROM gradle:8.14-jdk21 AS builder
 
 RUN git clone --depth=1 https://github.com/apache/polaris.git /polaris
 
@@ -20,9 +20,9 @@ RUN gradle :polaris-quarkus-server:build
 
 FROM eclipse-temurin:21-jre-alpine
 
-ARG POLARIS_VERSION=1.0.0-incubating-SNAPSHOT
+ARG POLARIS_VERSION=0.11.0-beta-incubating-SNAPSHOT
 
-COPY --from=builder /polaris/quarkus/server/build/distributions/polaris-quarkus-server-1.0.0-incubating-SNAPSHOT.zip /polaris-quarkus-server-${POLARIS_VERSION}.zip
+COPY --from=builder /polaris/quarkus/server/build/distributions/polaris-quarkus-server-${POLARIS_VERSION}.zip /polaris-quarkus-server-${POLARIS_VERSION}.zip
 RUN unzip polaris-quarkus-server-${POLARIS_VERSION}.zip
 
 EXPOSE 8181
