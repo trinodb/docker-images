@@ -20,11 +20,11 @@ RUN gradle :polaris-quarkus-server:build
 
 FROM eclipse-temurin:21-jre-alpine
 
-ARG POLARIS_VERSION=0.11.0-beta-incubating-SNAPSHOT
-
-COPY --from=builder /polaris/quarkus/server/build/distributions/polaris-quarkus-server-${POLARIS_VERSION}.zip /polaris-quarkus-server-${POLARIS_VERSION}.zip
-RUN unzip polaris-quarkus-server-${POLARIS_VERSION}.zip
+COPY --from=builder /polaris/quarkus/server/build/quarkus-app/lib/ /lib/
+COPY --from=builder /polaris/quarkus/server/build/quarkus-app/*.jar/ /
+COPY --from=builder /polaris/quarkus/server/build/quarkus-app/app/ /app/
+COPY --from=builder /polaris/quarkus/server/build/quarkus-app/quarkus/ /quarkus/
 
 EXPOSE 8181
 
-CMD ["java", "-jar", "polaris-quarkus-server-${POLARIS_VERSION}/quarkus-run.jar"]
+CMD ["java", "-jar", "quarkus-run.jar"]
