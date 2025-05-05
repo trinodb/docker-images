@@ -22,7 +22,7 @@ BUILD_SH=$(realpath bin/build.sh)
 TAG_SH=$(realpath bin/tag.sh)
 PUSH_SH=bin/push.sh
 TEST_SH=bin/test.sh
-BUILDDIR=build
+BUILDDIR=tmp
 DEPDIR=$(BUILDDIR)/depends
 FLAGDIR=$(BUILDDIR)/flags
 
@@ -39,7 +39,7 @@ FLAGDIR=$(BUILDDIR)/flags
 # build up into pieces based on image that have a large number of direct and
 # indirect children.
 #
-IMAGE_DIRS := $(shell find testing -type f -name Dockerfile -exec dirname {} \;)
+IMAGE_DIRS := $(shell find ./testing ./build -type f -name Dockerfile -exec dirname {} \;)
 UNLABELLED_TAGS := $(addsuffix @unlabelled,$(IMAGE_DIRS))
 PARENT_CHECKS := $(addsuffix -parent-check,$(IMAGE_DIRS))
 LATEST_TAGS := $(addsuffix @latest,$(IMAGE_DIRS))

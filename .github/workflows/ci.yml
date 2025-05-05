@@ -10,39 +10,41 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - image: almalinux9-oj17
+          - image: testing/almalinux9-oj17
             platforms: linux/amd64,linux/arm64
-          - image: almalinux9-oj17-openldap-referrals
+          - image: testing/almalinux9-oj17-openldap-referrals
             platforms: linux/amd64,linux/arm64
             test: openldap
-          - image: almalinux9-oj17-openldap-active-directory
+          - image: testing/almalinux9-oj17-openldap-active-directory
             platforms: linux/amd64,linux/arm64
             test: openldap-active-directory
-          - image: polaris-catalog
+          - image: testing/polaris-catalog
             test: polaris-catalog
-          - image: spark3-iceberg
+          - image: testing/spark3-iceberg
             platforms: linux/amd64,linux/arm64
             test: spark3-iceberg
-          - image: spark3-delta
+          - image: testing/spark3-delta
             platforms: linux/amd64,linux/arm64
             test: spark3-delta
-          - image: spark3-hudi
+          - image: testing/spark3-hudi
             platforms: linux/amd64,linux/arm64
             test: spark3-hudi
-          - image: kerberos
+          - image: testing/kerberos
             platforms: linux/amd64,linux/arm64
             test: kerberos
-          - image: hive3.1-hive
+          - image: testing/hive3.1-hive
             platforms: linux/amd64,linux/arm64
             test: hive3.1-hive
-          - image: hive4.0-hive
+          - image: testing/hive4.0-hive
             # Haven't added `linux/arm64` platform as test image fails with `The requested image's platform (linux/arm64) does not match the detected host platform (linux/amd64/v3) and no specific platform was requested`
             platforms: linux/amd64
             test: hive4.0-hive
-          - image: hdp3.1-hive-kerberized
+          - image: testing/hdp3.1-hive-kerberized
             test: hdp3.1-hive
-          - image: unity-catalog
+          - image: testing/unity-catalog
             test: unity-catalog
+          - image: build/sphinx
+            platforms: linux/amd64,linux/arm64
     steps:
     - uses: actions/checkout@v3
       with:
@@ -55,7 +57,7 @@ jobs:
     - name: Build ${{ matrix.image }}
       env:
         PLATFORMS: ${{ matrix.platforms }}
-      run: make "testing/${{ matrix.image }}"
+      run: make "${{ matrix.image }}"
     - name: Test ${{ matrix.test }}
       env:
         PLATFORMS: ${{ matrix.platforms }}
