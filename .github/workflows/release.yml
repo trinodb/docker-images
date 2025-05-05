@@ -81,6 +81,7 @@ jobs:
           testing/hdp3.1-hive-kerberized-kms
         )
         multi_arch=(
+          build/sphinx
           testing/almalinux9-oj11
           testing/almalinux9-oj17
           testing/almalinux9-oj17-openldap
