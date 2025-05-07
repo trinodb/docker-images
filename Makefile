@@ -39,7 +39,7 @@ FLAGDIR=$(BUILDDIR)/flags
 # build up into pieces based on image that have a large number of direct and
 # indirect children.
 #
-IMAGE_DIRS := $(shell find ./testing ./build -type f -name Dockerfile -exec dirname {} \;)
+IMAGE_DIRS := $(shell find testing build -type f -name Dockerfile -exec dirname {} \;)
 UNLABELLED_TAGS := $(addsuffix @unlabelled,$(IMAGE_DIRS))
 PARENT_CHECKS := $(addsuffix -parent-check,$(IMAGE_DIRS))
 LATEST_TAGS := $(addsuffix @latest,$(IMAGE_DIRS))
