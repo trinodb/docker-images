@@ -10,13 +10,13 @@ jobs:
       contents: write
       packages: write
     steps:
-    - name: Free up disk space
-      shell: bash
-      run: ./.github/bin/free-disk-space.sh
-
     - uses: actions/checkout@v3
       with:
         fetch-depth: 0 # checkout tags so version in Manifest is set properly
+
+    - name: Free up disk space
+      shell: bash
+      run: ./.github/bin/free-disk-space.sh
 
     - name: Configure Git user
       run: |
