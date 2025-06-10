@@ -67,7 +67,7 @@ function run_hive4_tests() {
 }
 
 function check_spark() {
-    environment_compose exec spark curl --http0.9 -f http://localhost:10213 -o /dev/null
+    environment_compose exec spark nc -z localhost 10213
 }
 
 function run_spark_tests() {

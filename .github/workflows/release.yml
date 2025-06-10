@@ -79,7 +79,7 @@ jobs:
           testing/almalinux9-oj17-openldap-active-directory
           testing/hive3.1-hive
           testing/kerberos
-          testing/spark3-delta
+          testing/spark4-delta
           testing/spark3-iceberg
           testing/spark3-hudi
           testing/hive4.0-hive
