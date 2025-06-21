@@ -41,8 +41,6 @@ jobs:
             test: hive4.0-hive
           - image: testing/hdp3.1-hive-kerberized
             test: hdp3.1-hive
-          - image: testing/unity-catalog
-            test: unity-catalog
           - image: build/sphinx
             platforms: linux/amd64,linux/arm64
     steps:
