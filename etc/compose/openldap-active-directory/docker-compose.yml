@@ -1,4 +1,3 @@
-version: '2.0'
 services:
   openldap:
     image: testing/almalinux9-oj17-openldap-active-directory:latest$ARCH

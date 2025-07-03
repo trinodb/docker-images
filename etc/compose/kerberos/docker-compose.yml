@@ -1,4 +1,3 @@
-version: '2.0'
 services:
   kerberos:
     image: testing/kerberos:latest$ARCH
