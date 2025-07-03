@@ -16,14 +16,14 @@ RUN git clone --depth=1 https://github.com/apache/polaris.git /polaris
 
 WORKDIR /polaris
 
-RUN gradle :polaris-quarkus-server:build
+RUN gradle :polaris-server:build
 
 FROM eclipse-temurin:21-jre-alpine
 
-COPY --from=builder /polaris/quarkus/server/build/quarkus-app/lib/ /lib/
-COPY --from=builder /polaris/quarkus/server/build/quarkus-app/*.jar/ /
-COPY --from=builder /polaris/quarkus/server/build/quarkus-app/app/ /app/
-COPY --from=builder /polaris/quarkus/server/build/quarkus-app/quarkus/ /quarkus/
+COPY --from=builder /polaris/runtime/server/build/quarkus-app/lib/ /lib/
+COPY --from=builder /polaris/runtime/server/build/quarkus-app/*.jar/ /
+COPY --from=builder /polaris/runtime/server/build/quarkus-app/app/ /app/
+COPY --from=builder /polaris/runtime/server/build/quarkus-app/quarkus/ /quarkus/
 
 EXPOSE 8181
 
