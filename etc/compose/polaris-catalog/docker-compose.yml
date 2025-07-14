@@ -1,3 +1,0 @@
-services:
-  polaris:
-    image: testing/polaris-catalog:latest

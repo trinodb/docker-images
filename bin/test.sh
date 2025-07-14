@@ -187,10 +187,7 @@ for ARCH in "${platforms[@]}"; do
 
     LOGS_PID=$!
 
-    if [[ ${ENVIRONMENT} == *"polaris"* ]]; then
-        # TODO Add test for Polaris
-        test true
-    elif [[ ${ENVIRONMENT} == "kerberos" ]]; then
+    if [[ ${ENVIRONMENT} == "kerberos" ]]; then
         run_kerberos_tests
     elif [[ ${ENVIRONMENT} == *"hive4"* ]]; then
         # wait until hiveserver is started
