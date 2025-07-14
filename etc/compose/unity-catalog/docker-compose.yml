@@ -1,3 +1,0 @@
-services:
-  polaris:
-    image: testing/unity-catalog:latest
