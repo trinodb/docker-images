@@ -17,6 +17,8 @@ ARG SPARK_VERSION=3.3.1
 ARG HADOOP_VERSION=3
 ARG HUDI_VERSION=0.12.3
 ARG SCALA_VERSION=2.12
+ARG HADOOP_AWS_VERSION=3.4.2
+ARG AWSSDK_VERSION=2.41.6
 
 ARG SPARK_ARTIFACT="spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}"
 
@@ -32,8 +34,8 @@ RUN set -xeu; \
 WORKDIR ${SPARK_HOME}/jars
 
 # install AWS SDK so we can access S3; the version must match the hadoop-* jars which are part of SPARK distribution
-RUN wget -nv "https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/3.3.1/hadoop-aws-3.3.1.jar"
-RUN wget -nv "https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-bundle/1.12.48/aws-java-sdk-bundle-1.12.48.jar"
+RUN wget -nv "https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/$HADOOP_AWS_VERSION/hadoop-aws-$HADOOP_AWS_VERSION.jar"
+RUN wget -nv "https://repo1.maven.org/maven2/software/amazon/awssdk/bundle/$AWSSDK_VERSION/bundle-$AWSSDK_VERSION.jar"
 
 # install Hudi
 RUN wget -nv "https://repo1.maven.org/maven2/org/apache/hudi/hudi-spark3-bundle_${SCALA_VERSION}/${HUDI_VERSION}/hudi-spark3-bundle_${SCALA_VERSION}-${HUDI_VERSION}.jar"
