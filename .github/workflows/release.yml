@@ -77,7 +77,6 @@ jobs:
           testing/hive3.1-hive
           testing/kerberos
           testing/spark4-delta
-          testing/spark3-iceberg
           testing/spark4-iceberg
           testing/spark3-hudi
           testing/hive4.0-hive

@@ -1,3 +1,0 @@
-services:
-  spark:
-    image: testing/spark3-iceberg:latest$ARCH
