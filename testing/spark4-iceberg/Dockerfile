@@ -43,8 +43,8 @@ RUN wget -nv https://repo1.maven.org/maven2/com/microsoft/azure/azure-storage/8.
 RUN wget -nv https://storage.googleapis.com/hadoop-lib/gcs/gcs-connector-hadoop2-latest.jar
 
 # install Iceberg
-RUN wget -nv "https://repository.apache.org/content/repositories/snapshots/org/apache/iceberg/iceberg-spark-runtime-${ICEBERG_JAR_VERSION}/${ICEBERG_VERSION}-SNAPSHOT/iceberg-spark-runtime-${ICEBERG_JAR_VERSION}-${ICEBERG_VERSION}-20250818.003355-104.jar"
-RUN wget -nv "https://repository.apache.org/content/repositories/snapshots/org/apache/iceberg/iceberg-aws-bundle/${ICEBERG_VERSION}-SNAPSHOT/iceberg-aws-bundle-${ICEBERG_VERSION}-20250818.003355-215.jar"
+RUN wget -nv "https://repo1.maven.org/maven2/org/apache/iceberg/iceberg-spark-runtime-${ICEBERG_JAR_VERSION}/${ICEBERG_VERSION}/iceberg-spark-runtime-${ICEBERG_JAR_VERSION}-${ICEBERG_VERSION}.jar"
+RUN wget -nv "https://repo1.maven.org/maven2/org/apache/iceberg/iceberg-aws-bundle/${ICEBERG_VERSION}/iceberg-aws-bundle-${ICEBERG_VERSION}.jar"
 
 # install PostgreSQL driver for JDBC catalog
 RUN wget -nv "https://repo1.maven.org/maven2/org/postgresql/postgresql/${POSTGRESQL_JAR_VERSION}/postgresql-${POSTGRESQL_JAR_VERSION}.jar"
