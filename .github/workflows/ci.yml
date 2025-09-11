@@ -45,7 +45,7 @@ jobs:
           - image: build/sphinx
             platforms: linux/amd64,linux/arm64
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v5
       with:
         fetch-depth: 0 # checkout tags so version in Manifest is set properly
     - name: Set up QEMU
