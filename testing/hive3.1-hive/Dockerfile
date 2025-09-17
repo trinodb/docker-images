@@ -39,9 +39,8 @@ ENV JAVA_HOME=/usr/lib/jvm/zulu-8
 ARG HADOOP_VERSION=3.1.2
 ARG HIVE_VERSION=3.1.3
 
-# TODO Apache Archive is rate limited -- these should probably go in S3
-ARG HADOOP_BINARY_PATH=https://archive.apache.org/dist/hadoop/common/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz
-ARG HIVE_BINARY_PATH=https://archive.apache.org/dist/hive/hive-$HIVE_VERSION/apache-hive-$HIVE_VERSION-bin.tar.gz
+ARG HADOOP_BINARY_PATH=https://mirrors.huaweicloud.com/apache/hadoop/common/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz
+ARG HIVE_BINARY_PATH=https://mirrors.huaweicloud.com/apache/hive/hive-$HIVE_VERSION/apache-hive-$HIVE_VERSION-bin.tar.gz
 
 RUN curl -fLsS -o /tmp/hadoop.tar.gz --url $HADOOP_BINARY_PATH && \
     tar xzf /tmp/hadoop.tar.gz --directory /opt && mv /opt/hadoop-$HADOOP_VERSION /opt/hadoop
