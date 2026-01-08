@@ -39,6 +39,9 @@ RUN wget -nv "https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-bundle/1
 RUN wget -nv https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-azure/3.3.4/hadoop-azure-3.3.4.jar
 RUN wget -nv https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-azure-datalake/3.3.6/hadoop-azure-datalake-3.3.6.jar
 RUN wget -nv https://repo1.maven.org/maven2/com/microsoft/azure/azure-storage/8.6.6/azure-storage-8.6.6.jar
+# install Jackson 1.x required by Hadoop Azure ABFS client (removed in Spark 4)
+RUN wget -nv https://repo1.maven.org/maven2/org/codehaus/jackson/jackson-core-asl/1.9.13/jackson-core-asl-1.9.13.jar
+RUN wget -nv https://repo1.maven.org/maven2/org/codehaus/jackson/jackson-mapper-asl/1.9.13/jackson-mapper-asl-1.9.13.jar
 # install Google Hadoop connector so we can access gcs
 RUN wget -nv https://storage.googleapis.com/hadoop-lib/gcs/gcs-connector-hadoop2-latest.jar
 
