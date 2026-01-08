@@ -4,56 +4,110 @@ on: [push, pull_request]
 
 jobs:
   build-images:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.runner }}
     timeout-minutes: 60
     strategy:
       fail-fast: false
       matrix:
         include:
           - image: testing/almalinux9-oj17
-            platforms: linux/amd64,linux/arm64
+            platform: linux/amd64
+            runner: ubuntu-24.04
+          - image: testing/almalinux9-oj17
+            platform: linux/arm64
+            runner: ubuntu-24.04-arm
+
           - image: testing/almalinux9-oj17-openldap-referrals
-            platforms: linux/amd64,linux/arm64
+            platform: linux/amd64
+            runner: ubuntu-24.04
             test: openldap
+          - image: testing/almalinux9-oj17-openldap-referrals
+            platform: linux/arm64
+            runner: ubuntu-24.04-arm
+            test: openldap
+
           - image: testing/almalinux9-oj17-openldap-active-directory
-            platforms: linux/amd64,linux/arm64
+            platform: linux/amd64
+            runner: ubuntu-24.04
             test: openldap-active-directory
+          - image: testing/almalinux9-oj17-openldap-active-directory
+            platform: linux/arm64
+            runner: ubuntu-24.04-arm
+            test: openldap-active-directory
+
           - image: testing/spark4-iceberg
-            platforms: linux/amd64,linux/arm64
+            platform: linux/amd64
+            runner: ubuntu-24.04
             test: spark4-iceberg
+          - image: testing/spark4-iceberg
+            platform: linux/arm64
+            runner: ubuntu-24.04-arm
+            test: spark4-iceberg
+
           - image: testing/spark4-delta
-            platforms: linux/amd64,linux/arm64
+            platform: linux/amd64
+            runner: ubuntu-24.04
             test: spark4-delta
+          - image: testing/spark4-delta
+            platform: linux/arm64
+            runner: ubuntu-24.04-arm
+            test: spark4-delta
+
           - image: testing/spark3-hudi
-            platforms: linux/amd64,linux/arm64
+            platform: linux/amd64
+            runner: ubuntu-24.04
             test: spark3-hudi
+          - image: testing/spark3-hudi
+            platform: linux/arm64
+            runner: ubuntu-24.04-arm
+            test: spark3-hudi
+
           - image: testing/kerberos
-            platforms: linux/amd64,linux/arm64
+            platform: linux/amd64
+            runner: ubuntu-24.04
             test: kerberos
+          - image: testing/kerberos
+            platform: linux/arm64
+            runner: ubuntu-24.04-arm
+            test: kerberos
+
           - image: testing/hive3.1-hive
-            platforms: linux/amd64,linux/arm64
+            platform: linux/amd64
+            runner: ubuntu-24.04
             test: hive3.1-hive
+          - image: testing/hive3.1-hive
+            platform: linux/arm64
+            runner: ubuntu-24.04-arm
+            test: hive3.1-hive
+
+          # Haven't added `linux/arm64` platform as test image fails with `The requested image's platform (linux/arm64) does not match the detected host platform (linux/amd64/v3) and no specific platform was requested`
           - image: testing/hive4.0-hive
-            # Haven't added `linux/arm64` platform as test image fails with `The requested image's platform (linux/arm64) does not match the detected host platform (linux/amd64/v3) and no specific platform was requested`
-            platforms: linux/amd64
+            platform: linux/amd64
+            runner: ubuntu-24.04
             test: hive4.0-hive
+
           - image: testing/hdp3.1-hive-kerberized
+            runner: ubuntu-24.04
             test: hdp3.1-hive
+
           - image: build/sphinx
-            platforms: linux/amd64,linux/arm64
+            platform: linux/amd64
+            runner: ubuntu-24.04
+          - image: build/sphinx
+            platform: linux/arm64
+            runner: ubuntu-24.04-arm
+
     steps:
     - uses: actions/checkout@v3
       with:
         fetch-depth: 0 # checkout tags so version in Manifest is set properly
-    - name: Set up QEMU
-      uses: docker/setup-qemu-action@v2
-    - name: Build ${{ matrix.image }}
+    - name: Build ${{ matrix.image }} (${{ matrix.platform }})
       env:
-        PLATFORMS: ${{ matrix.platforms }}
+        PLATFORM: ${{ matrix.platform }}
       run: make "${{ matrix.image }}"
     - name: Test ${{ matrix.test }}
       env:
-        PLATFORMS: ${{ matrix.platforms }}
+        PLATFORM: ${{ matrix.platform }}
       if: ${{ matrix.test  != '' }}
       shell: 'script -q -e -c "bash {0}"'
       run: make test IMAGE_TO_TEST="${{ matrix.test }}"
