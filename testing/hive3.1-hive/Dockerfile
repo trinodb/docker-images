@@ -37,15 +37,20 @@ RUN yum install -y \
 ENV JAVA_HOME=/usr/lib/jvm/zulu-8
 
 ARG HADOOP_VERSION=3.1.2
+ARG HADOOP_BINARY_SHA256=1c02ccc60a09c63a48dc4234ffd3aed1b75e5a1f2b49d60927eda114b93dd31a
+
 ARG HIVE_VERSION=3.1.3
+ARG HIVE_BINARY_SHA256=0c9b6a6359a7341b6029cc9347435ee7b379f93846f779d710b13f795b54bb16
 
 ARG HADOOP_BINARY_PATH=https://mirrors.huaweicloud.com/apache/hadoop/common/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz
 ARG HIVE_BINARY_PATH=https://mirrors.huaweicloud.com/apache/hive/hive-$HIVE_VERSION/apache-hive-$HIVE_VERSION-bin.tar.gz
 
 RUN curl -fLsS -o /tmp/hadoop.tar.gz --url $HADOOP_BINARY_PATH && \
+    echo "$HADOOP_BINARY_SHA256  /tmp/hadoop.tar.gz" | sha256sum -c - && \
     tar xzf /tmp/hadoop.tar.gz --directory /opt && mv /opt/hadoop-$HADOOP_VERSION /opt/hadoop
 
 RUN curl -fLsS -o /tmp/hive.tar.gz --url $HIVE_BINARY_PATH && \
+    echo "$HIVE_BINARY_SHA256  /tmp/hive.tar.gz" | sha256sum -c - && \
     tar xzf /tmp/hive.tar.gz --directory /opt && mv /opt/apache-hive-${HIVE_VERSION}-bin /opt/hive
 
 ARG MYSQL_CONNECTOR_VERSION=8.0.13
