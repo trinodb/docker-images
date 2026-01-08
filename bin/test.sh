@@ -170,10 +170,15 @@ stop_all_containers
 # catch terminate signals
 trap terminate INT TERM EXIT
 
-if [ -n "${PLATFORMS:-}" ]; then
+# Single platform (native runners in CI)
+if [ -n "${PLATFORM:-}" ]; then
+    platforms=("-${PLATFORM//\//-}")
+# Multiple platforms (release workflow)
+elif [ -n "${PLATFORMS:-}" ]; then
     IFS=, read -ra platforms <<<"$PLATFORMS"
     platforms=("${platforms[@]//\//-}")
     platforms=("${platforms[@]/#/-}")
+# No platform specified
 else
     platforms=("")
 fi
