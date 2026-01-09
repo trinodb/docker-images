@@ -1,42 +1,39 @@
 name: release
 
 on:
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      registry:
+        description: 'Container registry prefix (e.g., ghcr.io/trinodb)'
+        required: false
+        default: 'ghcr.io/trinodb'
+      dry_run:
+        description: 'Dry run (skip git push)'
+        type: boolean
+        required: false
+        default: false
 
 jobs:
-  release:
-    runs-on: ubuntu-latest
+  prepare:
+    runs-on: ubuntu-24.04
     permissions:
       contents: write
-      packages: write
+    outputs:
+      version: ${{ steps.version.outputs.VERSION }}
+      do_release: ${{ steps.version.outputs.DO_RELEASE }}
     steps:
     - uses: actions/checkout@v3
       with:
-        fetch-depth: 0 # checkout tags so version in Manifest is set properly
-
-    - name: Free up disk space
-      shell: bash
-      run: ./.github/bin/free-disk-space.sh
+        fetch-depth: 0
 
     - name: Configure Git user
       run: |
         git config user.email "releases@trinodb.io"
         git config user.name "Trino release automation"
 
-    - name: Set up QEMU
-      uses: docker/setup-qemu-action@v2
-
-    - name: Log in to the Container registry
-      # locked to https://github.com/docker/login-action/releases/tag/v2.1.0
-      uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
-      with:
-        registry: ghcr.io
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-
     - name: Set release version
+      id: version
       run: |
-        # if there's a SNAPSHOT suffix, remove it and commit changes
         DO_RELEASE=false
         if grep -q '^[0-9]\+-SNAPSHOT$' version; then
           sed -i 's/^\([0-9]\+\)-SNAPSHOT$/\1/' version
@@ -44,23 +41,45 @@ jobs:
           git diff
           git commit -a -m "Release: $VERSION"
           git tag -m "" "$VERSION"
-          # Verify tag was created and points to the release commit
           git show tags/"$VERSION"
           DO_RELEASE=true
         fi
         VERSION=$(cat version)
-        echo "VERSION=${VERSION}" >> $GITHUB_ENV
-        echo "DO_RELEASE=${DO_RELEASE}" >> $GITHUB_ENV
+        echo "VERSION=${VERSION}" >> $GITHUB_OUTPUT
+        echo "DO_RELEASE=${DO_RELEASE}" >> $GITHUB_OUTPUT
 
-    - name: Make release
+  release-amd64:
+    needs: prepare
+    if: needs.prepare.outputs.do_release == 'true'
+    runs-on: ubuntu-24.04
+    permissions:
+      packages: write
+    env:
+      VERSION: ${{ needs.prepare.outputs.version }}
+      REGISTRY: ${{ inputs.registry }}
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: Set release version
+      run: echo "$VERSION" > version
+
+    - name: Free up disk space
+      run: ./.github/bin/free-disk-space.sh
+
+    - name: Log in to the Container registry
+      uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Install crane
+      uses: imjasonh/setup-crane@31b88efe9de28ae0ffa220711af4b60be9435f6e # v0.4
+
+    - name: Build and push amd64 images
       run: |
-        if [ "$DO_RELEASE" != "true" ]; then
-          echo "Skipping the release step because not starting from a snapshot version"
-          exit 0
-        fi
-        skipped_images=(
-          testing/almalinux9-oj17-openldap-base
-        )
         single_arch=(
           testing/hdp3.1-hive
           testing/hdp3.1-hive-kerberized
@@ -81,32 +100,185 @@ jobs:
           testing/spark3-hudi
           testing/hive4.0-hive
         )
-        referenced_images=("${skipped_images[@]}" "${single_arch[@]}" "${multi_arch[@]}")
-        make meta
-        read -a images < <(make list)
-        export LC_ALL=C
-        mapfile -t ignored < <( \
-            comm -23 \
-                <(printf '%s\n' "${images[@]}" | sort) \
-                <(printf '%s\n' "${referenced_images[@]}" | sort) \
+
+        mkdir -p /tmp/refs
+
+        # Build and push single_arch (amd64-only) images by digest
+        for image in "${single_arch[@]}"; do
+          make "$image"
+          SAFE_NAME="${image//\//-}"
+          docker save "${image}:latest" -o /tmp/image.tar
+          crane push /tmp/image.tar "${REGISTRY}/${image}" --image-refs "/tmp/refs/${SAFE_NAME}"
+        done
+
+        # Build and push multi_arch amd64 images by digest
+        for image in "${multi_arch[@]}"; do
+          make "$image"
+          SAFE_NAME="${image//\//-}"
+          docker save "${image}:latest" -o /tmp/image.tar
+          crane push /tmp/image.tar "${REGISTRY}/${image}" --image-refs "/tmp/refs/${SAFE_NAME}-linux-amd64"
+        done
+
+    - name: Upload refs
+      uses: actions/upload-artifact@v4
+      with:
+        name: refs-amd64
+        path: /tmp/refs/*
+
+  release-arm64:
+    needs: prepare
+    if: needs.prepare.outputs.do_release == 'true'
+    runs-on: ubuntu-24.04-arm
+    permissions:
+      packages: write
+    env:
+      VERSION: ${{ needs.prepare.outputs.version }}
+      REGISTRY: ${{ inputs.registry }}
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: Set release version
+      run: echo "$VERSION" > version
+
+    - name: Free up disk space
+      run: ./.github/bin/free-disk-space.sh
+
+    - name: Log in to the Container registry
+      uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Install crane
+      uses: imjasonh/setup-crane@31b88efe9de28ae0ffa220711af4b60be9435f6e # v0.4
+
+    - name: Build and push arm64 images
+      run: |
+        # hive4.0-hive excluded - amd64 only
+        multi_arch=(
+          build/sphinx
+          testing/almalinux9-oj11
+          testing/almalinux9-oj17
+          testing/almalinux9-oj17-openldap
+          testing/almalinux9-oj17-openldap-referrals
+          testing/almalinux9-oj17-openldap-active-directory
+          testing/hive3.1-hive
+          testing/kerberos
+          testing/spark4-delta
+          testing/spark4-iceberg
+          testing/spark3-hudi
         )
-        if [ "${#ignored[@]}" -ne 0 ]; then
-          echo "Images that would not get released: ${ignored[*]}"
-          echo "Must be explicitly added to either single_arch or multi_arch list or should be added to skipped list"
-          exit 2
-        fi
-        make prepare-release
 
-        make "${single_arch[@]/%/@$VERSION}"
-        # free up disk space
-        docker system prune --volumes
-        make "${multi_arch[@]/%/@$VERSION}" PLATFORMS="linux/amd64,linux/arm64"
+        mkdir -p /tmp/refs
 
-        single_remote=("${single_arch[@]/#/ghcr.io/trinodb/}")
-        ./bin/push.sh "${single_remote[@]/%/:$VERSION}"
-        export PLATFORMS="linux/amd64,linux/arm64"
-        multi_remote=("${multi_arch[@]/#/ghcr.io/trinodb/}")
-        ./bin/push.sh "${multi_remote[@]/%/:$VERSION}"
+        # Build and push multi_arch arm64 images by digest
+        for image in "${multi_arch[@]}"; do
+          make "$image"
+          SAFE_NAME="${image//\//-}"
+          docker save "${image}:latest" -o /tmp/image.tar
+          crane push /tmp/image.tar "${REGISTRY}/${image}" --image-refs "/tmp/refs/${SAFE_NAME}-linux-arm64"
+        done
+
+    - name: Upload refs
+      uses: actions/upload-artifact@v4
+      with:
+        name: refs-arm64
+        path: /tmp/refs/*
+
+  create-manifests:
+    needs: [prepare, release-amd64, release-arm64]
+    runs-on: ubuntu-24.04
+    permissions:
+      packages: write
+    env:
+      VERSION: ${{ needs.prepare.outputs.version }}
+      REGISTRY: ${{ inputs.registry }}
+    steps:
+    - name: Log in to the Container registry
+      uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Install crane
+      uses: imjasonh/setup-crane@31b88efe9de28ae0ffa220711af4b60be9435f6e # v0.4
+
+    - name: Download refs
+      uses: actions/download-artifact@v4
+      with:
+        path: /tmp/refs
+        pattern: refs-*
+        merge-multiple: true
+
+    - name: Create and push manifests
+      run: |
+        single_arch=(
+          testing/hdp3.1-hive
+          testing/hdp3.1-hive-kerberized
+          testing/hdp3.1-hive-kerberized-2
+          testing/hdp3.1-hive-kerberized-kms
+        )
+        multi_arch=(
+          build/sphinx
+          testing/almalinux9-oj11
+          testing/almalinux9-oj17
+          testing/almalinux9-oj17-openldap
+          testing/almalinux9-oj17-openldap-referrals
+          testing/almalinux9-oj17-openldap-active-directory
+          testing/hive3.1-hive
+          testing/kerberos
+          testing/spark4-delta
+          testing/spark4-iceberg
+          testing/spark3-hudi
+        )
+
+        # Tag single_arch (amd64-only) images with final version
+        for image in "${single_arch[@]}"; do
+          SAFE_NAME="${image//\//-}"
+          REF=$(cat "/tmp/refs/${SAFE_NAME}")
+          crane tag "$REF" "${VERSION}"
+        done
+
+        # Create multi-arch manifests for images with both platforms
+        for image in "${multi_arch[@]}"; do
+          SAFE_NAME="${image//\//-}"
+          AMD64_REF=$(cat "/tmp/refs/${SAFE_NAME}-linux-amd64")
+          ARM64_REF=$(cat "/tmp/refs/${SAFE_NAME}-linux-arm64")
+          crane index append -t "${REGISTRY}/${image}:${VERSION}" \
+            -m "$AMD64_REF" \
+            -m "$ARM64_REF"
+        done
+
+        # hive4.0-hive is amd64-only but in multi_arch list (has no arm64 build)
+        AMD64_REF=$(cat "/tmp/refs/testing-hive4.0-hive-linux-amd64")
+        crane tag "$AMD64_REF" "${VERSION}"
+
+  finalize:
+    needs: [prepare, create-manifests]
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    env:
+      VERSION: ${{ needs.prepare.outputs.version }}
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: Configure Git user
+      run: |
+        git config user.email "releases@trinodb.io"
+        git config user.name "Trino release automation"
+
+    - name: Checkout release tag
+      if: ${{ inputs.dry_run != true }}
+      run: |
+        git fetch --tags origin
+        git checkout "$VERSION"
 
     - name: Set next development version
       run: |
@@ -114,6 +286,7 @@ jobs:
         echo "$VERSION-SNAPSHOT" > version
         git diff
         git commit -a -m "Prepare for next development iteration"
-        # Show the contents of the commit
         git show HEAD
-        git push --tags origin master
+        if [ "${{ inputs.dry_run }}" != "true" ]; then
+          git push --tags origin master
+        fi
