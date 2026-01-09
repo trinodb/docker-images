@@ -10,67 +10,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - image: testing/almalinux9-oj17
-            platform: linux/amd64
-            runner: ubuntu-24.04
-          - image: testing/almalinux9-oj17
-            platform: linux/arm64
-            runner: ubuntu-24.04-arm
-
-          - image: testing/almalinux9-oj17-openldap-referrals
-            platform: linux/amd64
-            runner: ubuntu-24.04
-            test: openldap
-          - image: testing/almalinux9-oj17-openldap-referrals
-            platform: linux/arm64
-            runner: ubuntu-24.04-arm
-            test: openldap
-
-          - image: testing/almalinux9-oj17-openldap-active-directory
-            platform: linux/amd64
-            runner: ubuntu-24.04
-            test: openldap-active-directory
-          - image: testing/almalinux9-oj17-openldap-active-directory
-            platform: linux/arm64
-            runner: ubuntu-24.04-arm
-            test: openldap-active-directory
-
-          - image: testing/spark4-iceberg
-            platform: linux/amd64
-            runner: ubuntu-24.04
-            test: spark4-iceberg
-          - image: testing/spark4-iceberg
-            platform: linux/arm64
-            runner: ubuntu-24.04-arm
-            test: spark4-iceberg
-
-          - image: testing/spark4-delta
-            platform: linux/amd64
-            runner: ubuntu-24.04
-            test: spark4-delta
-          - image: testing/spark4-delta
-            platform: linux/arm64
-            runner: ubuntu-24.04-arm
-            test: spark4-delta
-
-          - image: testing/spark3-hudi
-            platform: linux/amd64
-            runner: ubuntu-24.04
-            test: spark3-hudi
-          - image: testing/spark3-hudi
-            platform: linux/arm64
-            runner: ubuntu-24.04-arm
-            test: spark3-hudi
-
-          - image: testing/kerberos
-            platform: linux/amd64
-            runner: ubuntu-24.04
-            test: kerberos
-          - image: testing/kerberos
-            platform: linux/arm64
-            runner: ubuntu-24.04-arm
-            test: kerberos
-
+          # Images with large external downloads first (fail fast)
           - image: testing/hive3.1-hive
             platform: linux/amd64
             runner: ubuntu-24.04
@@ -89,6 +29,68 @@ jobs:
           - image: testing/hdp3.1-hive-kerberized
             runner: ubuntu-24.04
             test: hdp3.1-hive
+
+          - image: testing/spark4-iceberg
+            platform: linux/amd64
+            runner: ubuntu-24.04
+            test: spark4-iceberg
+          - image: testing/spark4-iceberg
+            platform: linux/arm64
+            runner: ubuntu-24.04-arm
+            test: spark4-iceberg
+
+          - image: testing/spark4-delta
+            platform: linux/amd64
+            runner: ubuntu-24.04
+            test: spark4-delta
+          - image: testing/spark4-delta
+            platform: linux/arm64
+            runner: ubuntu-24.04-arm
+            test: spark4-delta
+
+          - image: testing/spark3-hudi
+            platform: linux/amd64
+            runner: ubuntu-24.04
+            test: spark3-hudi
+          - image: testing/spark3-hudi
+            platform: linux/arm64
+            runner: ubuntu-24.04-arm
+            test: spark3-hudi
+
+          # Images without external downloads
+          - image: testing/kerberos
+            platform: linux/amd64
+            runner: ubuntu-24.04
+            test: kerberos
+          - image: testing/kerberos
+            platform: linux/arm64
+            runner: ubuntu-24.04-arm
+            test: kerberos
+
+          - image: testing/almalinux9-oj17
+            platform: linux/amd64
+            runner: ubuntu-24.04
+          - image: testing/almalinux9-oj17
+            platform: linux/arm64
+            runner: ubuntu-24.04-arm
+
+          - image: testing/almalinux9-oj17-openldap-referrals
+            platform: linux/amd64
+            runner: ubuntu-24.04
+            test: openldap
+          - image: testing/almalinux9-oj17-openldap-referrals
+            platform: linux/arm64
+            runner: ubuntu-24.04-arm
+            test: openldap
+
+          - image: testing/almalinux9-oj17-openldap-active-directory
+            platform: linux/amd64
+            runner: ubuntu-24.04
+            test: openldap-active-directory
+          - image: testing/almalinux9-oj17-openldap-active-directory
+            platform: linux/arm64
+            runner: ubuntu-24.04-arm
+            test: openldap-active-directory
 
           - image: build/sphinx
             platform: linux/amd64
