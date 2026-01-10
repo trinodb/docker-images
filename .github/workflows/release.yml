@@ -42,6 +42,9 @@ jobs:
           git commit -a -m "Release: $VERSION"
           git tag -m "" "$VERSION"
           git show tags/"$VERSION"
+          if [ "${{ inputs.dry_run }}" != "true" ]; then
+            git push origin HEAD:master "tags/$VERSION"
+          fi
           DO_RELEASE=true
         fi
         VERSION=$(cat version)
@@ -288,5 +291,5 @@ jobs:
         git commit -a -m "Prepare for next development iteration"
         git show HEAD
         if [ "${{ inputs.dry_run }}" != "true" ]; then
-          git push --tags origin master
+          git push origin HEAD:master
         fi
