@@ -19,51 +19,41 @@ jobs:
     permissions:
       contents: write
     outputs:
-      version: ${{ steps.version.outputs.VERSION }}
-      do_release: ${{ steps.version.outputs.DO_RELEASE }}
+      commit_sha: ${{ steps.release.outputs.COMMIT_SHA }}
     steps:
     - uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
 
     - name: Configure Git user
       run: |
         git config user.email "releases@trinodb.io"
         git config user.name "Trino release automation"
 
-    - name: Set release version
-      id: version
+    - name: Create release commit
+      id: release
       run: |
-        DO_RELEASE=false
-        if grep -q '^[0-9]\+-SNAPSHOT$' version; then
+        if ! grep -q '^[0-9]\+-SNAPSHOT$' version; then
+          echo "Error: version file must contain SNAPSHOT version (e.g., 124-SNAPSHOT)"
+          exit 1
+        fi
+        if [ "${{ inputs.dry_run }}" != "true" ]; then
           sed -i 's/^\([0-9]\+\)-SNAPSHOT$/\1/' version
           VERSION=$(cat version)
-          git diff
           git commit -a -m "Release: $VERSION"
-          git tag -m "" "$VERSION"
-          git show tags/"$VERSION"
-          DO_RELEASE=true
+          git push origin HEAD:master
         fi
-        VERSION=$(cat version)
-        echo "VERSION=${VERSION}" >> $GITHUB_OUTPUT
-        echo "DO_RELEASE=${DO_RELEASE}" >> $GITHUB_OUTPUT
+        echo "COMMIT_SHA=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
 
   release-amd64:
     needs: prepare
-    if: needs.prepare.outputs.do_release == 'true'
     runs-on: ubuntu-24.04
     permissions:
       packages: write
     env:
-      VERSION: ${{ needs.prepare.outputs.version }}
       REGISTRY: ${{ inputs.registry }}
     steps:
     - uses: actions/checkout@v3
       with:
-        fetch-depth: 0
-
-    - name: Set release version
-      run: echo "$VERSION" > version
+        ref: ${{ needs.prepare.outputs.commit_sha }}
 
     - name: Free up disk space
       run: ./.github/bin/free-disk-space.sh
@@ -127,20 +117,15 @@ jobs:
 
   release-arm64:
     needs: prepare
-    if: needs.prepare.outputs.do_release == 'true'
     runs-on: ubuntu-24.04-arm
     permissions:
       packages: write
     env:
-      VERSION: ${{ needs.prepare.outputs.version }}
       REGISTRY: ${{ inputs.registry }}
     steps:
     - uses: actions/checkout@v3
       with:
-        fetch-depth: 0
-
-    - name: Set release version
-      run: echo "$VERSION" > version
+        ref: ${{ needs.prepare.outputs.commit_sha }}
 
     - name: Free up disk space
       run: ./.github/bin/free-disk-space.sh
@@ -194,9 +179,12 @@ jobs:
     permissions:
       packages: write
     env:
-      VERSION: ${{ needs.prepare.outputs.version }}
       REGISTRY: ${{ inputs.registry }}
     steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: ${{ needs.prepare.outputs.commit_sha }}
+
     - name: Log in to the Container registry
       uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
       with:
@@ -213,6 +201,9 @@ jobs:
         path: /tmp/refs
         pattern: refs-*
         merge-multiple: true
+
+    - name: Set version from file
+      run: echo "VERSION=$(cat version)" >> $GITHUB_ENV
 
     - name: Create and push manifests
       run: |
@@ -259,34 +250,31 @@ jobs:
 
   finalize:
     needs: [prepare, create-manifests]
+    if: ${{ inputs.dry_run != true }}
     runs-on: ubuntu-24.04
     permissions:
       contents: write
-    env:
-      VERSION: ${{ needs.prepare.outputs.version }}
     steps:
     - uses: actions/checkout@v3
       with:
-        fetch-depth: 0
+        ref: ${{ needs.prepare.outputs.commit_sha }}
 
     - name: Configure Git user
       run: |
         git config user.email "releases@trinodb.io"
         git config user.name "Trino release automation"
 
-    - name: Checkout release tag
-      if: ${{ inputs.dry_run != true }}
+    - name: Create release tag
       run: |
-        git fetch --tags origin
-        git checkout "$VERSION"
+        VERSION=$(cat version)
+        git tag -m "" "$VERSION"
 
-    - name: Set next development version
+    - name: Create next development version
       run: |
+        VERSION=$(cat version)
         ((VERSION++))
         echo "$VERSION-SNAPSHOT" > version
-        git diff
         git commit -a -m "Prepare for next development iteration"
-        git show HEAD
-        if [ "${{ inputs.dry_run }}" != "true" ]; then
-          git push --tags origin master
-        fi
+
+    - name: Push changes
+      run: git push --tags origin HEAD:master

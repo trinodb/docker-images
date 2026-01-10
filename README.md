@@ -28,11 +28,14 @@ will build the `hdp3.1-base` and all the images depending on it (transitively).
 ## Releasing (pushing) docker image
 
 To release a new version of the images, run the `release` GitHub Actions (GHA) Workflow.
+The workflow requires the `version` file to contain a SNAPSHOT version (e.g., `124-SNAPSHOT`)
+and will fail otherwise.
+
 It will:
-1. Remove the `-SNAPSHOT` suffix from the `version` file.
-2. Run `make release` that builds and pushes all Docker images.
-3. Increment the version number and save it with the `-SNAPSHOT` suffix in the `version` file.
-4. Commit and push all changes to the git repository.
+1. Remove the `-SNAPSHOT` suffix from the `version` file and commit to master.
+2. Build and push all Docker images for amd64 and arm64 architectures.
+3. Create a git tag for the release version.
+4. Increment the version number, add the `-SNAPSHOT` suffix, and commit to master.
 
 All of the docker images in the repository share the same version number. This
 is because most of the images depend on a parent image that is also in the
@@ -48,6 +51,19 @@ This means that we treat the repository as a single codebase that creates
 multiple artifacts (Docker images) that all need to be released together.
 
 > Note: manual releases are not recommended. Use the GHA Workflow instead.
+
+### Testing Releases (Dry Run)
+
+To test the release process without modifying the official repository:
+
+1. Fork this repository
+2. Run the `release` workflow with:
+   - `dry_run: true` - Skips all git commits and tag creation
+   - `registry: ghcr.io/YOUR_USERNAME` - Pushes images to your personal registry
+
+**Note:** Even in dry run mode, Docker images ARE pushed to the specified registry.
+Only git operations (commits, tags) are skipped. This is intended for testing
+the full build and push pipeline in a personal fork.
 
 If you must publish a new version manually, follow these steps:
 
