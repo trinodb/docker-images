@@ -7,11 +7,6 @@ on:
         description: 'Container registry prefix (e.g., ghcr.io/trinodb)'
         required: false
         default: 'ghcr.io/trinodb'
-      dry_run:
-        description: 'Dry run (skip git push)'
-        type: boolean
-        required: false
-        default: false
 
 jobs:
   prepare:
@@ -35,12 +30,10 @@ jobs:
           echo "Error: version file must contain SNAPSHOT version (e.g., 124-SNAPSHOT)"
           exit 1
         fi
-        if [ "${{ inputs.dry_run }}" != "true" ]; then
-          sed -i 's/^\([0-9]\+\)-SNAPSHOT$/\1/' version
-          VERSION=$(cat version)
-          git commit -a -m "Release: $VERSION"
-          git push origin HEAD:master
-        fi
+        sed -i 's/^\([0-9]\+\)-SNAPSHOT$/\1/' version
+        VERSION=$(cat version)
+        git commit -a -m "Release: $VERSION"
+        git push origin HEAD:master
         echo "COMMIT_SHA=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
 
   release-amd64:
@@ -250,7 +243,6 @@ jobs:
 
   finalize:
     needs: [prepare, create-manifests]
-    if: ${{ inputs.dry_run != true }}
     runs-on: ubuntu-24.04
     permissions:
       contents: write
