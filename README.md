@@ -52,18 +52,19 @@ multiple artifacts (Docker images) that all need to be released together.
 
 > Note: manual releases are not recommended. Use the GHA Workflow instead.
 
-### Testing Releases (Dry Run)
+### Testing the Release Workflow
 
-To test the release process without modifying the official repository:
+To test the release workflow without affecting the official repository:
 
-1. Fork this repository
-2. Run the `release` workflow with:
-   - `dry_run: true` - Skips all git commits and tag creation
+1. Fork this repository to your personal GitHub account
+2. Run the `release` workflow in your fork with:
    - `registry: ghcr.io/YOUR_USERNAME` - Pushes images to your personal registry
 
-**Note:** Even in dry run mode, Docker images ARE pushed to the specified registry.
-Only git operations (commits, tags) are skipped. This is intended for testing
-the full build and push pipeline in a personal fork.
+This will perform a full release in your fork, including git commits, tags, and
+Docker image pushes. After testing, you may want to manually clean up:
+- Delete the release tag from your fork
+- Delete the Docker images from your personal registry
+- Reset the version file if needed
 
 If you must publish a new version manually, follow these steps:
 
