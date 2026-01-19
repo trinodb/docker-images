@@ -19,6 +19,8 @@ ARG ICEBERG_VERSION=1.10.1
 # ICEBERG_JAR_VERSION is derived from: <spark-version>_<scala-version>
 ARG ICEBERG_JAR_VERSION=4.0_2.13
 ARG POSTGRESQL_JAR_VERSION=42.3.5
+ARG HADOOP_AWS_VERSION=3.4.2
+ARG AWSSDK_VERSION=2.41.6
 
 ARG SPARK_ARTIFACT="spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}"
 
@@ -34,8 +36,8 @@ RUN set -xeu; \
 WORKDIR ${SPARK_HOME}/jars
 
 # install AWS SDK so we can access S3; the version must match the hadoop-* jars which are part of SPARK distribution
-RUN wget -nv "https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/3.3.4/hadoop-aws-3.3.4.jar"
-RUN wget -nv "https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-bundle/1.12.319/aws-java-sdk-bundle-1.12.319.jar"
+RUN wget -nv "https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/$HADOOP_AWS_VERSION/hadoop-aws-$HADOOP_AWS_VERSION.jar"
+RUN wget -nv "https://repo1.maven.org/maven2/software/amazon/awssdk/bundle/$AWSSDK_VERSION/bundle-$AWSSDK_VERSION.jar"
 # install Azure SDK so we can access azure file system; the version must match the hadoop-* jars which are part of SPARK distribution
 RUN wget -nv https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-azure/3.3.4/hadoop-azure-3.3.4.jar
 RUN wget -nv https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-azure-datalake/3.3.6/hadoop-azure-datalake-3.3.6.jar
