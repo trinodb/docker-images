@@ -20,10 +20,13 @@ jobs:
             runner: ubuntu-24.04-arm
             test: hive3.1-hive
 
-          # Haven't added `linux/arm64` platform as test image fails with `The requested image's platform (linux/arm64) does not match the detected host platform (linux/amd64/v3) and no specific platform was requested`
           - image: testing/hive4.0-hive
             platform: linux/amd64
             runner: ubuntu-24.04
+            test: hive4.0-hive
+          - image: testing/hive4.0-hive
+            platform: linux/arm64
+            runner: ubuntu-24.04-arm
             test: hive4.0-hive
 
           - image: testing/hdp3.1-hive-kerberized
