@@ -135,7 +135,6 @@ jobs:
 
     - name: Build and push arm64 images
       run: |
-        # hive4.0-hive excluded - amd64 only
         multi_arch=(
           build/sphinx
           testing/almalinux9-oj11
@@ -144,6 +143,7 @@ jobs:
           testing/almalinux9-oj17-openldap-referrals
           testing/almalinux9-oj17-openldap-active-directory
           testing/hive3.1-hive
+          testing/hive4.0-hive
           testing/kerberos
           testing/spark4-delta
           testing/spark4-iceberg
@@ -214,6 +214,7 @@ jobs:
           testing/almalinux9-oj17-openldap-referrals
           testing/almalinux9-oj17-openldap-active-directory
           testing/hive3.1-hive
+          testing/hive4.0-hive
           testing/kerberos
           testing/spark4-delta
           testing/spark4-iceberg
@@ -237,9 +238,6 @@ jobs:
             -m "$ARM64_REF"
         done
 
-        # hive4.0-hive is amd64-only but in multi_arch list (has no arm64 build)
-        AMD64_REF=$(cat "/tmp/refs/testing-hive4.0-hive-linux-amd64")
-        crane tag "$AMD64_REF" "${VERSION}"
 
   finalize:
     needs: [prepare, create-manifests]
