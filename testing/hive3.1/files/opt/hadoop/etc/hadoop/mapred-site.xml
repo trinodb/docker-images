@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<configuration>
+    <!-- Run MapReduce jobs in-process in this single-container test image. -->
+    <property>
+        <name>mapred.job.tracker</name>
+        <value>local</value>
+    </property>
+    <property>
+        <name>mapreduce.framework.name</name>
+        <value>local</value>
+    </property>
+    <property>
+        <name>mapreduce.task.tmp.dir</name>
+        <value>/tmp/hadoop-mapreduce/cache/${user.name}/tasks</value>
+    </property>
+    <property>
+        <name>mapreduce.local.dir</name>
+        <value>/tmp/hadoop-mapreduce/local</value>
+    </property>
+</configuration>

@@ -19,6 +19,24 @@ jobs:
             platform: linux/arm64
             runner: ubuntu-24.04-arm
             test: hive3.1-hive
+          - image: testing/hive3.1
+            platform: linux/amd64
+            runner: ubuntu-24.04
+            test: hive3.1
+          - image: testing/hive3.1
+            platform: linux/arm64
+            runner: ubuntu-24.04-arm
+            test: hive3.1
+          - image: testing/hive3.1-kerberos
+            platform: linux/amd64
+            runner: ubuntu-24.04
+            test: hive3.1-kerberos
+            test_images: testing/kdc
+          - image: testing/hive3.1-kerberos
+            platform: linux/arm64
+            runner: ubuntu-24.04-arm
+            test: hive3.1-kerberos
+            test_images: testing/kdc
 
           - image: testing/hive4.0-hive
             platform: linux/amd64
@@ -69,6 +87,14 @@ jobs:
             platform: linux/arm64
             runner: ubuntu-24.04-arm
             test: kerberos
+          - image: testing/kdc
+            platform: linux/amd64
+            runner: ubuntu-24.04
+            test: kdc
+          - image: testing/kdc
+            platform: linux/arm64
+            runner: ubuntu-24.04-arm
+            test: kdc
 
           - image: testing/almalinux9-oj17
             platform: linux/amd64
@@ -110,6 +136,14 @@ jobs:
       env:
         PLATFORM: ${{ matrix.platform }}
       run: make "${{ matrix.image }}"
+    - name: Build test dependencies
+      env:
+        PLATFORM: ${{ matrix.platform }}
+      if: ${{ matrix.test_images != '' }}
+      run: |
+        for image in ${{ matrix.test_images }}; do
+          make "$image"
+        done
     - name: Test ${{ matrix.test }}
       env:
         PLATFORM: ${{ matrix.platform }}

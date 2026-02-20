@@ -1,0 +1,4 @@
+services:
+  hadoop-master:
+    hostname: hadoop-master
+    image: testing/hive3.1:latest$ARCH
