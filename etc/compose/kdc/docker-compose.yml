@@ -1,0 +1,3 @@
+services:
+  kdc:
+    image: testing/kdc:latest$ARCH

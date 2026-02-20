@@ -45,6 +45,17 @@ function run_hadoop_tests() {
         true
 }
 
+function check_hadoop_kerberos() {
+    environment_compose exec hadoop-master bash -lc "kinit -kt /etc/security/keytabs/hdfs.keytab hdfs/hadoop-master@TRINO.TEST >/dev/null 2>&1 && hive -e 'select 1;' >/dev/null 2>&1"
+}
+
+function run_hadoop_kerberos_tests() {
+    environment_compose exec hadoop-master bash -lc "kinit -kt /etc/security/keytabs/hdfs.keytab hdfs/hadoop-master@TRINO.TEST && hive -e 'SELECT 1'" &&
+        environment_compose exec hadoop-master bash -lc "kinit -kt /etc/security/keytabs/hdfs.keytab hdfs/hadoop-master@TRINO.TEST && hive -e \"SHOW DATABASES LIKE 'default'\"" &&
+        environment_compose exec hadoop-master bash -lc "kinit -kt /etc/security/keytabs/hdfs.keytab hdfs/hadoop-master@TRINO.TEST && hdfs dfs -test -d /user/hive/warehouse" &&
+        true
+}
+
 function run_hive_transactional_tests() {
     environment_compose exec hadoop-master hive -e "
       CREATE TABLE transactional_table (x int) STORED AS orc TBLPROPERTIES ('transactional'='true');
@@ -94,6 +105,13 @@ function run_kerberos_tests() {
     environment_compose exec kerberos kinit -kt ala.keytab ala@STARBURSTDATA.COM
 }
 
+function run_kdc_tests() {
+    sleep 60
+    environment_compose exec kdc create_principal -o -p tola -k tola.keytab
+    environment_compose exec kdc create_principal -p ala -k ala.keytab
+    environment_compose exec kdc kinit -kt ala.keytab ala@TRINO.TEST
+}
+
 function check_openldap() {
     environment_compose exec openldap /usr/bin/wait-for-slapd.sh
 }
@@ -124,7 +142,7 @@ function cleanup() {
 
     # Ensure that the logs processes are terminated.
     # In most cases after the docker containers are stopped, logs processes must be terminated.
-    if [[ -n ${LOGS_PID} ]]; then
+    if [[ -n ${LOGS_PID:-} ]]; then
         kill ${LOGS_PID} 2>/dev/null || true
     fi
 
@@ -150,6 +168,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 source "$SCRIPT_DIR/lib.sh"
 PROJECT_ROOT="${SCRIPT_DIR}/.."
 DOCKER_CONF_LOCATION="${PROJECT_ROOT}/etc/compose"
+LOGS_PID=""
 
 ENVIRONMENT=$1
 
@@ -194,6 +213,15 @@ for ARCH in "${platforms[@]}"; do
 
     if [[ ${ENVIRONMENT} == "kerberos" ]]; then
         run_kerberos_tests
+    elif [[ ${ENVIRONMENT} == "kdc" ]]; then
+        run_kdc_tests
+    elif [[ ${ENVIRONMENT} == "hive3.1-kerberos" ]]; then
+        retry check_hadoop_kerberos
+
+        set -x
+        set +e
+        sleep 10
+        run_hadoop_kerberos_tests
     elif [[ ${ENVIRONMENT} == *"hive4"* ]]; then
         # wait until hiveserver is started
         retry check_hive4
@@ -213,7 +241,7 @@ for ARCH in "${platforms[@]}"; do
         set +e
         sleep 10
         run_hadoop_tests
-        if [[ ${ENVIRONMENT} == *"3.1-hive" ]]; then
+        if [[ ${ENVIRONMENT} == "hive3.1" || ${ENVIRONMENT} == "hive3.1-hive" || ${ENVIRONMENT} == "hdp3.1-hive" ]]; then
             run_hive_transactional_tests
         fi
     elif [[ ${ENVIRONMENT} == *"openldap"* ]]; then

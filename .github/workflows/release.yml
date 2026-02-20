@@ -76,7 +76,10 @@ jobs:
           testing/almalinux9-oj17-openldap
           testing/almalinux9-oj17-openldap-referrals
           testing/almalinux9-oj17-openldap-active-directory
+          testing/hive3.1
           testing/hive3.1-hive
+          testing/hive3.1-kerberos
+          testing/kdc
           testing/kerberos
           testing/spark4-delta
           testing/spark4-iceberg
@@ -142,8 +145,11 @@ jobs:
           testing/almalinux9-oj17-openldap
           testing/almalinux9-oj17-openldap-referrals
           testing/almalinux9-oj17-openldap-active-directory
+          testing/hive3.1
           testing/hive3.1-hive
+          testing/hive3.1-kerberos
           testing/hive4.0-hive
+          testing/kdc
           testing/kerberos
           testing/spark4-delta
           testing/spark4-iceberg
@@ -213,8 +219,11 @@ jobs:
           testing/almalinux9-oj17-openldap
           testing/almalinux9-oj17-openldap-referrals
           testing/almalinux9-oj17-openldap-active-directory
+          testing/hive3.1
           testing/hive3.1-hive
+          testing/hive3.1-kerberos
           testing/hive4.0-hive
+          testing/kdc
           testing/kerberos
           testing/spark4-delta
           testing/spark4-iceberg

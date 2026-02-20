@@ -1,0 +1,18 @@
+services:
+  kdc:
+    image: testing/kdc:latest$ARCH
+    hostname: kdc
+    volumes:
+      - keytabs:/shared/keytabs
+      - ./setup-keytabs.sh:/docker/kerberos-init.d/setup-keytabs.sh:ro
+
+  hadoop-master:
+    image: testing/hive3.1-kerberos:latest$ARCH
+    hostname: hadoop-master
+    depends_on:
+      - kdc
+    volumes:
+      - keytabs:/etc/security/keytabs
+
+volumes:
+  keytabs:
