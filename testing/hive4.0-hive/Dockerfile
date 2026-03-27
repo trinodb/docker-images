@@ -12,9 +12,8 @@
 
 FROM apache/hive:4.0.0
 
-# TODO replace with aws sdk v2 by following https://hadoop.apache.org/docs/stable/hadoop-aws/tools/hadoop-aws/aws_sdk_upgrade.html
-ARG AWS_JAVA_SDK_BUNDLE_VERSION=1.12.367
-ARG HADOOP_AWS_VERSION=3.3.6
+ARG HADOOP_AWS_VERSION=3.4.2
+ARG AWSSDK_VERSION=2.41.6
 
 USER root
 RUN apt-get -y update
@@ -22,5 +21,5 @@ RUN apt install curl -y
 
 # Install AWS SDK so we can access S3; the version must match the hadoop-aws* jars which are part of SPARK distribution
 RUN mkdir -p /opt/hive/auxlib && \
-    curl -fLsS -o /opt/hive/auxlib/aws-java-sdk-bundle-$AWS_JAVA_SDK_BUNDLE_VERSION.jar https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-bundle/$AWS_JAVA_SDK_BUNDLE_VERSION/aws-java-sdk-bundle-$AWS_JAVA_SDK_BUNDLE_VERSION.jar && \
+    curl -fLsS -o /opt/hive/auxlib/software-amazon-awssdk-bundle-$AWSSDK_VERSION.jar https://repo1.maven.org/maven2/software/amazon/awssdk/bundle/$AWSSDK_VERSION/bundle-$AWSSDK_VERSION.jar && \
     curl -fLsS -o /opt/hive/auxlib/hadoop-aws-$HADOOP_AWS_VERSION.jar https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/$HADOOP_AWS_VERSION/hadoop-aws-$HADOOP_AWS_VERSION.jar
