@@ -79,6 +79,7 @@ jobs:
           testing/hive3.1
           testing/hive3.1-hive
           testing/hive3.1-kerberos
+          testing/iceberg-rest
           testing/kdc
           testing/kerberos
           testing/spark4-delta
@@ -149,6 +150,7 @@ jobs:
           testing/hive3.1-hive
           testing/hive3.1-kerberos
           testing/hive4.0-hive
+          testing/iceberg-rest
           testing/kdc
           testing/kerberos
           testing/spark4-delta
@@ -223,6 +225,7 @@ jobs:
           testing/hive3.1-hive
           testing/hive3.1-kerberos
           testing/hive4.0-hive
+          testing/iceberg-rest
           testing/kdc
           testing/kerberos
           testing/spark4-delta

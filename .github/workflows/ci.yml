@@ -60,6 +60,15 @@ jobs:
             runner: ubuntu-24.04-arm
             test: spark4-iceberg
 
+          - image: testing/iceberg-rest
+            platform: linux/amd64
+            runner: ubuntu-24.04
+            test: iceberg-rest
+          - image: testing/iceberg-rest
+            platform: linux/arm64
+            runner: ubuntu-24.04-arm
+            test: iceberg-rest
+
           - image: testing/spark4-delta
             platform: linux/amd64
             runner: ubuntu-24.04

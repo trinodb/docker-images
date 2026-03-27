@@ -1,0 +1,5 @@
+services:
+  iceberg-rest:
+    image: testing/iceberg-rest:latest$ARCH
+    environment:
+      CATALOG_WAREHOUSE: file:///tmp/warehouse

@@ -87,6 +87,10 @@ function run_spark_tests() {
         true
 }
 
+function check_iceberg_rest() {
+    environment_compose exec iceberg-rest curl --fail http://localhost:8181/v1/config >/dev/null 2>&1
+}
+
 function check_health() {
     if ! list=$(environment_compose ps --format json); then
         echo >&2 "Error getting Docker containers status: $list"
@@ -255,6 +259,8 @@ for ARCH in "${platforms[@]}"; do
         set +e
         sleep 10
         run_spark_tests
+    elif [[ ${ENVIRONMENT} == "iceberg-rest" ]]; then
+        retry check_iceberg_rest
     else
         echo >&2 "ERROR: no test defined for ${ENVIRONMENT}"
         cleanup
