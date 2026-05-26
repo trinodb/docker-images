@@ -16,7 +16,7 @@ jobs:
     outputs:
       commit_sha: ${{ steps.release.outputs.COMMIT_SHA }}
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v6
 
     - name: Configure Git user
       run: |
@@ -44,7 +44,7 @@ jobs:
     env:
       REGISTRY: ${{ inputs.registry }}
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v6
       with:
         ref: ${{ needs.prepare.outputs.commit_sha }}
 
@@ -116,7 +116,7 @@ jobs:
     env:
       REGISTRY: ${{ inputs.registry }}
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v6
       with:
         ref: ${{ needs.prepare.outputs.commit_sha }}
 
@@ -174,7 +174,7 @@ jobs:
     env:
       REGISTRY: ${{ inputs.registry }}
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v6
       with:
         ref: ${{ needs.prepare.outputs.commit_sha }}
 
@@ -247,7 +247,7 @@ jobs:
     permissions:
       contents: write
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v6
       with:
         ref: ${{ needs.prepare.outputs.commit_sha }}
 
