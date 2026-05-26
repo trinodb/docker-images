@@ -138,7 +138,7 @@ jobs:
             runner: ubuntu-24.04-arm
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v6
       with:
         fetch-depth: 0 # checkout tags so version in Manifest is set properly
     - name: Build ${{ matrix.image }} (${{ matrix.platform }})
