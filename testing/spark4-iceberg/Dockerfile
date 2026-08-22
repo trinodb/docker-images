@@ -18,6 +18,7 @@ ARG HADOOP_VERSION=3
 ARG ICEBERG_VERSION=1.11.0
 # ICEBERG_JAR_VERSION is derived from: <spark-version>_<scala-version>
 ARG ICEBERG_JAR_VERSION=4.0_2.13
+ARG GCS_CONNECTOR_VERSION=hadoop2-2.2.24
 ARG POSTGRESQL_JAR_VERSION=42.3.5
 
 ARG SPARK_ARTIFACT="spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}"
@@ -44,7 +45,7 @@ RUN wget -nv https://repo1.maven.org/maven2/com/microsoft/azure/azure-storage/8.
 RUN wget -nv https://repo1.maven.org/maven2/org/codehaus/jackson/jackson-core-asl/1.9.13/jackson-core-asl-1.9.13.jar
 RUN wget -nv https://repo1.maven.org/maven2/org/codehaus/jackson/jackson-mapper-asl/1.9.13/jackson-mapper-asl-1.9.13.jar
 # install Google Hadoop connector so we can access gcs
-RUN wget -nv https://storage.googleapis.com/hadoop-lib/gcs/gcs-connector-hadoop2-latest.jar
+RUN wget -nv "https://repo1.maven.org/maven2/com/google/cloud/bigdataoss/gcs-connector/${GCS_CONNECTOR_VERSION}/gcs-connector-${GCS_CONNECTOR_VERSION}-shaded.jar"
 
 # install Iceberg
 RUN wget -nv "https://repo1.maven.org/maven2/org/apache/iceberg/iceberg-spark-runtime-${ICEBERG_JAR_VERSION}/${ICEBERG_VERSION}/iceberg-spark-runtime-${ICEBERG_JAR_VERSION}-${ICEBERG_VERSION}.jar"

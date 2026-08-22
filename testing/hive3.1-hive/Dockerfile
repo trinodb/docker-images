@@ -42,6 +42,8 @@ ARG HADOOP_BINARY_SHA256=1c02ccc60a09c63a48dc4234ffd3aed1b75e5a1f2b49d60927eda11
 ARG HIVE_VERSION=3.1.3
 ARG HIVE_BINARY_SHA256=0c9b6a6359a7341b6029cc9347435ee7b379f93846f779d710b13f795b54bb16
 
+ARG GCS_CONNECTOR_VERSION=hadoop2-2.2.24
+
 ARG HADOOP_BINARY_PATH=https://archive.apache.org/dist/hadoop/common/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz
 ARG HIVE_BINARY_PATH=https://archive.apache.org/dist/hive/hive-$HIVE_VERSION/apache-hive-$HIVE_VERSION-bin.tar.gz
 
@@ -59,6 +61,9 @@ RUN mkdir /opt/hive/auxlib && \
     curl -fLsS -o /opt/hive/auxlib/mysql-connector-java-$MYSQL_CONNECTOR_VERSION.jar https://repo1.maven.org/maven2/mysql/mysql-connector-java/$MYSQL_CONNECTOR_VERSION/mysql-connector-java-$MYSQL_CONNECTOR_VERSION.jar && \
     curl -fLsS -o /opt/hive/auxlib/aws-java-sdk-core-$AWS_SDK_VERSION.jar https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-core/$AWS_SDK_VERSION/aws-java-sdk-core-$AWS_SDK_VERSION.jar && \
     curl -fLsS -o /opt/hive/auxlib/aws-java-sdk-s3-$AWS_SDK_VERSION.jar https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-s3/$AWS_SDK_VERSION/aws-java-sdk-s3-$AWS_SDK_VERSION.jar
+
+RUN curl -fLsS -o /opt/hadoop/share/hadoop/common/lib/gcs-connector-$GCS_CONNECTOR_VERSION-shaded.jar \
+        https://repo1.maven.org/maven2/com/google/cloud/bigdataoss/gcs-connector/$GCS_CONNECTOR_VERSION/gcs-connector-$GCS_CONNECTOR_VERSION-shaded.jar
 
 ENV HADOOP_HOME=/opt/hadoop
 ENV HIVE_HOME=/opt/hive
