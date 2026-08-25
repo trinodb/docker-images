@@ -36,7 +36,7 @@ RUN wget -nv "https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/3.3.4/
 RUN wget -nv "https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-bundle/1.12.319/aws-java-sdk-bundle-1.12.319.jar"
 
 # install Delta
-RUN wget -nv "https://repo1.maven.org/maven2/io/delta/delta-spark_${SCALA_VERSION}/${DELTA_VERSION}/delta-spark_${SCALA_VERSION}-${DELTA_VERSION}.jar"
+RUN wget -nv "https://repo1.maven.org/maven2/io/delta/delta-spark_4.1_${SCALA_VERSION}/${DELTA_VERSION}/delta-spark_4.1_${SCALA_VERSION}-${DELTA_VERSION}.jar"
 RUN wget -nv "https://repo1.maven.org/maven2/io/delta/delta-storage/${DELTA_VERSION}/delta-storage-${DELTA_VERSION}.jar"
 
 # Create hive user to match Hive container
