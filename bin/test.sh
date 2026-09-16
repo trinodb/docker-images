@@ -56,6 +56,13 @@ function run_hadoop_kerberos_tests() {
         true
 }
 
+function run_azure_filesystem_tests() {
+    environment_compose exec -T hadoop-master hive -S -e "
+        SELECT reflect('org.apache.hadoop.fs.azurebfs.AzureBlobFileSystem', 'getScheme'),
+               reflect('org.apache.hadoop.fs.azurebfs.SecureAzureBlobFileSystem', 'getScheme');
+    " | grep -Fx $'abfs\tabfss'
+}
+
 function run_hive_transactional_tests() {
     environment_compose exec hadoop-master hive -e "
       CREATE TABLE transactional_table (x int) STORED AS orc TBLPROPERTIES ('transactional'='true');
@@ -221,6 +228,7 @@ for ARCH in "${platforms[@]}"; do
         run_kdc_tests
     elif [[ ${ENVIRONMENT} == "hive3.1-kerberos" ]]; then
         retry check_hadoop_kerberos
+        run_azure_filesystem_tests
 
         set -x
         set +e
@@ -239,6 +247,9 @@ for ARCH in "${platforms[@]}"; do
     elif [[ ${ENVIRONMENT} == *"hive"* ]]; then
         # wait until hadoop processes is started
         retry check_hadoop
+        if [[ ${ENVIRONMENT} == "hive3.1" || ${ENVIRONMENT} == "hive3.1-hive" ]]; then
+            run_azure_filesystem_tests
+        fi
 
         # run tests
         set -x
