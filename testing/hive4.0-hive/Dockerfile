@@ -16,10 +16,7 @@ ARG HADOOP_AWS_VERSION=3.4.2
 ARG AWSSDK_VERSION=2.41.6
 
 USER root
-RUN apt-get -y update
-RUN apt install curl -y
 
-# Install AWS SDK so we can access S3; the version must match the hadoop-aws* jars which are part of SPARK distribution
-RUN mkdir -p /opt/hive/auxlib && \
-    curl -fLsS -o /opt/hive/auxlib/software-amazon-awssdk-bundle-$AWSSDK_VERSION.jar https://repo1.maven.org/maven2/software/amazon/awssdk/bundle/$AWSSDK_VERSION/bundle-$AWSSDK_VERSION.jar && \
-    curl -fLsS -o /opt/hive/auxlib/hadoop-aws-$HADOOP_AWS_VERSION.jar https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/$HADOOP_AWS_VERSION/hadoop-aws-$HADOOP_AWS_VERSION.jar
+# Install AWS SDK and Hadoop S3 support.
+ADD --chmod=644 https://repo1.maven.org/maven2/software/amazon/awssdk/bundle/$AWSSDK_VERSION/bundle-$AWSSDK_VERSION.jar /opt/hive/auxlib/software-amazon-awssdk-bundle-$AWSSDK_VERSION.jar
+ADD --chmod=644 https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/$HADOOP_AWS_VERSION/hadoop-aws-$HADOOP_AWS_VERSION.jar /opt/hive/auxlib/hadoop-aws-$HADOOP_AWS_VERSION.jar
