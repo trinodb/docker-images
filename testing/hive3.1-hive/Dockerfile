@@ -65,6 +65,18 @@ RUN mkdir /opt/hive/auxlib && \
 RUN curl -fLsS -o /opt/hadoop/share/hadoop/common/lib/gcs-connector-$GCS_CONNECTOR_VERSION-shaded.jar \
         https://repo1.maven.org/maven2/com/google/cloud/bigdataoss/gcs-connector/$GCS_CONNECTOR_VERSION/gcs-connector-$GCS_CONNECTOR_VERSION-shaded.jar
 
+ARG HADOOP_AZURE_VERSION=3.2.4
+ARG WILDFLY_OPENSSL_VERSION=1.0.7.Final
+
+# Hadoop 3.1.2's Azure connector does not include ABFS support.
+RUN curl --retry 5 --retry-delay 10 --retry-all-errors -fLsS \
+        -o /opt/hadoop/share/hadoop/tools/lib/hadoop-azure-$HADOOP_AZURE_VERSION.jar \
+        https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-azure/$HADOOP_AZURE_VERSION/hadoop-azure-$HADOOP_AZURE_VERSION.jar && \
+    curl --retry 5 --retry-delay 10 --retry-all-errors -fLsS \
+        -o /opt/hadoop/share/hadoop/tools/lib/wildfly-openssl-$WILDFLY_OPENSSL_VERSION.jar \
+        https://repo1.maven.org/maven2/org/wildfly/openssl/wildfly-openssl/$WILDFLY_OPENSSL_VERSION/wildfly-openssl-$WILDFLY_OPENSSL_VERSION.jar && \
+    rm /opt/hadoop/share/hadoop/tools/lib/hadoop-azure-$HADOOP_VERSION.jar
+
 ENV HADOOP_HOME=/opt/hadoop
 ENV HIVE_HOME=/opt/hive
 ENV HADOOP_CLASSPATH=${HADOOP_HOME}/share/hadoop/tools/lib/*
