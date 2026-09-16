@@ -18,5 +18,6 @@ ARG AWSSDK_VERSION=2.41.6
 USER root
 
 # Install AWS SDK and Hadoop S3 support.
+RUN mkdir -p /opt/hive/auxlib
 ADD --chmod=644 https://repo1.maven.org/maven2/software/amazon/awssdk/bundle/$AWSSDK_VERSION/bundle-$AWSSDK_VERSION.jar /opt/hive/auxlib/software-amazon-awssdk-bundle-$AWSSDK_VERSION.jar
 ADD --chmod=644 https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/$HADOOP_AWS_VERSION/hadoop-aws-$HADOOP_AWS_VERSION.jar /opt/hive/auxlib/hadoop-aws-$HADOOP_AWS_VERSION.jar
