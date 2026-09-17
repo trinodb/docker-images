@@ -130,12 +130,6 @@ function check_health() {
     test "$status" == "healthy"
 }
 
-function run_kerberos_tests() {
-    sleep 60
-    environment_compose exec kerberos create_principal -o -p tola -k tola.keytab
-    environment_compose exec kerberos kinit -kt ala.keytab ala@STARBURSTDATA.COM
-}
-
 function run_kdc_tests() {
     sleep 60
     environment_compose exec kdc create_principal -o -p tola -k tola.keytab
@@ -242,9 +236,7 @@ for ARCH in "${platforms[@]}"; do
 
     LOGS_PID=$!
 
-    if [[ ${ENVIRONMENT} == "kerberos" ]]; then
-        run_kerberos_tests
-    elif [[ ${ENVIRONMENT} == "kdc" ]]; then
+    if [[ ${ENVIRONMENT} == "kdc" ]]; then
         run_kdc_tests
     elif [[ ${ENVIRONMENT} == "hive3.1-kerberos" ]]; then
         retry check_hadoop_kerberos
@@ -276,7 +268,7 @@ for ARCH in "${platforms[@]}"; do
         set +e
         sleep 10
         run_hadoop_tests
-        if [[ ${ENVIRONMENT} == "hive3.1" || ${ENVIRONMENT} == "hive3.1-hive" || ${ENVIRONMENT} == "hdp3.1-hive" ]]; then
+        if [[ ${ENVIRONMENT} == "hive3.1" || ${ENVIRONMENT} == "hive3.1-hive" ]]; then
             run_hive_transactional_tests
         fi
     elif [[ ${ENVIRONMENT} == *"openldap"* ]]; then

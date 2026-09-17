@@ -1,4 +1,0 @@
-services:
-  hadoop-master:
-    hostname: hadoop-master
-    image: testing/hdp3.1-hive:latest

@@ -63,25 +63,17 @@ jobs:
 
     - name: Build and push amd64 images
       run: |
-        single_arch=(
-          testing/hdp3.1-hive
-          testing/hdp3.1-hive-kerberized
-          testing/hdp3.1-hive-kerberized-2
-          testing/hdp3.1-hive-kerberized-kms
-        )
         multi_arch=(
           build/sphinx
           testing/almalinux9-oj11
           testing/almalinux9-oj17
           testing/almalinux9-oj17-openldap
           testing/almalinux9-oj17-openldap-referrals
-          testing/almalinux9-oj17-openldap-active-directory
           testing/hive3.1
           testing/hive3.1-hive
           testing/hive3.1-kerberos
           testing/iceberg-rest
           testing/kdc
-          testing/kerberos
           testing/spark4-delta
           testing/spark4-iceberg
           testing/spark3-hudi
@@ -89,14 +81,6 @@ jobs:
         )
 
         mkdir -p /tmp/refs
-
-        # Build and push single_arch (amd64-only) images by digest
-        for image in "${single_arch[@]}"; do
-          make "$image"
-          SAFE_NAME="${image//\//-}"
-          docker save "${image}:latest" -o /tmp/image.tar
-          crane push /tmp/image.tar "${REGISTRY}/${image}" --image-refs "/tmp/refs/${SAFE_NAME}"
-        done
 
         # Build and push multi_arch amd64 images by digest
         for image in "${multi_arch[@]}"; do
@@ -145,14 +129,12 @@ jobs:
           testing/almalinux9-oj17
           testing/almalinux9-oj17-openldap
           testing/almalinux9-oj17-openldap-referrals
-          testing/almalinux9-oj17-openldap-active-directory
           testing/hive3.1
           testing/hive3.1-hive
           testing/hive3.1-kerberos
           testing/hive4.0-hive
           testing/iceberg-rest
           testing/kdc
-          testing/kerberos
           testing/spark4-delta
           testing/spark4-iceberg
           testing/spark3-hudi
@@ -208,37 +190,22 @@ jobs:
 
     - name: Create and push manifests
       run: |
-        single_arch=(
-          testing/hdp3.1-hive
-          testing/hdp3.1-hive-kerberized
-          testing/hdp3.1-hive-kerberized-2
-          testing/hdp3.1-hive-kerberized-kms
-        )
         multi_arch=(
           build/sphinx
           testing/almalinux9-oj11
           testing/almalinux9-oj17
           testing/almalinux9-oj17-openldap
           testing/almalinux9-oj17-openldap-referrals
-          testing/almalinux9-oj17-openldap-active-directory
           testing/hive3.1
           testing/hive3.1-hive
           testing/hive3.1-kerberos
           testing/hive4.0-hive
           testing/iceberg-rest
           testing/kdc
-          testing/kerberos
           testing/spark4-delta
           testing/spark4-iceberg
           testing/spark3-hudi
         )
-
-        # Tag single_arch (amd64-only) images with final version
-        for image in "${single_arch[@]}"; do
-          SAFE_NAME="${image//\//-}"
-          REF=$(cat "/tmp/refs/${SAFE_NAME}")
-          crane tag "$REF" "${VERSION}"
-        done
 
         # Create multi-arch manifests for images with both platforms
         for image in "${multi_arch[@]}"; do
