@@ -1,6 +1,16 @@
+include:
+  - ../common/s3.yml
 services:
   hiveserver2:
     hostname: hiveserver2
-    image: testing/hive4.0-hive:latest$ARCH
+    image: testing/hive4.0-hive:${IMAGE_TAG:-latest}$ARCH
     environment:
       - SERVICE_NAME=hiveserver2
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - AWS_REGION=us-east-1
+    depends_on:
+      s3-init:
+        condition: service_completed_successfully
+    volumes:
+      - ../common/core-site.xml:/opt/hadoop/etc/hadoop/core-site.xml:ro

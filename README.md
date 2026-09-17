@@ -25,6 +25,21 @@ make testing/hdp3.1-base.dependants
 
 will build the `hdp3.1-base` and all the images depending on it (transitively).
 
+## Testing Hive and Spark S3 support locally
+
+The Hive 4 and Spark/Hudi tests run against a local Floci S3 service and do not
+require cloud credentials. They exercise table writes and reads, including
+Hudi updates and deletes.
+
+```
+make testing/hive4.0-hive testing/spark3-hudi
+make test IMAGE_TO_TEST=hive4.0-hive
+make test IMAGE_TO_TEST=spark3-hudi
+```
+
+These tests also run in CI on amd64 and arm64. To test a custom local image tag,
+set `IMAGE_TAG` when running the tests.
+
 ## Releasing (pushing) docker image
 
 To release a new version of the images, run the `release` GitHub Actions (GHA) Workflow.
