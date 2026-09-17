@@ -1,3 +1,11 @@
+include:
+  - ../common/s3.yml
 services:
   spark:
-    image: testing/spark3-hudi:latest$ARCH
+    image: testing/spark3-hudi:${IMAGE_TAG:-latest}$ARCH
+    depends_on:
+      s3-init:
+        condition: service_completed_successfully
+    volumes:
+      - ../common/core-site.xml:/opt/hadoop/etc/hadoop/core-site.xml:ro
+      - ./spark-defaults.conf:/spark/conf/spark-defaults.conf:ro

@@ -1,0 +1,11 @@
+services:
+  floci:
+    image: floci/floci:1.5.26
+  s3-init:
+    image: curlimages/curl:8.12.1
+    depends_on:
+      - floci
+    command: >-
+      --fail --silent --show-error --retry 30 --retry-connrefused
+      --retry-delay 1 --max-time 5 --request PUT
+      http://floci:4566/sdk-v2-test

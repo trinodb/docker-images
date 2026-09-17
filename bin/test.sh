@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -eo pipefail
 
 function retry() {
     END=$(($(date +%s) + 600))
@@ -81,7 +81,14 @@ function check_hive4() {
 
 function run_hive4_tests() {
     environment_compose exec hiveserver2 beeline -u jdbc:hive2://localhost:10000 -e 'SHOW DATABASES;' &&
-    true
+        environment_compose exec -T hiveserver2 beeline -u jdbc:hive2://localhost:10000 --silent=true --showHeader=false --outputformat=tsv2 -e "
+            CREATE EXTERNAL TABLE s3_test (value INT) STORED AS PARQUET LOCATION 's3a://sdk-v2-test/hive';
+            INSERT INTO s3_test VALUES (42);
+            SELECT value FROM s3_test;
+            DROP TABLE s3_test;
+        " | grep -Fx 42 &&
+        environment_compose exec hiveserver2 bash -c 'HADOOP_CLASSPATH="/opt/hive/auxlib/*" hadoop fs -rm -r s3a://sdk-v2-test/hive' &&
+        true
 }
 
 function check_spark() {
@@ -92,6 +99,19 @@ function run_spark_tests() {
     environment_compose exec spark beeline -u jdbc:hive2://localhost:10213 -e 'SELECT 1;' &&
         environment_compose exec spark beeline -u jdbc:hive2://localhost:10213 -e 'SHOW DATABASES;' &&
         true
+}
+
+function run_hudi_s3_tests() {
+    environment_compose exec -T spark beeline -u jdbc:hive2://localhost:10213 --silent=true --showHeader=false --outputformat=tsv2 -e "
+        CREATE TABLE s3_test (id BIGINT, value INT, ts BIGINT) USING hudi
+            TBLPROPERTIES (type = 'cow', primaryKey = 'id', preCombineField = 'ts')
+            LOCATION 's3a://sdk-v2-test/hudi';
+        INSERT INTO s3_test VALUES (1, 42, 1), (2, 99, 1);
+        UPDATE s3_test SET value = 43, ts = 2 WHERE id = 1;
+        DELETE FROM s3_test WHERE id = 2;
+        SELECT SUM(value) FROM s3_test;
+        DROP TABLE s3_test;
+    " | grep -Fx 43
 }
 
 function check_iceberg_rest() {
@@ -269,7 +289,11 @@ for ARCH in "${platforms[@]}"; do
         set -x
         set +e
         sleep 10
-        run_spark_tests
+        if [[ ${ENVIRONMENT} == "spark3-hudi" ]]; then
+            run_spark_tests && run_hudi_s3_tests
+        else
+            run_spark_tests
+        fi
     elif [[ ${ENVIRONMENT} == "iceberg-rest" ]]; then
         retry check_iceberg_rest
     else
