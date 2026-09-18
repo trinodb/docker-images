@@ -15,7 +15,7 @@ ARG ADDPRINC_ARGS="-maxrenewlife \"10 days\" +allow_renewable"
 
 # Install KMS
 ARG HADOOP_VERSION=3.1.4
-ARG HADOOP_BINARY_PATH=https://archive.apache.org/dist/hadoop/common/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz
+ARG HADOOP_BINARY_PATH=https://github.com/trinodb/docker-images/releases/download/dependency-mirror/hadoop-$HADOOP_VERSION.tar.gz
 RUN curl -fLsS -o /tmp/hadoop.tar.gz --url $HADOOP_BINARY_PATH && \
     tar xzf /tmp/hadoop.tar.gz --directory /opt && mv /opt/hadoop-$HADOOP_VERSION /opt/hadoop
 

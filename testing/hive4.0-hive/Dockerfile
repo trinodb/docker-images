@@ -17,7 +17,7 @@ ARG HADOOP_VERSION=3.4.2
 RUN set -eux; \
     arch_suffix=; \
     if [ "$(uname -m)" = aarch64 ]; then arch_suffix=-aarch64; fi; \
-    wget -q -O /tmp/hadoop.tar.gz "https://archive.apache.org/dist/hadoop/common/hadoop-${HADOOP_VERSION}/hadoop-${HADOOP_VERSION}${arch_suffix}-lean.tar.gz"; \
+    wget -q -O /tmp/hadoop.tar.gz "https://github.com/trinodb/docker-images/releases/download/dependency-mirror/hadoop-${HADOOP_VERSION}${arch_suffix}-lean.tar.gz"; \
     mkdir /hadoop; \
     tar -xzf /tmp/hadoop.tar.gz -C /hadoop --strip-components=1; \
     rm /tmp/hadoop.tar.gz
