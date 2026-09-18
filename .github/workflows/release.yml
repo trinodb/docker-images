@@ -36,8 +36,17 @@ jobs:
         git push origin HEAD:master
         echo "COMMIT_SHA=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
 
-  release-amd64:
+  dependency-mirror:
     needs: prepare
+    uses: ./.github/workflows/ci.yml
+    permissions:
+      contents: write
+    with:
+      mirror-only: true
+      ref: ${{ needs.prepare.outputs.commit_sha }}
+
+  release-amd64:
+    needs: [prepare, dependency-mirror]
     runs-on: ubuntu-24.04
     permissions:
       packages: write
@@ -113,7 +122,7 @@ jobs:
         path: /tmp/refs/*
 
   release-arm64:
-    needs: prepare
+    needs: [prepare, dependency-mirror]
     runs-on: ubuntu-24.04-arm
     permissions:
       packages: write

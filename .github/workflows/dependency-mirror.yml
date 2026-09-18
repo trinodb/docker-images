@@ -1,0 +1,115 @@
+name: dependency-mirror
+
+on:
+  workflow_call:
+    inputs:
+      dependencies:
+        description: YAML list of upstream URLs and pinned checksums
+        type: string
+        required: true
+      ref:
+        description: Commit for the mirror release tag
+        type: string
+        default: ''
+
+jobs:
+  publish:
+    if: ${{ github.repository == 'trinodb/docker-images' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    permissions:
+      contents: write
+    concurrency:
+      group: dependency-mirror-publish
+      cancel-in-progress: false
+    env:
+      PUBLISH: 'true'
+    steps: &mirror
+    - name: Install YAML parser
+      run: npm install --prefix "$RUNNER_TEMP/dependency-mirror" --no-save --package-lock=false --ignore-scripts yaml@2.8.1
+    - uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
+      env:
+        TARGET_REF: ${{ inputs.ref || github.event.pull_request.head.sha || github.sha }}
+        DEPENDENCIES: ${{ inputs.dependencies }}
+      with:
+        script: |
+          const fs = require('node:fs/promises');
+          const {createHash} = require('node:crypto');
+          const path = require('node:path');
+          const os = require('node:os');
+          const repo = {owner: 'trinodb', repo: 'docker-images'};
+          const tag = 'dependency-mirror';
+          const {parse} = require(process.env.RUNNER_TEMP + '/dependency-mirror/node_modules/yaml');
+          const dependencies = parse(process.env.DEPENDENCIES);
+
+          let release;
+          try {
+            ({data: release} = await github.rest.repos.getReleaseByTag({...repo, tag}));
+          } catch (error) {
+            if (error.status !== 404) throw error;
+          }
+          const assets = release
+            ? await github.paginate(github.rest.repos.listReleaseAssets, {...repo, release_id: release.id, per_page: 100})
+            : [];
+          const missing = dependencies.filter(dependency => {
+            const [algorithm, checksum] = dependency.checksum.split(':');
+            dependency.name = `${algorithm}-${checksum}-${path.basename(new URL(dependency.url).pathname)}`;
+            const asset = assets.find(asset => asset.name === dependency.name);
+            if (asset && asset.state !== 'uploaded') {
+              throw new Error(`Incomplete mirror asset: ${asset.name}`);
+            }
+            return !asset;
+          });
+          if (process.env.PUBLISH !== 'true') {
+            if (missing.length) {
+              throw new Error(`Dependencies must be mirrored by a same-repository CI run before building:\n${missing.map(dependency => dependency.name).join('\n')}`);
+            }
+            core.info('All dependencies are mirrored');
+            return;
+          }
+          for (const dependency of missing) {
+            const directory = await fs.mkdtemp(path.join(os.tmpdir(), 'dependency-mirror-'));
+            try {
+              const archive = path.join(directory, dependency.name);
+              await exec.exec('curl', [
+                '--fail', '--location', '--silent', '--show-error',
+                '--retry', '5', '--retry-delay', '10', '--retry-all-errors',
+                '--connect-timeout', '30', '--max-time', '3600',
+                '--output', archive, dependency.url,
+              ]);
+              const data = await fs.readFile(archive);
+              const [algorithm, checksum] = dependency.checksum.split(':');
+              if (createHash(algorithm).update(data).digest('hex') !== checksum) {
+                throw new Error(`Checksum mismatch: ${dependency.url}`);
+              }
+              if (!release) {
+                ({data: release} = await github.rest.repos.createRelease({
+                  ...repo,
+                  tag_name: tag,
+                  name: tag,
+                  target_commitish: process.env.TARGET_REF,
+                  make_latest: 'false',
+                }));
+              }
+              await github.rest.repos.uploadReleaseAsset({
+                ...repo,
+                release_id: release.id,
+                name: dependency.name,
+                data,
+                headers: {'content-type': 'application/octet-stream', 'content-length': data.length},
+              });
+              core.info(`Mirrored ${dependency.name}`);
+            } finally {
+              await fs.rm(directory, {recursive: true, force: true});
+            }
+          }
+
+  # Fork runs only check availability with a read-only token.
+  check:
+    if: ${{ !(github.repository == 'trinodb/docker-images' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)) }}
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    env:
+      PUBLISH: 'false'
+    steps: *mirror

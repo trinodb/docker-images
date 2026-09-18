@@ -22,11 +22,14 @@ ARG AWSSDK_VERSION=2.41.6
 
 ARG SPARK_ARTIFACT="spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}"
 
+ARG SPARK_BINARY_SHA512=769db39a560a95fd88b58ed3e9e7d1e92fb68ee406689fb4d30c033cb5911e05c1942dcc70e5ec4585df84e80aabbc272b9386a208debda89522efff1335c8ff
+
 ENV SPARK_HOME=/spark
 
 RUN set -xeu; \
     curl --retry 5 --retry-delay 10 --retry-all-errors -fLsS -o "${SPARK_ARTIFACT}.tgz" \
-        "https://archive.apache.org/dist/spark/spark-${SPARK_VERSION}/${SPARK_ARTIFACT}.tgz"; \
+        "https://github.com/trinodb/docker-images/releases/download/dependency-mirror/sha512-${SPARK_BINARY_SHA512}-${SPARK_ARTIFACT}.tgz"; \
+    echo "$SPARK_BINARY_SHA512  ${SPARK_ARTIFACT}.tgz" | sha512sum -c -; \
     tar -xf ${SPARK_ARTIFACT}.tgz; \
     rm ${SPARK_ARTIFACT}.tgz; \
     ln -sn /${SPARK_ARTIFACT} ${SPARK_HOME}

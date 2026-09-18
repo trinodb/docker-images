@@ -22,10 +22,13 @@ ARG POSTGRESQL_JAR_VERSION=42.3.5
 
 ARG SPARK_ARTIFACT="spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}"
 
+ARG SPARK_BINARY_SHA512=c9470a557c96fe899dd1c9ea8d0dda3310eaf0155b2bb972f70a6d97fee8cdaf838b425c30df3d5856b2c31fc2be933537c111db72d0427eabb76c6abd92c1f1
+
 ENV SPARK_HOME=/spark
 
 RUN set -xeu; \
-    wget -nv "https://archive.apache.org/dist/spark/spark-${SPARK_VERSION}/${SPARK_ARTIFACT}.tgz"; \
+    wget -nv -O "${SPARK_ARTIFACT}.tgz" "https://github.com/trinodb/docker-images/releases/download/dependency-mirror/sha512-${SPARK_BINARY_SHA512}-${SPARK_ARTIFACT}.tgz"; \
+    echo "$SPARK_BINARY_SHA512  ${SPARK_ARTIFACT}.tgz" | sha512sum -c -; \
     tar -xf ${SPARK_ARTIFACT}.tgz; \
     rm ${SPARK_ARTIFACT}.tgz; \
     ln -sn /${SPARK_ARTIFACT} ${SPARK_HOME}

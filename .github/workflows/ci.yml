@@ -1,9 +1,55 @@
 name: ci
 
-on: [push, pull_request]
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+  workflow_call:
+    inputs:
+      mirror-only:
+        description: Populate the dependency mirror without building images
+        type: boolean
+        default: false
+      ref:
+        description: Commit for the mirror release tag
+        type: string
+        default: ''
+
+permissions:
+  contents: read
 
 jobs:
+  dependency-mirror:
+    uses: ./.github/workflows/dependency-mirror.yml
+    permissions:
+      contents: write
+    with:
+      ref: ${{ inputs.ref }}
+      dependencies: |
+        - url: https://archive.apache.org/dist/accumulo/3.0.0/accumulo-3.0.0-bin.tar.gz
+          checksum: sha512:c992e7ce8073862057173bd1005af2c6b617e6ba2a1fb7f7f3e3aed0876dca6c87794257fe511863ffb9b7a641597bedad730673d4c504abc0ee88c78ecfed01
+        - url: https://archive.apache.org/dist/hadoop/common/hadoop-3.1.2/hadoop-3.1.2.tar.gz
+          checksum: sha256:1c02ccc60a09c63a48dc4234ffd3aed1b75e5a1f2b49d60927eda114b93dd31a
+        - url: https://archive.apache.org/dist/hadoop/common/hadoop-3.1.4/hadoop-3.1.4.tar.gz
+          checksum: sha512:f7eff67e948e21e23d7069dc169c98fcce757f59473e1e9a0e27d69a23df88840a9776089eeae5a8e1e496753f811868fe65638b04e3388c197931cd44d86f63
+        - url: https://archive.apache.org/dist/hadoop/core/hadoop-3.3.5/hadoop-3.3.5.tar.gz
+          checksum: sha512:cc170df24976543a3e961a1353a194225e3ffc5d53d594dd63d71422765e1d816d1ffa877c02bf93f0183fcfbe4c10f4b7739deca69420ed83372a0b1f9d5dc7
+        - url: https://archive.apache.org/dist/hive/hive-3.1.3/apache-hive-3.1.3-bin.tar.gz
+          checksum: sha256:0c9b6a6359a7341b6029cc9347435ee7b379f93846f779d710b13f795b54bb16
+        - url: https://archive.apache.org/dist/spark/spark-3.3.1/spark-3.3.1-bin-hadoop3.tgz
+          checksum: sha512:769db39a560a95fd88b58ed3e9e7d1e92fb68ee406689fb4d30c033cb5911e05c1942dcc70e5ec4585df84e80aabbc272b9386a208debda89522efff1335c8ff
+        - url: https://archive.apache.org/dist/spark/spark-3.4.2/spark-3.4.2-bin-hadoop3.tgz
+          checksum: sha512:c9470a557c96fe899dd1c9ea8d0dda3310eaf0155b2bb972f70a6d97fee8cdaf838b425c30df3d5856b2c31fc2be933537c111db72d0427eabb76c6abd92c1f1
+        - url: https://archive.apache.org/dist/spark/spark-4.0.0/spark-4.0.0-bin-hadoop3.tgz
+          checksum: sha512:b5a9e2ea22ac971bad81ab079e510f1ab92732efaf790af4b895174b28d99a65d35543f4300caa073257b6fe42062daafe3eea106d1945806166098606f8d03c
+        - url: https://archive.apache.org/dist/spark/spark-4.1.0/spark-4.1.0-bin-hadoop3.tgz
+          checksum: sha512:fff7f929d98779b096a2d2395b1b9db1ce277660f3852dd45e1457c373013f2669074315252181a3cea291d8f3a726c70f7f9b247e723edbf8080f40888edde1
+        - url: https://archive.apache.org/dist/zookeeper/zookeeper-3.8.2/apache-zookeeper-3.8.2-bin.tar.gz
+          checksum: sha512:30d42364d158850700623e2b0f226335ce52a9707660c16c64ea9c163fe657c429b5f846d664bf7f381bc86abafb01cdc28d23d9f8e49b99a751e6598342a7af
+
   build-images:
+    if: ${{ !inputs.mirror-only }}
+    needs: dependency-mirror
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 60
     strategy:

@@ -44,8 +44,8 @@ ARG HIVE_BINARY_SHA256=0c9b6a6359a7341b6029cc9347435ee7b379f93846f779d710b13f795
 
 ARG GCS_CONNECTOR_VERSION=hadoop2-2.2.24
 
-ARG HADOOP_BINARY_PATH=https://archive.apache.org/dist/hadoop/common/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz
-ARG HIVE_BINARY_PATH=https://archive.apache.org/dist/hive/hive-$HIVE_VERSION/apache-hive-$HIVE_VERSION-bin.tar.gz
+ARG HADOOP_BINARY_PATH=https://github.com/trinodb/docker-images/releases/download/dependency-mirror/sha256-${HADOOP_BINARY_SHA256}-hadoop-$HADOOP_VERSION.tar.gz
+ARG HIVE_BINARY_PATH=https://github.com/trinodb/docker-images/releases/download/dependency-mirror/sha256-${HIVE_BINARY_SHA256}-apache-hive-$HIVE_VERSION-bin.tar.gz
 
 RUN curl --retry 5 --retry-delay 10 --retry-all-errors -fLsS -o /tmp/hadoop.tar.gz --url $HADOOP_BINARY_PATH && \
     echo "$HADOOP_BINARY_SHA256  /tmp/hadoop.tar.gz" | sha256sum -c - && \

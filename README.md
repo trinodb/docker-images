@@ -25,6 +25,26 @@ make testing/hdp3.1-base.dependants
 
 will build the `hdp3.1-base` and all the images depending on it (transitively).
 
+## Dependency mirror
+
+Large Apache archives are downloaded only from the `dependency-mirror` GitHub
+release in `trinodb/docker-images`. Each asset name includes its pinned checksum,
+which is verified before extraction. Local `make` builds use the same mirror URLs
+and require no GitHub token.
+
+The URLs and expected checksums are listed as YAML in the
+[CI workflow](.github/workflows/ci.yml). Before image builds, pushes, manual runs,
+and PRs from branches in `trinodb/docker-images` download, verify, and publish
+missing archives using `actions/github-script`. The release workflow reuses this
+list before its image builds. Existing assets are never overwritten, and the
+mirror release is not marked latest. Fork runs only check availability with a
+read-only token; missing assets must be published by a same-repository CI run.
+
+To update a dependency, obtain its checksum from the upstream release and update
+both the Dockerfile and the inline workflow list. Checksums are pinned in Git;
+CI never fetches or derives them from the downloaded archive. Asset names are
+`<algorithm>-<checksum>-<original filename>`.
+
 ## Releasing (pushing) docker image
 
 To release a new version of the images, run the `release` GitHub Actions (GHA) Workflow.
