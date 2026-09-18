@@ -40,6 +40,13 @@ make test IMAGE_TO_TEST=spark3-hudi
 These tests also run in CI on amd64 and arm64. To test a custom local image tag,
 set `IMAGE_TAG` when running the tests.
 
+## Dependency mirror
+
+Image builds download archived dependencies from the repository's
+[dependency mirror](https://github.com/trinodb/docker-images/releases/tag/dependency-mirror).
+CI populates the mirror before building images. Complete a successful CI run
+before creating a release.
+
 ## Releasing (pushing) docker image
 
 To release a new version of the images, run the `release` GitHub Actions (GHA) Workflow.

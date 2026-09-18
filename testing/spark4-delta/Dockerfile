@@ -26,7 +26,7 @@ ENV SPARK_HOME=/spark
 
 RUN set -xeu; \
     curl --retry 5 --retry-delay 10 --retry-all-errors -fLsS -o "${SPARK_ARTIFACT}.tgz" \
-        "https://archive.apache.org/dist/spark/spark-${SPARK_VERSION}/${SPARK_ARTIFACT}.tgz"; \
+        "https://github.com/trinodb/docker-images/releases/download/dependency-mirror/${SPARK_ARTIFACT}.tgz"; \
     tar -xf ${SPARK_ARTIFACT}.tgz; \
     rm ${SPARK_ARTIFACT}.tgz; \
     ln -sn /${SPARK_ARTIFACT} ${SPARK_HOME}
