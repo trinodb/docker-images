@@ -14,8 +14,6 @@ jobs:
       dependencies: |
         - url: https://archive.apache.org/dist/hadoop/common/hadoop-3.1.2/hadoop-3.1.2.tar.gz
           checksum: sha256:1c02ccc60a09c63a48dc4234ffd3aed1b75e5a1f2b49d60927eda114b93dd31a
-        - url: https://archive.apache.org/dist/hadoop/common/hadoop-3.1.4/hadoop-3.1.4.tar.gz
-          checksum: sha512:f7eff67e948e21e23d7069dc169c98fcce757f59473e1e9a0e27d69a23df88840a9776089eeae5a8e1e496753f811868fe65638b04e3388c197931cd44d86f63
         - url: https://archive.apache.org/dist/hadoop/common/hadoop-3.4.2/hadoop-3.4.2-lean.tar.gz
           checksum: sha512:53582b3dae515316933c8486cdbd688a93530deb4bcc842e6a599f33dfeb51b17d79f61dc15b6febe95715325c2d2f4fc503bfae6ec3226851644ba7ebae8930
         - url: https://archive.apache.org/dist/hadoop/common/hadoop-3.4.2/hadoop-3.4.2-aarch64-lean.tar.gz
