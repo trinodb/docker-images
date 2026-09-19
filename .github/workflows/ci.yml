@@ -74,10 +74,6 @@ jobs:
             runner: ubuntu-24.04-arm
             test: hive4.0-hive
 
-          - image: testing/hdp3.1-hive-kerberized
-            runner: ubuntu-24.04
-            test: hdp3.1-hive
-
           - image: testing/spark4-iceberg
             platform: linux/amd64
             runner: ubuntu-24.04
@@ -115,14 +111,6 @@ jobs:
             test: spark3-hudi
 
           # Images without external downloads
-          - image: testing/kerberos
-            platform: linux/amd64
-            runner: ubuntu-24.04
-            test: kerberos
-          - image: testing/kerberos
-            platform: linux/arm64
-            runner: ubuntu-24.04-arm
-            test: kerberos
           - image: testing/kdc
             platform: linux/amd64
             runner: ubuntu-24.04
@@ -147,15 +135,6 @@ jobs:
             platform: linux/arm64
             runner: ubuntu-24.04-arm
             test: openldap
-
-          - image: testing/almalinux9-oj17-openldap-active-directory
-            platform: linux/amd64
-            runner: ubuntu-24.04
-            test: openldap-active-directory
-          - image: testing/almalinux9-oj17-openldap-active-directory
-            platform: linux/arm64
-            runner: ubuntu-24.04-arm
-            test: openldap-active-directory
 
           - image: build/sphinx
             platform: linux/amd64
