@@ -17,6 +17,8 @@ COPY ./files /
 # Install Java and presto-admin dependences
 RUN \
     set -xeu && \
+    # Use the official repository to avoid out-of-sync mirrors
+    sed -i -e 's/^mirrorlist=/#mirrorlist=/' -e 's/^# baseurl=/baseurl=/' /etc/yum.repos.d/almalinux*.repo && \
     yum update -y && \
     yum install -y \
         python \
