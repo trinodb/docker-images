@@ -37,6 +37,9 @@ WORKDIR ${SPARK_HOME}/jars
 RUN wget -nv "https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/$HADOOP_AWS_VERSION/hadoop-aws-$HADOOP_AWS_VERSION.jar"
 RUN wget -nv "https://repo1.maven.org/maven2/software/amazon/awssdk/bundle/$AWSSDK_VERSION/bundle-$AWSSDK_VERSION.jar"
 
+# install Spark Avro data source, so that `USING avro` works without a runtime download
+RUN wget -nv "https://repo1.maven.org/maven2/org/apache/spark/spark-avro_${SCALA_VERSION}/${SPARK_VERSION}/spark-avro_${SCALA_VERSION}-${SPARK_VERSION}.jar"
+
 # install Delta
 RUN wget -nv "https://repo1.maven.org/maven2/io/delta/delta-spark_4.1_${SCALA_VERSION}/${DELTA_VERSION}/delta-spark_4.1_${SCALA_VERSION}-${DELTA_VERSION}.jar"
 RUN wget -nv "https://repo1.maven.org/maven2/io/delta/delta-storage/${DELTA_VERSION}/delta-storage-${DELTA_VERSION}.jar"
