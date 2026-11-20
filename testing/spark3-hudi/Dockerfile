@@ -52,6 +52,9 @@ WORKDIR ${SPARK_HOME}/jars
 RUN echo 'export SPARK_DIST_CLASSPATH="$(/opt/hadoop/bin/hadoop classpath --glob)"' > /spark/conf/spark-env.sh
 RUN wget -nv -P /opt/hadoop/share/hadoop/tools/lib "https://repo1.maven.org/maven2/software/amazon/awssdk/bundle/$AWSSDK_VERSION/bundle-$AWSSDK_VERSION.jar"
 
+# install Spark Avro data source, so that `USING avro` works without a runtime download
+RUN wget -nv "https://repo1.maven.org/maven2/org/apache/spark/spark-avro_${SCALA_VERSION}/${SPARK_VERSION}/spark-avro_${SCALA_VERSION}-${SPARK_VERSION}.jar"
+
 # install Hudi
 RUN wget -nv "https://repo1.maven.org/maven2/org/apache/hudi/hudi-spark3-bundle_${SCALA_VERSION}/${HUDI_VERSION}/hudi-spark3-bundle_${SCALA_VERSION}-${HUDI_VERSION}.jar"
 
