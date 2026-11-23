@@ -45,7 +45,7 @@ myst-parser==4.0.1
     # via -r requirements.in
 packaging==25.0
     # via sphinx
-pillow==10.3.0
+pillow==13.0.0
     # via -r requirements.in
 pydantic==2.11.4
     # via
